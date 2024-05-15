@@ -9,7 +9,7 @@ const openai = new OpenAI({
 });
 
 
-export const OpenApiUtill = {
+export const OpenApiUtil = {
     async prompt(msg) {
         const completion = await openai.chat.completions.create({
           messages: [{ role: "system", content: msg }],
