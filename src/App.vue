@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import VHeader from './components/common/VHeader.vue';
+import VGameInfo from '@/components/game/VGameInfo.vue';
 
 </script>
 
@@ -8,7 +9,7 @@ import VHeader from './components/common/VHeader.vue';
  <header>
   <VHeader/>
  </header>
-
+  
   <RouterView />
 </template>
 
