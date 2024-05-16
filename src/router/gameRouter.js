@@ -1,6 +1,7 @@
-import VGameInfo from '@/views/game/GameInfoView.vue'
-import VGameMap from '@/views/game/GameMapView.vue'
-import VGameResult from '@/views/game/GameResultView.vue'
+import GameInfoView from '@/views/game/GameInfoView.vue'
+import GameMapView from '@/views/game/GameMapView.vue'
+import GameResultView from '@/views/game/GameResultView.vue'
+import GameListView from '@/views/game/GameListView.vue'
 
 export default[{
   path: '/game',
@@ -10,17 +11,22 @@ export default[{
     {
       path: 'info',
       name: 'gameinfo',
-      component: VGameInfo
+      component: GameInfoView
     },
     {
       path: 'map',
       name: 'gamemap',
-      component: VGameMap
+      component: GameMapView
     },
     {
       path: 'result',
       name: 'gameresult',
-      component: VGameResult
+      component: GameResultView
+    },
+    {
+      path: 'list',
+      name: 'gamelist',
+      component: GameListView
     },
   ]
 }]

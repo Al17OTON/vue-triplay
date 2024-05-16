@@ -48,7 +48,6 @@ const selectRandom = (count) => {
 };
 const createSeed = (locations) => {
   let idx = selectRandom(gameSetting.value.count);
-  console.log(idx);
   for (var i of idx) {
     let place = {};
     place.address_name = locations[i].address_name;
@@ -57,22 +56,26 @@ const createSeed = (locations) => {
     gameList.value.push(place);
     gameSeed.value += `${locations[i].id} `;
   }
-  console.log(gameList.value);
-  console.log(gameSeed.value);
+
   store.score = gameSetting.value.count * 1000;
   store.gameList = gameList.value;
-  store.gameSeed = gameSeed.value;
-  store.count = gameSetting.value.count;
-  store.keyword = searchQuery.value.query;
+  store.difficulty = gameSetting.value.difficulty;
+  store.seedInfo = {
+    keyword: searchQuery.value.query,
+    seedInfo: gameSeed.value,
+    count: gameSetting.value.count,
+  };
+  console.log("seedInfo pinia에 저장: ");
+  console.log(store.seedInfo);
+  // store.keyword = searchQuery.value.query;
+  // store.gameSeed = gameSeed.value;
+  // store.count = gameSetting.value.count;
 };
 const searchKeyword = () => {
   gameSetting.value.query = searchQuery.value.query;
-  console.log(searchQuery.value);
-  console.log(gameSetting.value);
   searchKeywordApi(
     searchQuery.value,
     ({ data }) => {
-      console.log(data.documents);
       // seed 생성 후 pinia에 넘겨두기?
       createSeed(data.documents);
       router.push({ name: "gamemap" });
@@ -84,7 +87,6 @@ const searchKeyword = () => {
 const getSido = () => {
   getSidoApi(
     ({ data }) => {
-      console.log(data.resdata);
       sidoList.value = data.resdata.map((item) => {
         return { value: item.sidoCode, text: item.sidoName };
       });

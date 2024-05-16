@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useGameStore = defineStore('game', () => {
@@ -6,9 +6,13 @@ export const useGameStore = defineStore('game', () => {
   const score = ref(0)
   
   // seed table
+  const seedInfo = ref({})
   const keyword = ref("")
   const gameSeed = ref("")
   const count = ref(0)
+
+  // game table
+  const difficulty = ref("")
 
   // game에 쓰일 지역 정보
   const gameList = ref([])
@@ -17,5 +21,5 @@ export const useGameStore = defineStore('game', () => {
     id.value++
   }
 
-  return { id, score, keyword, gameSeed, count, gameList, increment }
+  return { id, score, seedInfo, keyword, gameSeed, count, difficulty, gameList, increment }
 })
