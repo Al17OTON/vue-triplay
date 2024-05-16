@@ -19,7 +19,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <VGameItem v-for="game in gameList" :key="game.gameId" />
+    <VGameItem :game="game" v-for="game in gameList" :key="game.gameId" />
   </div>
 </template>
 

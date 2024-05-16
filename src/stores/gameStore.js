@@ -4,6 +4,7 @@ import { defineStore } from 'pinia'
 export const useGameStore = defineStore('game', () => {
   const id = ref(0)
   const score = ref(0)
+  const newGame = ref(true)
   
   // seed table
   const seedInfo = ref({})
@@ -21,5 +22,5 @@ export const useGameStore = defineStore('game', () => {
     id.value++
   }
 
-  return { id, score, seedInfo, keyword, gameSeed, count, difficulty, gameList, increment }
+  return { id, score, newGame, seedInfo, keyword, gameSeed, count, difficulty, gameList, increment }
 })

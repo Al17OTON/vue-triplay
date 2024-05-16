@@ -16,6 +16,7 @@ const saveSeed = () => {
     ({ data }) => {
       console.log(data);
       seedId.value = data.resdata;
+      // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
     },
     (error) => console.log(error)
   );
@@ -47,6 +48,7 @@ const saveGame = () => {
     <h1>{{ store.score }}</h1>
     <h1>{{ store.gameSeed }}</h1>
     <button
+      v-show="store.newGame"
       class="btn btn-primary btn-md me-3"
       data-bs-toggle="modal"
       data-bs-target="#gameSaveModal"
@@ -54,7 +56,8 @@ const saveGame = () => {
     >
       게임 저장하기
     </button>
-    <button class="btn btn-primary btn-md">여행 계획하기</button>
+    <button class="btn btn-primary btn-md me-3">여행 계획하기</button>
+    <button class="btn btn-primary btn-md">홈으로</button>
   </div>
 
   <!-- 게임 저장 모달 -->

@@ -57,6 +57,7 @@ const createSeed = (locations) => {
     gameSeed.value += `${locations[i].id} `;
   }
 
+  store.newGame = true
   store.score = gameSetting.value.count * 1000;
   store.gameList = gameList.value;
   store.difficulty = gameSetting.value.difficulty;
