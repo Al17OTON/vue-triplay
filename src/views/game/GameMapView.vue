@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
-import VRoadView from "@/components/game/VRoadView.vue";
+import VRoadView from "@/components/game/VRoadMap.vue";
 import VMap from "@/components/game/VMap.vue";
 const store = useGameStore();
 const router = useRouter();
