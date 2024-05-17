@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
-import VRoadView from "@/components/game/VRoadMap.vue";
+import VRoadMap from "@/components/game/VRoadMap.vue";
 import VMap from "@/components/game/VMap.vue";
 const store = useGameStore();
 const router = useRouter();
@@ -30,6 +30,11 @@ const getDistance = (dis) => {
   curScore.value = dif;
   console.log("거리: " + dis);
 };
+
+onMounted(() => {
+  console.log("인덱스: " + store.id);
+  console.log(store.gameList);
+});
 </script>
 
 <template>
@@ -49,7 +54,7 @@ const getDistance = (dis) => {
     </button>
     {{ store.id }}
     {{ store.gameList[store.id].place_name }}
-    <VRoadView
+    <VRoadMap
       :key="store.gameList[store.id].location"
       :location="store.gameList[store.id].location"
     />

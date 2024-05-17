@@ -24,7 +24,7 @@ const classGroup = "form-select mb-3";
 const labelClass = "fw-bold mb-3";
 
 const searchQuery = ref({
-  category_group_code: "AT4",
+  // category_group_code: "AT4",
   query: "",
   page: "1",
   size: "15",
@@ -57,7 +57,8 @@ const createSeed = (locations) => {
     gameSeed.value += `${locations[i].id} `;
   }
 
-  store.newGame = true
+  store.newGame = true;
+  store.id = 0;
   store.score = gameSetting.value.count * 1000;
   store.gameList = gameList.value;
   store.difficulty = gameSetting.value.difficulty;
@@ -78,6 +79,7 @@ const searchKeyword = () => {
     searchQuery.value,
     ({ data }) => {
       // seed 생성 후 pinia에 넘겨두기?
+      console.log(data.documents);
       createSeed(data.documents);
       router.push({ name: "gamemap" });
     },

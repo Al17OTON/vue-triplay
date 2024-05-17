@@ -8,7 +8,7 @@ import GameMakeView from '@/views/game/GameMakeView.vue'
 export default[{
   path: '/game',
   name: 'game',
-  redirect: {name: 'home'},
+  redirect: {name: 'gamehome'},
   children: [
     {
       path: 'home',

@@ -57,7 +57,9 @@ const saveGame = () => {
       게임 저장하기
     </button>
     <button class="btn btn-primary btn-md me-3">여행 계획하기</button>
-    <button class="btn btn-primary btn-md">홈으로</button>
+    <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
+      홈으로
+    </button>
   </div>
 
   <!-- 게임 저장 모달 -->

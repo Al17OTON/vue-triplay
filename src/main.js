@@ -10,7 +10,10 @@ import "bootstrap/dist/css/bootstrap.min.css"
 
 const app = createApp(App)
 
-app.use(createPinia())
+const pinia = createPinia()
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+pinia.use(piniaPluginPersistedstate)
+app.use(pinia)
 app.use(router)
 
 app.mount('#app')
