@@ -7,7 +7,7 @@ export const useGameStore = defineStore('game', () => {
   const newGame = ref(true)
   
   // seed table
-  const seedInfo = ref({}) // keyword, 
+  const seedInfo = ref({}) // keyword
   // game table
   const difficulty = ref("")
   // game에 쓰일 지역 정보

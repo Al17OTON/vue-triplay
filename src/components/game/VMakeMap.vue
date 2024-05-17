@@ -11,8 +11,6 @@ var ps = null;
 var infowindow = null;
 var markers = [];
 var searchResult = ref();
-const seedInfo = ref({});
-const placeList = ref([]);
 const location = ref({
   y: 36.35559977190671,
   x: 127.29859991863871,
@@ -164,11 +162,6 @@ function getListItem(index, places) {
   btn.setAttribute("data-bs-toggle", "modal");
   btn.setAttribute("data-bs-target", "#roadModal");
   btn.innerText = "로드뷰";
-  btn.addEventListener("click", (e) => {
-    console.log(e);
-    location.value.x = places.x;
-    location.value.y = places.y;
-  });
   el.appendChild(btn);
 
   itemStr += "";
@@ -211,7 +204,6 @@ function addMarker(position, idx, place) {
     } else {
       store.addPlace(place);
     }
-    // alert(placeList.value);
   });
 
   marker.setMap(map); // 지도 위에 마커를 표출합니다
@@ -309,11 +301,9 @@ onMounted(() => {
 
     <div id="menu_right" class="bg_white">
       <div></div>
-      <!-- <VPlaceItem :place="place" v-for="place in store.placeList" :key="place.id" /> -->
       <VPlaceItem :place="place" v-for="place in store.placeList" :key="place.id" />
     </div>
   </div>
-  <!-- <VRoadMap :key="location.x" :location="location" /> -->
 
   <!-- 결과 모달 -->
   <div class="modal fade" id="roadModal" tabindex="-1" aria-hidden="true">

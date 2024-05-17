@@ -15,7 +15,6 @@ const saveSeed = () => {
   saveSeedApi(
     store.seedInfo,
     ({ data }) => {
-      console.log(data);
       seedId.value = data.resdata;
       // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
       saveGame();
@@ -34,8 +33,7 @@ const saveGame = () => {
   console.log(gameInfo);
   saveGameApi(
     gameInfo,
-    ({ data }) => {
-      console.log(data);
+    () => {
       router.push({ name: "gamelist" });
     },
     (error) => console.log(error)
@@ -55,7 +53,6 @@ const saveGame = () => {
       class="mt-3 form-control mb-3"
       placeholder="게임 제목을 입력해주세요."
     />
-
     <VMakeMap />
   </div>
 </template>

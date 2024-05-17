@@ -32,7 +32,7 @@ const getDistance = (dis) => {
 };
 
 onMounted(() => {
-  console.log("인덱스: " + store.id);
+  console.log("게임 시작 인덱스: " + store.id);
   console.log(store.gameList);
 });
 </script>

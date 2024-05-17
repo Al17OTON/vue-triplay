@@ -1,15 +1,9 @@
 <script setup>
 import { useGameStore } from "@/stores/gameStore";
 const store = useGameStore();
-
-const props = defineProps({
+defineProps({
   place: Object,
 });
-
-// const emit = defineEmits(["removePlace"]);
-// const removePlace = () => {
-//   emit("removePlace", props.place.id);
-// };
 </script>
 
 <template>

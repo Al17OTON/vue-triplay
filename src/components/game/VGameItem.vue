@@ -19,17 +19,13 @@ const searchQuery = {
 };
 
 const startGame = () => {
-  console.log("게임 아이템");
-  console.log(props.game);
   searchQuery.query = props.game.keyword;
   searchKeywordApi(
     searchQuery,
     ({ data }) => {
       locations.value = data.documents;
-      console.log(locations.value);
       const ids = props.game.seedInfo.split(" ");
       const gameList = [];
-      console.log(ids);
       for (var location of locations.value) {
         for (var id of ids) {
           if (location.id === id) {
@@ -37,7 +33,6 @@ const startGame = () => {
             place.address_name = location.address_name;
             place.place_name = location.place_name;
             place.location = { x: location.x, y: location.y };
-            console.log(place);
             gameList.push(place);
           }
         }

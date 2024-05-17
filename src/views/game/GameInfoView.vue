@@ -19,7 +19,7 @@ const sidoList = ref();
 const gugunList = ref();
 const countList = ref([]);
 const gameList = ref([]);
-const gameSeed = ref("");
+const seedInfo = ref("");
 const classGroup = "form-select mb-3";
 const labelClass = "fw-bold mb-3";
 
@@ -54,7 +54,7 @@ const createSeed = (locations) => {
     place.place_name = locations[i].place_name;
     place.location = { x: locations[i].x, y: locations[i].y };
     gameList.value.push(place);
-    gameSeed.value += `${locations[i].id} `;
+    seedInfo.value += `${locations[i].id} `;
   }
 
   store.newGame = true;
@@ -64,21 +64,15 @@ const createSeed = (locations) => {
   store.difficulty = gameSetting.value.difficulty;
   store.seedInfo = {
     keyword: searchQuery.value.query,
-    seedInfo: gameSeed.value,
+    seedInfo: seedInfo.value,
     count: gameSetting.value.count,
   };
-  console.log("seedInfo pinia에 저장: ");
-  console.log(store.seedInfo);
-  // store.keyword = searchQuery.value.query;
-  // store.gameSeed = gameSeed.value;
-  // store.count = gameSetting.value.count;
 };
 const searchKeyword = () => {
   gameSetting.value.query = searchQuery.value.query;
   searchKeywordApi(
     searchQuery.value,
     ({ data }) => {
-      // seed 생성 후 pinia에 넘겨두기?
       console.log(data.documents);
       createSeed(data.documents);
       router.push({ name: "gamemap" });
@@ -99,18 +93,13 @@ const getSido = () => {
 };
 
 const selectSido = (key, text) => {
-  // searchItem.value.sidoCode = option
-  console.log(key + " " + text);
   searchQuery.value.query = text;
   if (key >= 10) {
     getGugunApi(key, ({ data }) => {
-      console.log(data);
       gugunList.value = data.resdata.map((item) => {
         return { value: item.gugunCode, text: item.gugunName };
       });
     });
-  } else {
-    // gugunList.value = []
   }
 };
 
