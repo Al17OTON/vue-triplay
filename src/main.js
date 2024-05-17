@@ -1,18 +1,20 @@
-import "./assets/css/main.css";
+import './assets/css/main.css'
 
-import { createApp } from "vue";
-import { createPinia } from "pinia";
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-import App from "./App.vue";
-import router from "./router";
-import "bootstrap";
-import "bootstrap/dist/css/bootstrap.min.css";
+import App from './App.vue'
+import router from './router'
+import "bootstrap"
+import "bootstrap/dist/css/bootstrap.min.css"
 
-import Swal from "sweetalert2"; //alert 창 이쁘게 띄우기
+const app = createApp(App)
 
-const app = createApp(App);
+const pinia = createPinia()
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+pinia.use(piniaPluginPersistedstate)
+app.use(pinia)
+app.use(router)
 
-app.use(createPinia());
-app.use(router);
+app.mount('#app')
 
-app.mount("#app");

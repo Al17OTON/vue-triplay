@@ -1,51 +1,14 @@
 <script setup>
-import { useMemberStore } from "@/stores/memberStore";
-import Swal from "sweetalert2";
-import { Axios } from "@/util/http-commons.js";
-import { ref } from "vue";
+import { login, logout } from "@/util/login.js";
+import { useMemberStore } from "@/stores/memberStore.js";
 
 const memberStore = useMemberStore();
-const api = Axios();
 
-const login = () => {
- 
-  (async () => {
-
-    const res = await Swal.fire({
-      title: "로그인",
-
-      html:
-      '<input id="swal-input1" class="swal2-input" placeholder="ID">' +
-      '<input id="swal-input2" class="swal2-input" placeholder="Password">',
-
-      inputAttributes: {
-        autocapitalize: "off",
-        input: 'text',
-        required: 'true'
-      },
-      showCancelButton: true,
-      confirmButtonText: "login",
-      showLoaderOnConfirm: true,
-      
-      preConfirm: async () => {
-        const id = document.getElementById('swal-input1').value;
-        const pw = document.getElementById('swal-input2').value;
-        
-        if(!id || !pw) Swal.showValidationMessage("아이디와 비밀번호를 모두 입력해주세요.");     
-        
-          const response = await api.post("member/login", {
-              member_id : id,
-              member_pw : pw
-          }).then(res => res.json());
-          // if(!response.ok) {
-          //   return Swal.showValidationMessage("로그인 정보가 올바르지 않습니다."); 
-          // }
-          return response;
-      }
-    });
-
-    
-  })();
+const callLogin = () => {
+  login();
+}
+const callLogout = () => {
+  logout();
 }
 
 </script>
@@ -54,7 +17,7 @@ const login = () => {
   <div>
     <nav class="navbar navbar-expand-sm bg-light navbar-light shadow fixed-top">
       <div class="container-sm">
-        <RouterLink class="navbar-brand" to="/">Enjoy Trip</RouterLink>
+        <RouterLink class="navbar-brand" to="/">Triplay</RouterLink>
         <button
           class="navbar-toggler"
           type="button"
@@ -78,19 +41,20 @@ const login = () => {
                 >
               </li>
               <li class="nav-item">
-                <a id="logoutLink" class="nav-link" href="">로그아웃</a>
+                <a id="logoutLink" class="nav-link" @click.prevent="callLogout">로그아웃</a>
               </li>
               <li class="nav-item">
-                <a id="myPageLink" class="nav-link" href="">마이페이지</a>
+                <!-- <a id="myPageLink" class="nav-link" @click.prevent="">마이페이지</a> -->
+                <RouterLink id="myPageLink" class="nav-link" :to="{name: 'mypage'}">마이페이지</RouterLink>
               </li>
             </div>
             
             <div v-else class="nav-section">
               <li class="nav-item">    
-                <a id="loginLink" class="nav-link" @click.prevent="login">로그인</a>
+                <a id="loginLink" class="nav-link" @click.prevent="callLogin">로그인</a>
               </li>
               <li class="nav-item">
-                <RouterLink id="signLink" class="nav-link" to="/signup">회원가입</RouterLink>
+                <RouterLink id="signLink" class="nav-link" :to="{name: 'signup'}">회원가입</RouterLink>
               </li>
             </div>
           </ul>

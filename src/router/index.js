@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import gameRouter from "./gameRouter";
+import memberRouter from "./memberRouter";
 import MainView from "@/views/MainView.vue";
+import { useMemberStore } from "@/stores/memberStore.js";
+import { login } from "@/util/login.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +23,7 @@ const router = createRouter({
     // }
 
     ...gameRouter,
-
+    ...memberRouter,
     {
       path: "/",
       name: "main",
@@ -28,5 +31,26 @@ const router = createRouter({
     },
   ],
 });
+
+// 인증이 필요한 경우 로그인 모달 띄우기
+router.beforeEach(async (to, from, next) => {
+  if (!to.meta.requiresAuth) {
+    // console.log("권한 필요없음");
+    next();
+    return;
+  }
+  const memberStore = useMemberStore();
+
+  if (memberStore.isLogin) {
+    // console.log("로그인 됨");
+    next();
+  }
+  else {
+    // console.log("로그인안됨");
+    await login();
+    if (memberStore.isLogin) next();
+    else next('/');
+  }
+}); 
 
 export default router;

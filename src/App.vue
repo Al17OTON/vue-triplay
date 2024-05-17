@@ -7,7 +7,7 @@ import Footer from "@/components/common/Footer.vue";
 </script>
 
 <template>
-  <header>
+  <header class="header-wrap">
     <Header />
   </header>
 
@@ -18,4 +18,9 @@ import Footer from "@/components/common/Footer.vue";
   </footer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header-wrap {
+  /* padding-bottom: 2%; */
+  margin-bottom: 10%; /*해결필요*/
+}
+</style>
