@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { onMounted, onUpdated, watch } from "vue";
 import { useGameStore } from "@/stores/gameStore";
 const store = useGameStore();
 const emit = defineEmits(["moveLocation", "getDistance", "setReset"]);
@@ -86,7 +86,6 @@ watch(
   () => props.reset,
   (reset) => {
     if (reset) {
-      console.log("?");
       drawLine.setMap(null);
       targetMarker.setMap(null);
       marker.position = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);
