@@ -1,14 +1,25 @@
 <script setup>
-import { RouterView } from "vue-router";
-import VHeader from "./components/common/VHeader.vue";
+import { RouterLink, RouterView } from "vue-router";
+// import VHeader from "./components/common/VHeader.vue";
+import Header from "@/components/common/Header.vue";
+import Footer from "@/components/common/Footer.vue";
 </script>
 
 <template>
-  <header>
-    <VHeader />
+  <header class="header-wrap">
+    <Header />
   </header>
 
   <RouterView />
+
+  <footer>
+    <Footer />
+  </footer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.header-wrap {
+  /* padding-bottom: 2%; */
+  margin-bottom: 10%; /*해결필요*/
+}
+</style>
