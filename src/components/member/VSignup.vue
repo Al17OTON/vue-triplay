@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { Axios } from "@/util/http-commons.js";
 import Swal from "sweetalert2";
-import Success from "@/components/member/Success.vue";
+import Result from "@/components/common/Result.vue";
 
 const api = Axios();
 
@@ -105,7 +105,7 @@ const checkPw = () => {
       </form>
     </div>
 
-    <Success v-show="signupSuccess" />
+    <Result v-show="signupSuccess" msg="회원가입 성공" to="main" toName="홈으로"/>
   </div>
 </template>
 
