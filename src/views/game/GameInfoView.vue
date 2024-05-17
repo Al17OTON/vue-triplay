@@ -19,12 +19,12 @@ const sidoList = ref();
 const gugunList = ref();
 const countList = ref([]);
 const gameList = ref([]);
-const gameSeed = ref("");
+const seedInfo = ref("");
 const classGroup = "form-select mb-3";
 const labelClass = "fw-bold mb-3";
 
 const searchQuery = ref({
-  category_group_code: "AT4",
+  // category_group_code: "AT4",
   query: "",
   page: "1",
   size: "15",
@@ -48,32 +48,32 @@ const selectRandom = (count) => {
 };
 const createSeed = (locations) => {
   let idx = selectRandom(gameSetting.value.count);
-  console.log(idx);
   for (var i of idx) {
     let place = {};
     place.address_name = locations[i].address_name;
     place.place_name = locations[i].place_name;
     place.location = { x: locations[i].x, y: locations[i].y };
     gameList.value.push(place);
-    gameSeed.value += `${locations[i].id} `;
+    seedInfo.value += `${locations[i].id} `;
   }
-  console.log(gameList.value);
-  console.log(gameSeed.value);
+
+  store.newGame = true;
+  store.id = 0;
   store.score = gameSetting.value.count * 1000;
   store.gameList = gameList.value;
-  store.gameSeed = gameSeed.value;
-  store.count = gameSetting.value.count;
-  store.keyword = searchQuery.value.query;
+  store.difficulty = gameSetting.value.difficulty;
+  store.seedInfo = {
+    keyword: searchQuery.value.query,
+    seedInfo: seedInfo.value,
+    count: gameSetting.value.count,
+  };
 };
 const searchKeyword = () => {
   gameSetting.value.query = searchQuery.value.query;
-  console.log(searchQuery.value);
-  console.log(gameSetting.value);
   searchKeywordApi(
     searchQuery.value,
     ({ data }) => {
       console.log(data.documents);
-      // seed 생성 후 pinia에 넘겨두기?
       createSeed(data.documents);
       router.push({ name: "gamemap" });
     },
@@ -84,7 +84,6 @@ const searchKeyword = () => {
 const getSido = () => {
   getSidoApi(
     ({ data }) => {
-      console.log(data.resdata);
       sidoList.value = data.resdata.map((item) => {
         return { value: item.sidoCode, text: item.sidoName };
       });
@@ -94,18 +93,13 @@ const getSido = () => {
 };
 
 const selectSido = (key, text) => {
-  // searchItem.value.sidoCode = option
-  console.log(key + " " + text);
   searchQuery.value.query = text;
   if (key >= 10) {
     getGugunApi(key, ({ data }) => {
-      console.log(data);
       gugunList.value = data.resdata.map((item) => {
         return { value: item.gugunCode, text: item.gugunName };
       });
     });
-  } else {
-    // gugunList.value = []
   }
 };
 

@@ -1,8 +1,8 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
-import VRoadView from "@/components/game/VRoadMap.vue";
+import VRoadMap from "@/components/game/VRoadMap.vue";
 import VMap from "@/components/game/VMap.vue";
 const store = useGameStore();
 const router = useRouter();
@@ -14,7 +14,6 @@ const curScore = ref();
 // x: 경도(long), y: 위도(lati)
 // LatLng(y, x)
 const nextPlace = () => {
-  console.log(store.id + " " + store.gameList.length);
   resetFlag.value = true;
   submitFlag.value = false;
   if (store.id == store.gameList.length - 1) {
@@ -31,6 +30,11 @@ const getDistance = (dis) => {
   curScore.value = dif;
   console.log("거리: " + dis);
 };
+
+onMounted(() => {
+  console.log("게임 시작 인덱스: " + store.id);
+  console.log(store.gameList);
+});
 </script>
 
 <template>
@@ -50,7 +54,7 @@ const getDistance = (dis) => {
     </button>
     {{ store.id }}
     {{ store.gameList[store.id].place_name }}
-    <VRoadView
+    <VRoadMap
       :key="store.gameList[store.id].location"
       :location="store.gameList[store.id].location"
     />
@@ -58,7 +62,7 @@ const getDistance = (dis) => {
     <VMap :submit="submitFlag" :reset="resetFlag" @get-distance="getDistance" />
   </div>
 
-  <!-- 로그인 모달 -->
+  <!-- 결과 모달 -->
   <div class="modal fade" id="resultModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-3">
@@ -68,7 +72,6 @@ const getDistance = (dis) => {
           </div>
         </div>
 
-        <!-- 입력 폼 -->
         <div class="modal-body">
           <div class="mb-3">
             <h5>거리</h5>
@@ -95,7 +98,7 @@ const getDistance = (dis) => {
       </div>
     </div>
   </div>
-  <!-- 로그인 모달 끝 -->
+  <!-- 결과 모달 끝 -->
 </template>
 
 <style scoped></style>
