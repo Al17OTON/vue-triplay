@@ -30,15 +30,11 @@ const callLogout = () => {
           <ul class="navbar-nav">
             <div v-if="memberStore.member_id" class="nav-section">
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="{ name: 'main' }">지역별 여행지</RouterLink>
+                <RouterLink class="nav-link" :to="{ name: 'game' }"
+                  >게임</RouterLink>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="">여행 계획</a>
-              </li>
-              <li class="nav-item">
-                <RouterLink id="boardLink" class="nav-link" :to="{ name: 'main' }"
-                  >게시판</RouterLink
-                >
+                <RouterLink class="nav-link" :to="{name: 'plan'}">여행 계획</RouterLink>
               </li>
               <li class="nav-item">
                 <a id="logoutLink" class="nav-link" @click.prevent="callLogout">로그아웃</a>

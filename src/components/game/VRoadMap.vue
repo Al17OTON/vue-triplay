@@ -39,7 +39,7 @@ onMounted(() => {
 
 <template>
   <div>
-    <div id="roadview" style="width: 100%; height: 300px"></div>
+    <div id="roadview" style="width: 100%; height: 500px"></div>
   </div>
 </template>
 
