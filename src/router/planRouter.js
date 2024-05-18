@@ -22,5 +22,11 @@ export default[{
       name: 'planwrite',
       component: PlanWriteView
     },
+    {
+        path: '/planner',
+        name: 'planner',
+        component: () => import('@/views/plan/PlanView.vue'),
+        //meta: { requiresAuth: true } 디버깅 편의를 위해 주석처리
+    }          
   ]
 }]

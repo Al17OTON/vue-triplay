@@ -2,7 +2,7 @@ import axios from "axios";
 import { login } from "@/util/login.js";
 import { useMemberStore } from "@/stores/memberStore.js";
 
-const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY } = import.meta.env;
+const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY } = import.meta.env;
 
 function Axios() {
   const instance = axios.create({
@@ -49,6 +49,17 @@ function Kakao() { // kakao map 관련 API 호출 시 사용
       },
     });
     return instance;
-  }
+}
 
-export { Axios, Kakao };
+function KakaoPathFinder() {
+  const instance = axios.create({
+    baseURL: VITE_KAKAO_MOBILITY_URL,
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Authorization": `KakaoAK ${VITE_KAKAO_RESTAPIKEY}`
+    },
+  });
+  return instance;
+}
+
+export { Axios, Kakao, KakaoPathFinder };
