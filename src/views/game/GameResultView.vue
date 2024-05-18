@@ -16,6 +16,7 @@ const saveSeed = () => {
     ({ data }) => {
       console.log(data);
       seedId.value = data.resdata;
+      saveGame()
       // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
     },
     (error) => console.log(error)
@@ -52,7 +53,6 @@ const saveGame = () => {
       class="btn btn-primary btn-md me-3"
       data-bs-toggle="modal"
       data-bs-target="#gameSaveModal"
-      @click="saveSeed"
     >
       게임 저장하기
     </button>
@@ -79,7 +79,7 @@ const saveGame = () => {
           <div class="d-flex justify-content-center">
             <button
               type="button"
-              @click="saveGame"
+              @click="saveSeed"
               data-bs-dismiss="modal"
               class="btn btn-outline-success me-2"
             >
