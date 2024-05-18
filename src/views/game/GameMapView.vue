@@ -16,7 +16,12 @@ const curScore = ref();
 const nextPlace = () => {
   resetFlag.value = true;
   submitFlag.value = false;
+  store.gameList[store.id].distance = distance.value;
+  store.gameList[store.id].score = curScore.value;
   if (store.id == store.gameList.length - 1) {
+    console.log("최종 gameList & seedInfo")
+    console.log(store.gameList)
+    console.log(store.seedInfo)
     router.replace({ name: "gameresult" });
   } else {
     store.increment();
@@ -54,12 +59,15 @@ onMounted(() => {
     </button>
     {{ store.id }}
     {{ store.gameList[store.id].place_name }}
-    <VRoadMap
-      :key="store.gameList[store.id].location"
-      :location="store.gameList[store.id].location"
-    />
-    <br />
-    <VMap :submit="submitFlag" :reset="resetFlag" @get-distance="getDistance" />
+    <div style="display: flex">
+      <VRoadMap
+      class="flex-fill me-3"
+        :key="store.gameList[store.id].location"
+        :location="store.gameList[store.id].location"
+      />
+      <VMap class="flex-fill" :submit="submitFlag" :reset="resetFlag" @get-distance="getDistance" />
+    </div>
+    
   </div>
 
   <!-- 결과 모달 -->

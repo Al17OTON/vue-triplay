@@ -116,9 +116,8 @@ onUpdated(() => {});
 </script>
 
 <template>
-  <div>
-    {{ submit }}
-    <div id="map" style="height: 600px"></div>
+  <div >
+    <div id="map" style="width: 100%; height: 100%; "></div>
   </div>
 </template>
 
