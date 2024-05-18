@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import gameRouter from "./gameRouter";
 import memberRouter from "./memberRouter";
+import planRouter from "./planRouter";
+
 import MainView from "@/views/MainView.vue";
 import { useMemberStore } from "@/stores/memberStore.js";
 import { login } from "@/util/login.js";
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +27,7 @@ const router = createRouter({
 
     ...gameRouter,
     ...memberRouter,
+    ...planRouter,
     {
       path: "/",
       name: "main",
