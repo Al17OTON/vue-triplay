@@ -27,7 +27,7 @@ export default [{
         path: '/modify',
         name: 'modify',
         component: () => import('@/views/member/ModifyView.vue'),
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true },
     },
     {
         path: '/remove',

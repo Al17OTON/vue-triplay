@@ -22,4 +22,13 @@ import Footer from "@/components/common/Footer.vue";
   /* padding-bottom: 2%; */
   margin-bottom: 10%; /*해결필요*/
 }
+
+.footer-wrap {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  
+}
 </style>

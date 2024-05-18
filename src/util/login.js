@@ -33,7 +33,7 @@ export const login = async () => {
             member_id : id,
             member_pw : pw
         }).then(res => {
-          console.log("time = " + Date.now());
+          // console.log("time = " + Date.now());
           return res;
         }).catch(err => {
           console.log(err);
