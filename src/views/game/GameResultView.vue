@@ -2,8 +2,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
+import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
 const router = useRouter();
+const memberStore = useMemberStore();
 const store = useGameStore();
 
 const seedId = ref();
@@ -24,7 +26,7 @@ const saveSeed = () => {
 const saveGame = () => {
   var gameInfo = {
     seedId: seedId.value,
-    memberId: "ewq",
+    memberId: memberStore.member_id,
     difficulty: store.difficulty,
     gameTitle: gameTitle.value,
   };

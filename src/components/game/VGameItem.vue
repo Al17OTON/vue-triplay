@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { searchKeywordApi } from "@/api/kakaomap.js";
+import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap.js";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 const router = useRouter();
@@ -23,20 +23,7 @@ const startGame = () => {
   searchKeywordApi(
     searchQuery,
     ({ data }) => {
-      locations.value = data.documents;
-      const ids = props.game.seedInfo.split(" ");
-      const gameList = [];
-      for (var location of locations.value) {
-        for (var id of ids) {
-          if (location.id === id) {
-            let place = {};
-            place.address_name = location.address_name;
-            place.place_name = location.place_name;
-            place.location = { x: location.x, y: location.y };
-            gameList.push(place);
-          }
-        }
-      }
+      const gameList = createListFromSeedApi(props.game.seedInfo, data.documents)
 
       store.newGame = false;
       store.id = 0;
