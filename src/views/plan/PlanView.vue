@@ -2,7 +2,7 @@
 import PlanMap from '@/components/plan/PlanMap.vue';
 </script>
 <template>
-    <PlanMap />
+    <PlanMap :is-detail="false"/>
 </template>
 
 <style scope>

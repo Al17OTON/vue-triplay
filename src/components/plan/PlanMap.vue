@@ -14,7 +14,7 @@ const emit = defineEmits([
 
 ]);
 const props = defineProps({
-    gameResult : Array
+    isDetail : Boolean
 });
 const imrich = ref(false);  //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
@@ -27,52 +27,7 @@ let distanceOverlay = null;
 let polyline = null;
 let polylineDash = null;
 const selected = ref({});
-let places = ref([
-    {
-        id: 1,
-        address_name: '1',
-        place_name: '1',
-        location : {x : 127.11024293202674, y : 37.394348634049784},
-        score : 100,
-        distance : "100m",
-    },
-    {
-        id: 2,
-        address_name: '2',
-        place_name: '2',
-        location : {x : 127.11341936045922, y : 37.39639094915999},
-        score : 200,
-        distance : "200m",
-    },
-    {
-        id: 3,
-        address_name: '3',
-        place_name: '3',
-        location : {x : 127.10860518470294, y : 37.401999820065534},
-        score : 300,
-        distance : "300m",
-    },
-]);
-
-// 카카오 길찾기 예제
-const temp = '{"origin": {' +
-        '"x": "127.11024293202674",' +
-        '"y": " 37.394348634049784"' +
-    ' },' +
-    '"destination": {' +
-        '"x": "127.10860518470294",' +
-        '"y": "37.401999820065534"' +
-    '},' +
-    '"waypoints": [' +
-        '{ "name": "name0",' +
-            '"x": 127.11341936045922,' +
-            '"y": 37.39639094915999 }' +
-        
-    '], "priority": "RECOMMEND",' +
-   ' "car_fuel": "GASOLINE",' +
-    '"car_hipass": false,' +
-    '"alternatives": false,' +
-    '"road_details": false }';
+const places = ref([]);
 
 let map = null;
 let marker = [];
@@ -108,6 +63,7 @@ const initMap = () => {
   for(var i = 0; i < places.value.length; i++) {
     selected.value[places.value[i].id + ''] = true;
   }
+  selectedCnt.value = places.value.length;
   drawMarker();
 };
 
@@ -322,7 +278,13 @@ const drawPath = () => {
     polylineDash.setMap(map);
     smoothLevel();
 
+    const hour = Math.floor(duration / 3600);   //1시간은 60초 * 60분 = 3600초
+    const min = Math.floor((duration % 3600) / 60); //분은 남은 시간 중 60으로 나누어 계산
+    let durationText = '';
+    if(hour > 0) durationText = hour + "시간 ";
+    durationText += min +"분";
     showDistance(getTimeHTML(distance, duration), path[path.length-1]);
+    savePlaces2Pinia(distance, durationText);
     // map.setBounds(bounds);
 }
 
@@ -331,10 +293,12 @@ const removePath = () => {
     if(polyline) polyline.setMap(null);
     if(polylineDash) polylineDash.setMap(null);
     deleteDistnce();
+    gameStore.seedInfo.isOk = false;
 }
 
 // 드래그앤드랍시 이벤트
 const onDrop = ((dropResult) => {
+    if(props.isDetail) return;
     // console.log(dropResult);
     // dropResult.payload = places[dropResult.removedIndex];
     places.value = applyDrag(places.value, dropResult);
@@ -345,7 +309,8 @@ const onDrop = ((dropResult) => {
 })
 
 //선택된 id값을 탐색하여 선택 여부를 반전. 마커는 최대 10개이므로 O(n)으로 충분히 해결가능
-const onClick = (id) => {
+const onClick = (id, isDetail) => {
+    if(isDetail) return;
     for(var i = 0; i < places.value.length; i++) {
         if(places.value[i].id === id) {
             selected.value[id+''] = !selected.value[id+''];
@@ -360,6 +325,21 @@ const onClick = (id) => {
     else removePath();
 }
 
+const savePlaces2Pinia = (distance, duration) => {
+    let seed = '';
+    let cnt = 0;
+    for(var i = 0; i < places.value.length; i++) {
+        if(selected.value[places.value[i].id + '']) {
+            seed += `${places.value[i].id} `;
+            cnt++;
+        }
+    }
+    gameStore.seedInfo.isOk = true;
+    gameStore.seedInfo.seed = seed;
+    gameStore.seedInfo.count = cnt;
+    gameStore.seedInfo.distance = distance;
+    gameStore.seedInfo.duration = duration;
+}
 
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
@@ -367,7 +347,6 @@ onMounted(() => {
   } else {
     loadScript();
   }
-  selectedCnt.value = places.value.length;
 });
 
 onUpdated(() => {});
@@ -447,20 +426,22 @@ function deleteDistnce () {
             <!--카카오맵이 표시되는 영역-->
             <div id="map" style="width: 100%; height: 600px; position: relative; overflow: hidden"></div>
             
-            <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
-            <div class="form-check form-switch custom_switch">
-                <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                <label class="form-check-label" for="flexSwitchCheckDefault">I'M RICH!</label>
-            </div>
-            <div class="custom_submit">
-                <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
+            <div v-if="!isDetail">
+                <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
+                <div class="form-check form-switch custom_switch">
+                    <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">I'M RICH!</label>
+                </div>
+                <div class="custom_submit">
+                    <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
+                </div>
             </div>
             <!--카카오 맵에 표시되는 관광정보 리스트 view-->
             <div id="menu_wrap" class="bg_white">
                 <div class="option">
-                    <Container @drop="onDrop" lock-axis="y">
+                    <Container @drop="onDrop" :lock-axis="isDetail?'xy':'y'">
                         <Draggable v-for="item in places" :key="item.id">
-                            <div :class="{'draggable-item' : true, 'custom_selected': selected[item.id+''], 'custom_unselected' : !selected[item.id+'']}" @click="onClick(item.id)">
+                            <div :class="{'draggable-item' : !isDetail, 'custom_selected': selected[item.id+''], 'custom_unselected' : !selected[item.id+'']}" @click="onClick(item.id, isDetail)">
                                 <div>{{ item.id }}</div>
                                 <div>{{ item.place_name }}</div>
                                 <div>{{ item.location }}</div>
