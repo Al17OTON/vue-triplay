@@ -20,6 +20,7 @@ function createListFromSeedApi(seedInfo, locations){
             }
         }
     }
+    console.log(gameList)
     return gameList;
 }
 

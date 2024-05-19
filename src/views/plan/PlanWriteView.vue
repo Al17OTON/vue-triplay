@@ -26,7 +26,7 @@ const submitSeed = async () => {
   return await api.post("/seed", {
           keyword: gameStore.seedInfo.keyword,
           count: gameStore.seedInfo.count,
-          seedInfo: gameStore.seedInfo.seed
+          seedInfo: gameStore.seedInfo.seedInfo
         },
         {
           headers: {
