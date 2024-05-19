@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router";
-import { getPlanApi, deletePlanApi } from '@/api/plan';
+import { getPlanApi, deletePlanApi, updateHitApi     } from '@/api/plan';
 import { searchKeywordApi, createListFromSeedApi } from '@/api/kakaomap';
 import { useGameStore } from '@/stores/gameStore';
 import PlanMap from '@/components/plan/PlanMap.vue';
@@ -13,6 +13,9 @@ const gameStore = useGameStore();
 const plan = ref({})
 onMounted(() => {
   console.log(route.query.planId)
+  updateHitApi(route.query.planId, ({data}) => {
+    console.log(data)
+  }, error => console.log(error))
   getPlanApi(route.query.planId, ({data}) => {
     console.log(data)
     plan.value = data.resdata
@@ -49,8 +52,8 @@ const deletePlan = () => {
           조회수 &nbsp; &nbsp;{{ plan.hit }}
         </div>
         
-        <div class="d-flex mb-4 mt-4" style="height: 100%">
-          <PlanMap :is-detail="true" :gameList="plan.placeList " class="flex-lg-fill" style="width: 100%; height: 100%"/>
+        <div class="d-flex mb-4 mt-4">
+          <PlanMap :is-detail="true" :gameList="plan.placeList " class="flex-fill" style="width: 100%; height: 500px"/>
           <div class="ps-3" style="width: 500px">
             예상 소요 시간 : {{plan.estimateTime }} <br>
             이동 거리 : {{ plan.distance }}
@@ -60,14 +63,14 @@ const deletePlan = () => {
         <div>
           {{ plan.planContent }}
         </div>
-      </div>
-      <div>
-        <button @click="router.push({name: 'plan'})" class="btn btn-outline-secondary" style="float:right">목록으로</button>
-        <button 
-          data-bs-toggle="modal"
-          data-bs-target="#deleteModal" 
-          class="btn btn-outline-danger me-1" 
-          style="float:right">삭제</button>
+        <div>
+          <button @click="router.push({name: 'plan'})" class="btn btn-outline-secondary" style="float:right">목록으로</button>
+          <button 
+            data-bs-toggle="modal"
+            data-bs-target="#deleteModal" 
+            class="btn btn-outline-danger me-1" 
+            style="float:right">삭제</button>
+        </div>
       </div>
     </div>
   </div>
@@ -78,7 +81,7 @@ const deletePlan = () => {
       <div class="modal-content p-4">
         <div class="modal-body ">
           <div class="mb-3 d-flex flex-column align-items-center">
-            <h5>삭제된 글은 복구할 수 없습니다.</h5>
+            <h5><b>삭제된 글은 복구할 수 없습니다.</b></h5>
             <h5>삭제하시겠습니까?</h5>
           </div>
           

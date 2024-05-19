@@ -15,13 +15,17 @@ onMounted(()=>{
 
 <template>
   <div class="container">
-    <h1>PLAN LIST</h1>
-    <div >
-      <VPlanListItem 
-        style="cursor: pointer"
-        v-for="plan in planList" 
-        :key="plan.planId" 
-        :plan="plan"/>
+    <div class="row justify-content-md-center">
+      <div class="col-lg-8"> 
+        <h1>PLAN LIST</h1>
+        <div >
+          <VPlanListItem 
+            style="cursor: pointer"
+            v-for="plan in planList" 
+            :key="plan.planId" 
+            :plan="plan"/>
+        </div>
+      </div>
     </div>
   </div>
 </template>

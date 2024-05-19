@@ -277,21 +277,18 @@ onMounted(() => {
 
 <template>
   <div class="map_wrap">
-    <div id="map" style="width: 100%; height: 600px; position: relative; overflow: hidden"></div>
+    <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
     <div id="menu_left" class="bg_white">
       <div class="option">
-        <div>
-          <form @submit.prevent="searchPlaces">
-            <input
-              type="text"
-              v-model="searchQuery.query"
-              placeholder="검색어를 입력하세요."
-              class="form-control p-1"
-              id="keyword"
-              size="15"
-            />
-            <button class="btn btn-primary btn-md me-3 p-1" type="submit">검색하기</button>
-          </form>
+        <div style="display: flex">
+          <input
+            type="text"
+            v-model="searchQuery.query"
+            placeholder="검색어를 입력하세요"
+            class="form-control p-1"
+            id="keyword"
+          />
+          <button class="btn btn-secondary p-1" @click="searchPlaces">검색</button>
         </div>
       </div>
       <hr />
@@ -316,7 +313,7 @@ onMounted(() => {
         </div>
 
         <div class="modal-body">
-          <VRoadMap :key="location.x" :location="location" />
+          <VRoadMap style="height: 400px" :key="location.x" :location="location" />
           <div class="d-flex justify-content-center">
             <button type="button" class="mt-3 btn btn-outline-success me-2" data-bs-dismiss="modal">
               확인
@@ -344,7 +341,7 @@ onMounted(() => {
 .map_wrap {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 600px
 }
 #menu_left {
   position: absolute;
@@ -352,7 +349,7 @@ onMounted(() => {
   left: 0;
   bottom: 0;
   width: 300px;
-  height: 580px;
+  height: 95%;
   margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -368,7 +365,7 @@ onMounted(() => {
   right: 40px;
   bottom: 0;
   width: 300px;
-  height: 580px;
+  height: 95%;
   margin: 10px 0 30px 10px;
   padding: 5px;
   overflow-y: auto;
@@ -385,7 +382,7 @@ onMounted(() => {
   display: block;
   height: 1px;
   border: 0;
-  border-top: 2px solid #5f5f5f;
+  border-top: 1px solid #5f5f5f;
   margin: 3px 0;
 }
 #menu_left .option {

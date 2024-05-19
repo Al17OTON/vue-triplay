@@ -445,8 +445,7 @@ function deleteDistnce () {
   <div class="map-view" id="map-mo">
         <div class="map_wrap">
             <!--카카오맵이 표시되는 영역-->
-            <div id="map" style="width: 100%; height: 600px; position: relative; overflow: hidden"></div>
-            
+            <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
             <div v-if="!isDetail">
                 <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
                 <div class="form-check form-switch custom_switch">
@@ -490,7 +489,7 @@ function deleteDistnce () {
 /*카카오 맵에서 사용하는 CSS - start*/
         .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
         .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
-        .map_wrap {position:relative;width:100%;height:500px;}
+        .map_wrap {position:relative;width:100%;height:100%;}
         #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:20%;margin:10px 0 10px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
         .bg_white {background:#fff;}
         #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
@@ -510,10 +509,10 @@ function deleteDistnce () {
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
     
-        .custom_submit {position:absolute;right:10px;bottom:-90px;overflow:hidden;z-index:1;}        
+        .custom_submit {position:absolute;right:10px;bottom:5px;overflow:hidden;z-index:1;}        
         .custom_btn {width: 80px; height: 30px;}
 
-        .custom_switch {position:absolute;right:10px;bottom:-50px;z-index:1;display: flex; flex-direction: column-reverse; align-items: center; text-align: center;}   
+        .custom_switch {position:absolute;right:10px;bottom:45px;z-index:1;display: flex; flex-direction: column-reverse; align-items: center; text-align: center;}   
         .custom_switch input {
             width: 60px;
             height: 30px;
@@ -523,7 +522,7 @@ function deleteDistnce () {
             padding-right: 20px;
         }
         .custom_smooth {
-            position:absolute;right:10px;bottom:10px;overflow:hidden;z-index:1;
+            position:absolute;right:10px;bottom:105px;overflow:hidden;z-index:1;
         }
 
         .custom_selected {

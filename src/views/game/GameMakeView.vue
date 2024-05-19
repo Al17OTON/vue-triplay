@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
-import VMakeMap from "/src/components/game/VMakeMap.vue";
+import VMakeMap from "@/components/game/VMakeMap.vue";
 const memberStore = useMemberStore();
 const store = useGameStore();
 const router = useRouter();
@@ -44,19 +44,32 @@ const saveGame = () => {
 </script>
 
 <template>
-  <div>
-    <h1 class="d-inline">게임 만들기</h1>
-    <button @click="saveSeed" style="float: right" class="btn btn-primary btn-md me-3 p-1">
-      게임 저장
-    </button>
-    <input
-      v-model="gameTitle"
-      type="text"
-      class="mt-3 form-control mb-3"
-      placeholder="게임 제목을 입력해주세요."
-    />
-    <VMakeMap />
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-lg-10">
+        <input
+          v-model="gameTitle"
+          type="text"
+          class="mt-3 form-control mb-3 title"
+          placeholder="게임 제목을 입력해주세요."
+        />
+        <hr>
+        <VMakeMap/>
+        <button @click="saveSeed" class="btn btn-outline-success mt-3 p-2 align-center ">
+          게임 저장
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title{
+  border-width: 0; 
+  font-size: 18pt;
+}
+.align-center{
+  display: block; 
+  margin: 0 auto
+}
+</style>

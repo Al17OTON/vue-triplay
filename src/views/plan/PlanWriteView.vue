@@ -73,20 +73,36 @@ const submit = async () => {
 </script>
 
 <template>
-  <div class="container mt-5">
-    <h1>PLAN WRITE</h1>
-    <button @click="submit" class="btn btn-primary btn-md mb-3">작성하기</button>
-    <input v-model="planInfo.planTitle" placeholder="제목을 입력해주세요" class="form-control mb-3" type="text">
-    <PlanMap :is-detail="false" :gameList="gameStore.gameList" />
-    <div class="custom-container">
-    <textarea class="form-control mb-3" v-model="planInfo.planContent"></textarea>
-    <input class="form-control" @change="addFile" ref="file" type="file">
+   <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-lg-10">
+        <div>
+          <input 
+            v-model="planInfo.planTitle" 
+            placeholder="제목을 입력해주세요" 
+            class="form-control mb-3 title" 
+            type="text">
+        </div>
+        
+        <hr>
+        <PlanMap :is-detail="false" :gameList="gameStore.gameList" style="height: 600px"/>
+        
+        <input class="form-control mt-3 mb-3" @change="addFile" ref="file" type="file">
+        <textarea placeholder="본문을 입력해주세요" rows="10" class="form-control " v-model="planInfo.planContent"></textarea>
+        <button @click="submit" class="btn btn-outline-success btn-md mt-3 align-center">작성하기</button>
+
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.custom-container {
-  padding-top: 150px;
+.title{
+  border-width: 0; 
+  font-size: 18pt;
+}
+.align-center{
+  display: block; 
+  margin: 0 auto
 }
 </style>

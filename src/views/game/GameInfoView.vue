@@ -183,7 +183,8 @@ const selectGugun = (key, text) => {
           />
         </div>
         <div class="d-flex justify-content-center">
-          <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
+
+        <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
         </div>
       </div>
     </div>

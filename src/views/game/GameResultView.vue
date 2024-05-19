@@ -3,14 +3,19 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
-import { saveGameApi, saveSeedApi } from "@/api/game.js";
+import { saveGameApi, saveSeedApi, updateScoreApi } from "@/api/game.js";
 const router = useRouter();
 const memberStore = useMemberStore();
 const store = useGameStore();
 
 onMounted(() => {
-  console.log(store.gameList)
+  updateScoreApi(memberStore.token, {
+    member_id: memberStore.member_id,
+    amount: store.score
+  }, ({data}) => console.log(data),
+     (error) => console.log(error))
 })
+
 const seedId = ref();
 const gameTitle = ref();
 const saveSeed = () => {
