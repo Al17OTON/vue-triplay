@@ -284,8 +284,8 @@ const drawPath = () => {
 
     const hour = Math.floor(duration / 3600);   //1시간은 60초 * 60분 = 3600초
     const min = Math.floor((duration % 3600) / 60); //분은 남은 시간 중 60으로 나누어 계산
-    if(distance > 1000) distanceText = "약 " + (distance / 1000).toFixed(1) + "km";
-    else distanceText = "약 " + Math.floor(((distance / 10) * 10)) + "m";
+    if(distance > 1000) distanceText = (distance / 1000).toFixed(1) + "km";
+    else distanceText = Math.floor(((distance / 10) * 10)) + "m";
     
     if(hour > 0) durationText = hour + "시간 ";
     durationText += min +"분";
