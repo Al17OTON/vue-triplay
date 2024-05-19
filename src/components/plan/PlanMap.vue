@@ -334,8 +334,9 @@ const savePlaces2Pinia = (distance, duration) => {
             cnt++;
         }
     }
+    console.log(seed)
     gameStore.seedInfo.isOk = true;
-    gameStore.seedInfo.seed = seed;
+    gameStore.seedInfo.seedInfo = seed;
     gameStore.seedInfo.count = cnt;
     gameStore.seedInfo.distance = distance;
     gameStore.seedInfo.duration = duration;
