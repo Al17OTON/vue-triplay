@@ -109,8 +109,8 @@ const selectGugun = (key, text) => {
 </script>
 
 <template>
-  <div>
-    <div>
+  <div class="container">
+    <div class="col-md-12 row">
       <div :class="labelClass">지역</div>
       <VSelect
         :selectId="'sido'"
