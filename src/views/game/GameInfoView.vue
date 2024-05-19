@@ -71,16 +71,27 @@ const createSeed = (locations) => {
   console.log(gameList.value)
 };
 const searchKeyword = () => {
-  gameSetting.value.query = searchQuery.value.query;
-  searchKeywordApi(
-    searchQuery.value,
-    ({ data }) => {
-      console.log(data.documents);
-      createSeed(data.documents);
-      router.push({ name: "gamemap" });
-    },
-    (error) => console.log(error)
-  );
+  console.log(gameSetting.value)
+  if(searchQuery.value.query[0] != '' &&
+     gameSetting.value.difficulty && 
+     gameSetting.value.count != ''
+  ){
+    gameSetting.value.query = searchQuery.value.query[1];
+    searchQuery.value.query = gameSetting.value.query
+    searchKeywordApi(
+      searchQuery.value,
+      ({ data }) => {
+        console.log(data.documents);
+        createSeed(data.documents);
+        router.push({ name: "gamemap" });
+      },
+      (error) => {
+        console.log(error)
+        alert("선택지를 모두 골라주세요.")
+    });
+  }else{
+    alert("선택지를 모두 골라주세요.")
+  }
 };
 
 const getSido = () => {
@@ -95,18 +106,20 @@ const getSido = () => {
 };
 
 const selectSido = (key, text) => {
-  searchQuery.value.query = text;
+  searchQuery.value.query = [key, text];
   if (key >= 10) {
     getGugunApi(key, ({ data }) => {
       gugunList.value = data.resdata.map((item) => {
         return { value: item.gugunCode, text: item.gugunName };
       });
     });
+  }else{
+    gugunList.value = []
   }
 };
 
 const selectGugun = (key, text) => {
-  searchQuery.value.query = text;
+  searchQuery.value.query = [key, text];
 };
 </script>
 
@@ -159,7 +172,6 @@ const selectGugun = (key, text) => {
         </div>
         <div>
           <h4 :class="labelClass">여행지 개수를 선택해주세요</h4>
-          <!-- <div :class="labelClass">개수</div> -->
           <VSelect
             v-model="gameSetting.count"
             :selectId="'count'"
