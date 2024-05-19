@@ -1,21 +1,25 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
+import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
 const router = useRouter();
+const memberStore = useMemberStore();
 const store = useGameStore();
 
+onMounted(() => {
+  console.log(store.gameList)
+})
 const seedId = ref();
 const gameTitle = ref();
 const saveSeed = () => {
-  console.log("결과에서 seedInfo: ");
-  console.log(store.seedInfo);
   saveSeedApi(
     store.seedInfo,
     ({ data }) => {
       console.log(data);
       seedId.value = data.resdata;
+      saveGame()
       // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
     },
     (error) => console.log(error)
@@ -25,12 +29,11 @@ const saveSeed = () => {
 const saveGame = () => {
   var gameInfo = {
     seedId: seedId.value,
-    memberId: "ewq",
+    memberId: memberStore.member_id,
     difficulty: store.difficulty,
     gameTitle: gameTitle.value,
   };
-  console.log("결과에서 gameInfo: ");
-  console.log(gameInfo);
+  
   saveGameApi(
     gameInfo,
     ({ data }) => {
@@ -52,11 +55,10 @@ const saveGame = () => {
       class="btn btn-primary btn-md me-3"
       data-bs-toggle="modal"
       data-bs-target="#gameSaveModal"
-      @click="saveSeed"
     >
       게임 저장하기
     </button>
-    <button class="btn btn-primary btn-md me-3">여행 계획하기</button>
+    <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">여행 계획하기</button>
     <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
       홈으로
     </button>
@@ -79,7 +81,7 @@ const saveGame = () => {
           <div class="d-flex justify-content-center">
             <button
               type="button"
-              @click="saveGame"
+              @click="saveSeed"
               data-bs-dismiss="modal"
               class="btn btn-outline-success me-2"
             >

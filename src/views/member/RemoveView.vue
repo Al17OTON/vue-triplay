@@ -10,7 +10,7 @@ const memberStore = useMemberStore();
 const api = Axios();
 
 const removeMember = () => {
-    api.put("/member/remove?member_id=" + memberStore.member_id, {
+    api.put("/member/remove?member_id=" + memberStore.member_id, {}, {  //왠지 몰라도 {}를 중간에 넣어주면 됨 - ChatGPT
         headers: {
             access_token: `${memberStore.token}`
         }
@@ -18,7 +18,10 @@ const removeMember = () => {
     .then((res) => {
         if (res.status != 200) oops("삭제 실패");
     })
-    .catch((err) => oops("삭제 실패"));
+    .catch((err) => oops("삭제 실패"))
+    .finally(() => memberStore.logout());
+
+    
 }
 
 onMounted(() => {

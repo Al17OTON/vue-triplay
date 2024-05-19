@@ -20,6 +20,15 @@ import Footer from "@/components/common/Footer.vue";
 <style scoped>
 .header-wrap {
   /* padding-bottom: 2%; */
-  margin-bottom: 10%; /*해결필요*/
+  margin-bottom: 5%; /*해결필요*/
+}
+
+.footer-wrap {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  
 }
 </style>

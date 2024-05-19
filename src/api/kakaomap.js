@@ -6,4 +6,23 @@ function searchKeywordApi(param, success, fail){
     .then(success).catch(fail)
 }
 
-export { searchKeywordApi };
+function createListFromSeedApi(seedInfo, locations){
+    const ids = seedInfo.split(" ");
+    const gameList = [];
+    for (var location of locations) {
+        for (var id of ids) {
+            if (location.id === id) {
+                let place = {};
+                place.address_name = location.address_name;
+                place.place_name = location.place_name;
+                place.location = { x: location.x, y: location.y };
+                gameList.push(place);
+            }
+        }
+    }
+    console.log(gameList)
+    return gameList;
+}
+
+
+export { searchKeywordApi, createListFromSeedApi };
