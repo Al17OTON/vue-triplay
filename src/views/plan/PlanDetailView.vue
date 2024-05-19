@@ -50,7 +50,7 @@ const deletePlan = () => {
         </div>
         
         <div class="d-flex mb-4 mt-4" style="height: 100%">
-          <PlanMap :is-detail="true" class="flex-lg-fill" style="width: 100%; height: 100%"/>
+          <PlanMap :is-detail="true" :gameList="plan.placeList " class="flex-lg-fill" style="width: 100%; height: 100%"/>
           <div class="ps-3" style="width: 500px">
             예상 소요 시간 : {{plan.estimateTime }} <br>
             이동 거리 : {{ plan.distance }}
