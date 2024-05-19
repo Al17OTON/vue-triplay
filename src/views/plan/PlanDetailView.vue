@@ -74,7 +74,7 @@ const deletePlan = () => {
 
   <!-- 삭제 모달 -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-4">
         <div class="modal-body ">
           <div class="mb-3 d-flex flex-column align-items-center">

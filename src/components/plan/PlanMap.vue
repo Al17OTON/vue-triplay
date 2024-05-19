@@ -500,10 +500,14 @@ function deleteDistnce () {
         .custom_submit {position:absolute;right:10px;bottom:-90px;overflow:hidden;z-index:1;}        
         .custom_btn {width: 80px; height: 30px;}
 
-        .custom_switch {position:absolute;right:20px;bottom:-50px;overflow:hidden;z-index:1;display: flex; flex-direction: column-reverse; align-items: center;}   
+        .custom_switch {position:absolute;right:10px;bottom:-50px;z-index:1;display: flex; flex-direction: column-reverse; align-items: center; text-align: center;}   
         .custom_switch input {
             width: 60px;
             height: 30px;
+        }
+        .custom_switch label {
+            position: relative;
+            padding-right: 20px;
         }
         .custom_smooth {
             position:absolute;right:10px;bottom:10px;overflow:hidden;z-index:1;
