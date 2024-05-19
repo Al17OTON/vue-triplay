@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
@@ -8,6 +8,9 @@ const router = useRouter();
 const memberStore = useMemberStore();
 const store = useGameStore();
 
+onMounted(() => {
+  console.log(store.gameList)
+})
 const seedId = ref();
 const gameTitle = ref();
 const saveSeed = () => {

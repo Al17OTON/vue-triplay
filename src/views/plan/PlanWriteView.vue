@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore.js";
@@ -18,10 +18,9 @@ const file = ref();
 const planInfo = ref({})
 // planInfo : title, content, memberId, distance, estimatedTime, seedInfo
 
-const addFile = () => {
-  console.log(file.value.files)
-}
-
+onMounted(() => {
+  console.log(gameStore.gameList)
+})
 const submitSeed = async () => {
   return await api.post("/seed", {
           keyword: gameStore.seedInfo.keyword,
@@ -78,7 +77,7 @@ const submit = async () => {
     <h1>PLAN WRITE</h1>
     <button @click="submit" class="btn btn-primary btn-md mb-3">작성하기</button>
     <input v-model="planInfo.planTitle" placeholder="제목을 입력해주세요" class="form-control mb-3" type="text">
-    <PlanMap :is-detail="false" />
+    <PlanMap :is-detail="false" :gameList="gameStore.gameList" />
     <div class="custom-container">
     <textarea class="form-control mb-3" v-model="planInfo.planContent"></textarea>
     <input class="form-control" @change="addFile" ref="file" type="file">

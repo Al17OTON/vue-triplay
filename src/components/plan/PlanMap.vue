@@ -1,10 +1,10 @@
 <script setup>
-import { onMounted, onUpdated, ref} from "vue";
+import { onMounted, onUpdated, ref, watch} from "vue";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
-import { applyDrag, generateItems } from '@/util/dragHelper.js';
+import { applyDrag, generateItems } from '@/util/dragHelper.js';``
 import { oops } from "@/util/sweetAlert.js";
 
 const memberStore = useMemberStore();
@@ -14,7 +14,8 @@ const emit = defineEmits([
 
 ]);
 const props = defineProps({
-    isDetail : Boolean
+    isDetail : Boolean,
+    gameList: Object
 });
 const imrich = ref(false);  //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
@@ -57,16 +58,28 @@ const initMap = () => {
   var mapTypeControl = new kakao.maps.MapTypeControl();
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
-  places.value = gameStore.gameList;
 
-  //전부 선택으로 할당
-  for(var i = 0; i < places.value.length; i++) {
-    selected.value[places.value[i].id + ''] = true;
+  if(!props.isDetail){
+    places.value = props.gameList;
+    //   전부 선택으로 할당
+    for(var i = 0; i < places.value.length; i++) {
+        selected.value[places.value[i].id + ''] = true;
+    }
+    selectedCnt.value = places.value.length;
+    drawMarker();
   }
-  selectedCnt.value = places.value.length;
-  drawMarker();
-  if(props.isDetail) findPath();
 };
+
+watch(()=> props.gameList, (gameList) => {
+    console.log(gameList)
+    places.value = gameList
+    for(var i = 0; i < places.value.length; i++) {
+        selected.value[places.value[i].id + ''] = true;
+    }
+    selectedCnt.value = places.value.length;
+    drawMarker();
+    findPath();
+})
 
 //Smooth 버튼에서 사용
 //지도를 부드럽게 이동 시키기, 초반에 미적 요소로 사용되기 위해 작성됨. 불안정함...
