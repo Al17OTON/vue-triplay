@@ -29,6 +29,15 @@ function getGameListApi(success, fail) {
     http.get('game').then(success).catch(fail)
 }
 
+function updateScoreApi(token, param, success, fail){
+    http.put('member/addScore', {
+        headers: {
+            token: token
+        },
+        params: param
+    }).then(success).catch(fail)
+}
+
 export {
-    getSidoApi, getGugunApi, saveSeedApi, getSeedApi, saveGameApi, getGameApi, getGameListApi
+    getSidoApi, getGugunApi, saveSeedApi, getSeedApi, saveGameApi, getGameApi, getGameListApi, updateScoreApi
 };

@@ -18,4 +18,7 @@ function deletePlanApi(planId, success, fail){
     http.delete(`plan/${planId}`).then(success).catch(fail);
 }
 
-export { insertPlanApi, getPlanListApi, getPlanApi, deletePlanApi };
+function updateHitApi(planId, success, fail){
+    http.put(`plan/hit/${planId}`).then(success).catch(fail);
+}
+export { insertPlanApi, getPlanListApi, getPlanApi, deletePlanApi, updateHitApi };

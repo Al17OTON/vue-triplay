@@ -6,9 +6,11 @@ const emit = defineEmits(["moveLocation", "getDistance", "setReset"]);
 const props = defineProps({
   submit: Boolean,
   reset: Boolean,
+  target: Boolean,
 });
 
 let map = null;
+var circle = null;
 var marker = null;
 var drawLine = null;
 var targetMarker = null;
@@ -82,10 +84,36 @@ watch(
   }
 );
 
+// 0.01도 = 1.1km
+watch(
+  () => props.target,
+  (target) =>{
+    if(target){
+      console.log(store.gameList[store.id].location)
+      var targetLatLng = new kakao.maps.LatLng(
+        store.gameList[store.id].location.y+0.001,
+        store.gameList[store.id].location.x-0.001
+      );
+      36.09015200138156, 126.81194127370222
+      circle = new kakao.maps.Circle({
+        center : targetLatLng,  // 원의 중심좌표 입니다 
+        radius: 50000, // 미터 단위의 원의 반지름입니다 
+        strokeWeight: 5, // 선의 두께입니다 
+        strokeColor: '#75B8FA', // 선의 색깔입니다
+        strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        fillColor: '#CFE7FF', // 채우기 색깔입니다
+        fillOpacity: 0.7  // 채우기 불투명도 입니다   
+      }); 
+
+      circle.setMap(map)
+    }
+  }
+)
 watch(
   () => props.reset,
   (reset) => {
     if (reset) {
+      circle.setMap(null);
       drawLine.setMap(null);
       targetMarker.setMap(null);
       marker.position = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);

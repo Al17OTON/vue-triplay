@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import VRoadMap from "@/components/game/VRoadMap.vue";
@@ -9,19 +9,18 @@ const router = useRouter();
 
 const submitFlag = ref(false);
 const resetFlag = ref(true);
+const targetFlag = ref(false);
 const distance = ref();
 const curScore = ref();
 // x: 경도(long), y: 위도(lati)
 // LatLng(y, x)
 const nextPlace = () => {
+  targetFlag.value = false;
   resetFlag.value = true;
   submitFlag.value = false;
   store.gameList[store.id].distance = distance.value;
   store.gameList[store.id].score = curScore.value;
   if (store.id == store.gameList.length - 1) {
-    console.log("최종 gameList & seedInfo")
-    console.log(store.gameList)
-    console.log(store.seedInfo)
     router.replace({ name: "gameresult" });
   } else {
     store.increment();
@@ -36,15 +35,14 @@ const getDistance = (dis) => {
   console.log("거리: " + dis);
 };
 
-onMounted(() => {
-  console.log("게임 시작 인덱스: " + store.id);
-  console.log(store.gameList);
-});
 </script>
 
 <template>
   <div>
     reset: {{ resetFlag }} submit: {{ submitFlag }} <br />
+    <button class="btn btn-primary btn-md mb-3 me-3" @click="targetFlag = true">
+      범위
+    </button>
     <button v-show="!resetFlag" class="btn btn-primary btn-md mb-3 me-3" @click="nextPlace">
       다음
     </button>
@@ -61,11 +59,12 @@ onMounted(() => {
     {{ store.gameList[store.id].place_name }}
     <div style="display: flex">
       <VRoadMap
+        style="height: 500px"
         class="flex-fill me-3"
         :key="store.gameList[store.id].location"
         :location="store.gameList[store.id].location"
       />
-      <VMap class="flex-fill" :submit="submitFlag" :reset="resetFlag" @get-distance="getDistance" />
+      <VMap class="flex-fill" :target="targetFlag" :submit="submitFlag" :reset="resetFlag" @get-distance="getDistance" />
     </div>
     
   </div>
@@ -75,19 +74,18 @@ onMounted(() => {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-3">
         <div class="d-flex justify-content-center">
-          <div>
-            <h2 class="fw-bold">결과</h2>
-          </div>
+          <h3 class="fw-bold">결과</h3>
         </div>
-
+        <hr>
         <div class="modal-body">
           <div class="mb-3">
             <h5>거리</h5>
-            {{ distance }} m
+            <span style="font-size: 18pt; font-weight:bold">{{ distance }} m</span>
+            
           </div>
           <div class="mb-3">
             <h5>점수</h5>
-            {{ curScore }} point 💰💵
+            <span style="font-size: 18pt; font-weight:bold">{{ curScore }} point 💰💵</span>
           </div>
           <div class="d-flex justify-content-center">
             <button
