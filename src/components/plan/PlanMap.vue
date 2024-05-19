@@ -438,7 +438,7 @@ function deleteDistnce () {
                 <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
                 <div class="form-check form-switch custom_switch">
                     <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">I'M RICH!</label>
+                    <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
                 </div>
                 <div class="custom_submit">
                     <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
@@ -507,7 +507,7 @@ function deleteDistnce () {
         }
         .custom_switch label {
             position: relative;
-            padding-right: 20px;
+            /* padding-right: 20px; */
         }
         .custom_smooth {
             position:absolute;right:10px;bottom:10px;overflow:hidden;z-index:1;
