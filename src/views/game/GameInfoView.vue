@@ -68,16 +68,17 @@ const createSeed = (locations) => {
     seedInfo: seedInfo.value,
     count: gameSetting.value.count,
   };
-  console.log(gameList.value)
+  console.log(gameList.value);
 };
 const searchKeyword = () => {
-  console.log(gameSetting.value)
-  if(searchQuery.value.query[0] != '' &&
-     gameSetting.value.difficulty && 
-     gameSetting.value.count != ''
-  ){
+  console.log(gameSetting.value);
+  if (
+    searchQuery.value.query[0] != "" &&
+    gameSetting.value.difficulty &&
+    gameSetting.value.count != ""
+  ) {
     gameSetting.value.query = searchQuery.value.query[1];
-    searchQuery.value.query = gameSetting.value.query
+    searchQuery.value.query = gameSetting.value.query;
     searchKeywordApi(
       searchQuery.value,
       ({ data }) => {
@@ -86,11 +87,12 @@ const searchKeyword = () => {
         router.push({ name: "gamemap" });
       },
       (error) => {
-        console.log(error)
-        alert("선택지를 모두 골라주세요.")
-    });
-  }else{
-    alert("선택지를 모두 골라주세요.")
+        console.log(error);
+        alert("선택지를 모두 골라주세요.");
+      }
+    );
+  } else {
+    alert("선택지를 모두 골라주세요.");
   }
 };
 
@@ -113,8 +115,8 @@ const selectSido = (key, text) => {
         return { value: item.gugunCode, text: item.gugunName };
       });
     });
-  }else{
-    gugunList.value = []
+  } else {
+    gugunList.value = [];
   }
 };
 
@@ -125,17 +127,6 @@ const selectGugun = (key, text) => {
 
 <template>
   <div class="container">
-<<<<<<< HEAD
-    <div class="col-md-12 row">
-      <div :class="labelClass">지역</div>
-      <VSelect
-        :selectId="'sido'"
-        :selectOption="sidoList"
-        :defaultValue="'여행할 지역 선택'"
-        :classGroup="classGroup"
-        @on-key-select="selectSido"
-      />
-=======
     <div class="row justify-content-md-center">
       <div class="col-lg-6">
         <div class="mb-5">
@@ -147,7 +138,6 @@ const selectGugun = (key, text) => {
             :classGroup="classGroup"
             @on-key-select="selectSido"
           />
->>>>>>> 89a35f17d45723b0230fbd04f778114549a3d2bd
 
           <VSelect
             :selectId="'gugun'"
@@ -193,12 +183,10 @@ const selectGugun = (key, text) => {
           />
         </div>
         <div class="d-flex justify-content-center">
-          <button class=" btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
+          <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
         </div>
       </div>
-    </div> 
-    
-    
+    </div>
   </div>
 </template>
 
