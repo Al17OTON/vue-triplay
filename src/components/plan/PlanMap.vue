@@ -65,6 +65,7 @@ const initMap = () => {
   }
   selectedCnt.value = places.value.length;
   drawMarker();
+  if(props.isDetail) findPath();
 };
 
 //Smooth 버튼에서 사용
@@ -278,13 +279,19 @@ const drawPath = () => {
     polylineDash.setMap(map);
     smoothLevel();
 
+    let distanceText = "";
+    let durationText = '';
+
     const hour = Math.floor(duration / 3600);   //1시간은 60초 * 60분 = 3600초
     const min = Math.floor((duration % 3600) / 60); //분은 남은 시간 중 60으로 나누어 계산
-    let durationText = '';
+    if(distance > 1000) distanceText = (distance / 1000).toFixed(1) + "km";
+    else distanceText = Math.floor(((distance / 10) * 10)) + "m";
+    
     if(hour > 0) durationText = hour + "시간 ";
     durationText += min +"분";
+
     showDistance(getTimeHTML(distance, duration), path[path.length-1]);
-    savePlaces2Pinia(distance, durationText);
+    savePlaces2Pinia(distanceText, durationText);
     // map.setBounds(bounds);
 }
 
