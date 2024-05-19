@@ -53,7 +53,7 @@ onMounted(() => {
       class="btn btn-primary btn-md mb-3"
       data-bs-toggle="modal"
       data-bs-target="#resultModal"
-      @click="submitFlag = true"
+      @click="submitFlag = true; resetFlag = false"
     >
       제출
     </button>
@@ -61,7 +61,7 @@ onMounted(() => {
     {{ store.gameList[store.id].place_name }}
     <div style="display: flex">
       <VRoadMap
-      class="flex-fill me-3"
+        class="flex-fill me-3"
         :key="store.gameList[store.id].location"
         :location="store.gameList[store.id].location"
       />
@@ -93,12 +93,7 @@ onMounted(() => {
             <button
               type="button"
               class="btn btn-outline-success me-2"
-              data-bs-dismiss="modal"
-              @click="
-                submitFlag = true;
-                resetFlag = false;
-              "
-            >
+              data-bs-dismiss="modal">
               확인
             </button>
           </div>

@@ -40,6 +40,17 @@ function Axios() {
   return instance;
 }
 
+function AxiosMulti () {
+  const instance = axios.create({
+    baseURL: VITE_API_URL,
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return instance;
+}
+
 function Kakao() { // kakao map 관련 API 호출 시 사용
     const instance = axios.create({
       baseURL: VITE_KAKAO_API_URL,
@@ -62,4 +73,4 @@ function KakaoPathFinder() {
   return instance;
 }
 
-export { Axios, Kakao, KakaoPathFinder };
+export { Axios, AxiosMulti, Kakao, KakaoPathFinder };

@@ -9,8 +9,6 @@ const store = useGameStore();
 const seedId = ref();
 const gameTitle = ref();
 const saveSeed = () => {
-  console.log("결과에서 seedInfo: ");
-  console.log(store.seedInfo);
   saveSeedApi(
     store.seedInfo,
     ({ data }) => {
@@ -30,8 +28,7 @@ const saveGame = () => {
     difficulty: store.difficulty,
     gameTitle: gameTitle.value,
   };
-  console.log("결과에서 gameInfo: ");
-  console.log(gameInfo);
+  
   saveGameApi(
     gameInfo,
     ({ data }) => {
@@ -56,7 +53,7 @@ const saveGame = () => {
     >
       게임 저장하기
     </button>
-    <button class="btn btn-primary btn-md me-3">여행 계획하기</button>
+    <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">여행 계획하기</button>
     <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
       홈으로
     </button>
