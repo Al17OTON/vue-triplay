@@ -2,8 +2,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
+import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
 import VMakeMap from "/src/components/game/VMakeMap.vue";
+const memberStore = useMemberStore();
 const store = useGameStore();
 const router = useRouter();
 
@@ -26,7 +28,7 @@ const saveSeed = () => {
 const saveGame = () => {
   var gameInfo = {
     seedId: seedId.value,
-    memberId: "ewq",
+    memberId: memberStore.member_id,
     gameTitle: gameTitle.value,
   };
   console.log("결과에서 gameInfo: ");

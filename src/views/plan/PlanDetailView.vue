@@ -2,10 +2,13 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from "vue-router";
 import { getPlanApi, deletePlanApi } from '@/api/plan';
-import VMap from '@/components/game/VMap.vue';
+import { searchKeywordApi, createListFromSeedApi } from '@/api/kakaomap';
+import { useGameStore } from '@/stores/gameStore';
+import PlanMap from '@/components/plan/PlanMap.vue';
 import VPlanPlaceItem from '@/components/plan/VPlanPlaceItem.vue';
 const route = useRoute();
 const router = useRouter();
+const gameStore = useGameStore();
 
 const plan = ref({})
 onMounted(() => {
@@ -13,15 +16,20 @@ onMounted(() => {
   getPlanApi(route.query.planId, ({data}) => {
     console.log(data)
     plan.value = data.resdata
-    plan.value.placeList = [{
-      index: 1,
-      address_name: "대전 서구 관저동 1384",
-      place_name: "베이크오프"
-      }, {
-        index: 2,
-        address_name: "대전 서구 관저동 1384",
-        place_name: "베이크오프"
-      }]
+    // seed 갖다가 만들어야 댐
+    // planMap 생성 시 필요한 거
+    // id: 1,
+    // address_name: '1',
+    // place_name: '1',
+    // location : {x : 127.11024293202674, y : 37.394348634049784}
+    searchKeywordApi(
+      {query: plan.value.keyword},
+      ({data}) => {
+        console.log(data)
+        plan.value.placeList = createListFromSeedApi(plan.value.seedInfo, data.documents)
+        gameStore.gameList = plan.value.placeList 
+        // console.log(plan.value.placeList)
+      }, error => console.log(error))
   }, (error) => console.log(error))
 })
 
@@ -46,16 +54,17 @@ const deletePlan = () => {
           조회수 &nbsp; &nbsp;{{ plan.hit }}
         </div>
         
-        <div class="d-flex mb-4 mt-4">
-          <VMap class="flex-fill me-4" style="width: 100%; height: 500px"/>
-          <div class="flex-fill">
+        <div class="d-flex mb-4 mt-4" style="height: 100%">
+          <PlanMap class="flex-lg-fill" style="width: 100%; height: 100%"/>
+          <div class="ps-3" style="width: 500px">
             예상 소요 시간 : {{plan.estimateTime }} <br>
             이동 거리 : {{ plan.distance }}
             <VPlanPlaceItem :place="place" v-for="place in plan.placeList" :key="place.id"/>
           </div>
         </div>
-        {{ plan.planContent }}
-        
+        <div>
+          {{ plan.planContent }}
+        </div>
       </div>
       <div>
         <button @click="router.push({name: 'plan'})" class="btn btn-outline-secondary" style="float:right">목록으로</button>

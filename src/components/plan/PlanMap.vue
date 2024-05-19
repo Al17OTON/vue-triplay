@@ -441,9 +441,7 @@ function deleteDistnce () {
 </script>
 
 <template>
-<div class="container">
-<div class="row justify-content-md-center">
-<div class="col-lg-10">
+
   <div class="map-view" id="map-mo">
         <div class="map_wrap">
             <!--카카오맵이 표시되는 영역-->
@@ -464,7 +462,7 @@ function deleteDistnce () {
                         <Draggable v-for="item in places" :key="item.id">
                             <div :class="{'draggable-item' : true, 'custom_selected': selected[item.id+''], 'custom_unselected' : !selected[item.id+'']}" @click="onClick(item.id)">
                                 <div>{{ item.id }}</div>
-                                <div>{{ item.name }}</div>
+                                <div>{{ item.place_name }}</div>
                                 <div>{{ item.location }}</div>
                                 <div>{{ item.score }}</div>
                                 <div>{{ item.distance }}</div>
@@ -479,9 +477,6 @@ function deleteDistnce () {
             </div>
         </div>
     </div>  
-</div>
-</div>
-</div>
 
 <!-- <div id="infoOverlay" :class="{'dotOverlay' : false, 'distanceInfo' : true}" v-show="pathInfo.isShow">
     <span>{{ pathInfo.d }}</span>

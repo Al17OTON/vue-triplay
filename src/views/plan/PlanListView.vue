@@ -18,10 +18,10 @@ onMounted(()=>{
     <h1>PLAN LIST</h1>
     <div >
       <VPlanListItem 
-      style="cursor: pointer"
-      v-for="plan in planList" 
-      :key="plan.planId" 
-      :plan="plan"/>
+        style="cursor: pointer"
+        v-for="plan in planList" 
+        :key="plan.planId" 
+        :plan="plan"/>
     </div>
   </div>
 </template>
