@@ -23,7 +23,7 @@ const initMap = () => {
   var position = new kakao.maps.LatLng(props.location.y, props.location.x);
 
   // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
-  roadviewClient.getNearestPanoId(position, 500, function (panoId) {
+  roadviewClient.getNearestPanoId(position, 800, function (panoId) {
     roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
   });
 };

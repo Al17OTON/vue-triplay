@@ -7,6 +7,7 @@ export const useGameStore = defineStore('game', () => {
   const newGame = ref(true)
   
   // seed table
+  const page = ref(1);
   const seedInfo = ref({}) // keyword count seed
   // game table
   const difficulty = ref("")
@@ -27,7 +28,8 @@ export const useGameStore = defineStore('game', () => {
 
   // watch로 바꾸기?
   const createSeedInfo = () => {
-    seedInfo.value.seedInfo = ""
+    // page.value = 1;
+    seedInfo.value.seedInfo = `${page.value} `
     for (var place of placeList.value) {
       seedInfo.value.seedInfo += place.id + " "
     }

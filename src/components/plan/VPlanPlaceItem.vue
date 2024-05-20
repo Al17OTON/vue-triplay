@@ -1,5 +1,4 @@
 <script setup>
-import VGptModal from "./VGptModal.vue";
 defineProps({
   index: Number,
   place: Object,
@@ -7,20 +6,21 @@ defineProps({
 </script>
 
 <template>
-  <div class="item" data-bs-toggle="modal" data-bs-target="#gptModal">
+  <div class="item">
     <div class="d-flex">
       <h3>{{ index + 1 }}</h3>
-      <div class="ms-2 vertical-container">
+      <div class="flex-fill ms-2 vertical-container">
         <span class="place-name">{{ place.place_name }}</span>
         {{ place.address_name }}
       </div>
-      <div style="display: block; float: right">정보 🤖💬</div>
-      <!-- <button class="btn btn-outline-secondary" style="display: inline; float: right">
-        정보 🤖💬
-      </button> -->
+      <button
+        data-bs-toggle="modal" data-bs-target="#gptModal"
+        class="ms-2 btn btn-success" 
+        style="margin: auto 0">
+        🤖💬
+      </button>
     </div>
   </div>
-  <VGptModal :place="place" />
 </template>
 
 <style scoped>
