@@ -113,7 +113,7 @@ watch(
   () => props.reset,
   (reset) => {
     if (reset) {
-      circle.setMap(null);
+      // circle.setMap(null);
       drawLine.setMap(null);
       targetMarker.setMap(null);
       marker.position = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);
