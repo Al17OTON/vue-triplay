@@ -16,8 +16,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    <VGameItem class="mb-3" :game="game" v-for="game in gameList" :key="game.gameId" />
+  <div class="container">
+    <div class="row justify-content-md-center">
+      <div class="col-lg-6">
+        <VGameItem class="mb-3" :game="game" v-for="game in gameList" :key="game.gameId" />
+      </div>
+    </div>
   </div>
 </template>
 

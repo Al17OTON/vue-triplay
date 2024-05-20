@@ -1,9 +1,9 @@
 // OpenApiUtill.js
 import  OpenAI  from "openai";
 
-
+// import.meta.env.VITE_OPENAI_APPKEY, 
 const openai = new OpenAI({
-    apiKey : import.meta.env.VITE_OPENAI_APPKEY, 
+    apiKey : import.meta.env.VITE_OPENAI_APPKEY,
     dangerouslyAllowBrowser: true,
 
 });
@@ -18,7 +18,4 @@ export const OpenApiUtil = {
       
         console.log(completion.choices[0]);
       }
-
-  
-      
 };
