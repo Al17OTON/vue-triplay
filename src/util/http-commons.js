@@ -2,11 +2,12 @@ import axios from "axios";
 import { login } from "@/util/login.js";
 import { useMemberStore } from "@/stores/memberStore.js";
 
-const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY } = import.meta.env;
+const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY, VITE_RELEASE_API_URL } = import.meta.env;
 
 function Axios() {
   const instance = axios.create({
-    baseURL: VITE_API_URL,
+    //baseURL: VITE_API_URL,
+    baseURL: VITE_RELEASE_API_URL,
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
@@ -20,7 +21,11 @@ function Axios() {
       return response;
     },
     async (error) => {
-      console.log(error)
+
+      if (!error.response.status) {
+        console.log(error);
+        return;
+      }
       if (error.response.status === 401) {
         await login();
 

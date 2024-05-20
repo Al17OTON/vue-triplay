@@ -1,51 +1,54 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getPlanApi, deletePlanApi, updateHitApi } from "@/api/plan";
-import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap";
-import { useGameStore } from "@/stores/gameStore";
-import PlanMap from "@/components/plan/PlanMap.vue";
-import VPlanPlaceItem from "@/components/plan/VPlanPlaceItem.vue";
+import { getPlanApi, deletePlanApi, updateHitApi     } from '@/api/plan';
+import { searchKeywordApi, createListFromSeedApi } from '@/api/kakaomap';
+import { useGameStore } from '@/stores/gameStore';
+import { addMemo } from '@/util/memo.js';
+import PlanMap from '@/components/plan/PlanMap.vue';
+import MemoList from '@/components/plan/MemoList.vue';
+import VPlanPlaceItem from '@/components/plan/VPlanPlaceItem.vue';
 const route = useRoute();
 const router = useRouter();
 const gameStore = useGameStore();
 
-const plan = ref({});
+const memoSwitch = ref(false);
+const rootSwitch = ref(false);
+const planId = ref();
+const plan = ref({})
 onMounted(() => {
-  updateHitApi(
-    route.query.planId,
-    ({ data }) => {
-      console.log(data);
-    },
-    (error) => console.log(error)
-  );
-  getPlanApi(
-    route.query.planId,
-    ({ data }) => {
-      plan.value = data.resdata;
-      // seed n : {x : 127.11024293202674, y : 37.394348634049784}
-      searchKeywordApi(
-        { query: plan.value.keyword },
-        ({ data }) => {
-          plan.value.placeList = createListFromSeedApi(plan.value.seedInfo, data.documents);
-          gameStore.gameList = plan.value.placeList;
-        },
-        (error) => console.log(error)
-      );
-    },
-    (error) => console.log(error)
-  );
-});
+  memoSwitch.value = true;  //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
+  planId.value = route.query.planId;
+  console.log(route.query.planId)
+  updateHitApi(route.query.planId, ({data}) => {
+    console.log(data)
+  }, error => console.log(error))
+  getPlanApi(route.query.planId, ({data}) => {
+    console.log(data)
+    plan.value = data.resdata
+    // seed n : {x : 127.11024293202674, y : 37.394348634049784}
+    searchKeywordApi(
+      {query: plan.value.keyword},
+      ({data}) => {
+        console.log(data)
+        plan.value.placeList = createListFromSeedApi(plan.value.seedInfo, data.documents)
+        gameStore.gameList = plan.value.placeList 
+        console.log(plan.value.placeList)
+      }, error => console.log(error))
+  }, (error) => console.log(error))
+})
 
 const deletePlan = () => {
-  deletePlanApi(
-    plan.value.planId,
-    () => {
-      router.push({ name: "planlist" });
-    },
-    (error) => console.log(error)
-  );
-};
+  deletePlanApi(plan.value.planId, ({data}) => {
+    console.log(data)
+    router.push({name: 'planlist'})
+  }, (error) => console.log(error))
+}
+
+const setRoot = () => {
+  rootSwitch.value = !rootSwitch.value;
+}
+
 </script>
 <template>
   <div class="container">
@@ -109,16 +112,20 @@ const deletePlan = () => {
           </button>
           <button
             data-bs-toggle="modal"
-            data-bs-target="#deleteModal"
-            class="btn btn-outline-danger me-1"
-            style="float: right"
-          >
-            삭제
-          </button>
+            data-bs-target="#deleteModal" 
+            class="btn btn-outline-danger me-1" 
+            style="float:right">삭제</button>
+            <button 
+            @click="setRoot"
+            class="btn btn-outline-secondary me-1" 
+            style="float:right">댓글</button>
+
         </div>
       </div>
     </div>
   </div>
+
+  <MemoList :plan_id="planId" :update="memoSwitch" :setRoot="rootSwitch"/>
 
   <!-- 삭제 모달 -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">

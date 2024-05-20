@@ -1,8 +1,10 @@
 <script setup>
-import PlanMap from "@/components/plan/PlanMap.vue";
+import CustomPlan from '@/components/plan/CustomPlan.vue';
 </script>
 <template>
-  <PlanMap style="height: 600px" :is-detail="false" />
+    hello
+    <CustomPlan style="height: 500px" :is-detail="true"/>
+
 </template>
 
 <style scope></style>
