@@ -28,7 +28,7 @@ export default[{
     {
       path: 'result',
       name: 'gameresult',
-      component: GameResultView
+      component: GameResultView,
     },
     {
       path: 'list',

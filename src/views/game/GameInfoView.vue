@@ -72,11 +72,7 @@ const createSeed = (locations) => {
 };
 const searchKeyword = () => {
   console.log(gameSetting.value);
-  if (
-    searchQuery.value.query[0] != "" &&
-    gameSetting.value.difficulty &&
-    gameSetting.value.count != ""
-  ) {
+  if (searchQuery.value.query[0] != "" && gameSetting.value.difficulty && gameSetting.value.count) {
     gameSetting.value.query = searchQuery.value.query[1];
     searchQuery.value.query = gameSetting.value.query;
     searchKeywordApi(
@@ -149,7 +145,7 @@ const selectGugun = (key, text) => {
         </div>
         <div class="mb-5">
           <h4 class="fw-bold">난이도를 선택해주세요</h4>
-          <div class="mb-3">난이도에 따라 힌트 제공 범위가 달라집니다.</div>
+          <div class="mb-3">난이도에 따라 제공되는 힌트가 달라집니다.</div>
           <input
             v-model="gameSetting.difficulty"
             value="EASY"
@@ -183,8 +179,7 @@ const selectGugun = (key, text) => {
           />
         </div>
         <div class="d-flex justify-content-center">
-
-        <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
+          <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
         </div>
       </div>
     </div>

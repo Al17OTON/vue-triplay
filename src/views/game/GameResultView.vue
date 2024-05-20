@@ -9,12 +9,17 @@ const memberStore = useMemberStore();
 const store = useGameStore();
 
 onMounted(() => {
-  updateScoreApi(memberStore.token, {
-    member_id: memberStore.member_id,
-    amount: store.score
-  }, ({data}) => console.log(data),
-     (error) => console.log(error))
-})
+  console.log(store.seedInfo);
+  updateScoreApi(
+    memberStore.token,
+    {
+      member_id: memberStore.member_id,
+      amount: store.score,
+    },
+    ({ data }) => console.log(data),
+    (error) => console.log(error)
+  );
+});
 
 const seedId = ref();
 const gameTitle = ref();
@@ -24,7 +29,7 @@ const saveSeed = () => {
     ({ data }) => {
       console.log(data);
       seedId.value = data.resdata;
-      saveGame()
+      saveGame();
       // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
     },
     (error) => console.log(error)
@@ -38,7 +43,7 @@ const saveGame = () => {
     difficulty: store.difficulty,
     gameTitle: gameTitle.value,
   };
-  
+
   saveGameApi(
     gameInfo,
     ({ data }) => {
@@ -63,7 +68,9 @@ const saveGame = () => {
     >
       게임 저장하기
     </button>
-    <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">여행 계획하기</button>
+    <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">
+      여행 계획하기
+    </button>
     <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
       홈으로
     </button>

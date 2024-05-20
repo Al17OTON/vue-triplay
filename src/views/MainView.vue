@@ -3,7 +3,6 @@
 import LeaderBoard from "@/components/main/LeaderBoard.vue";
 import MainCarousel from "@/components/main/MainCarousel.vue";
 import MainContents from "@/components/main/MainContents.vue";
-
 // import Footer from "@/components/common/Footer.vue";
 </script>
 

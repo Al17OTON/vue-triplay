@@ -13,6 +13,7 @@ function createListFromSeedApi(seedInfo, locations){
         for (var id of ids) {
             if (location.id === id) {
                 let place = {};
+                place.id = location.id;
                 place.address_name = location.address_name;
                 place.place_name = location.place_name;
                 place.location = { x: location.x, y: location.y };

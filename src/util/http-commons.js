@@ -21,6 +21,7 @@ function Axios() {
       return response;
     },
     async (error) => {
+
       if (!error.response.status) {
         console.log(error);
         return;
