@@ -14,5 +14,9 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  server: {   //npm run serve로 실행
+    host: '0.0.0.0',  //모든 IP허용
+    port: 5173
   }
 })

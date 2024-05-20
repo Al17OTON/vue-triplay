@@ -4,14 +4,21 @@ import { useRoute, useRouter } from "vue-router";
 import { getPlanApi, deletePlanApi, updateHitApi     } from '@/api/plan';
 import { searchKeywordApi, createListFromSeedApi } from '@/api/kakaomap';
 import { useGameStore } from '@/stores/gameStore';
+import { addMemo } from '@/util/memo.js';
 import PlanMap from '@/components/plan/PlanMap.vue';
+import MemoList from '@/components/plan/MemoList.vue';
 import VPlanPlaceItem from '@/components/plan/VPlanPlaceItem.vue';
 const route = useRoute();
 const router = useRouter();
 const gameStore = useGameStore();
 
+const memoSwitch = ref(false);
+const rootSwitch = ref(false);
+const planId = ref();
 const plan = ref({})
 onMounted(() => {
+  memoSwitch.value = true;  //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
+  planId.value = route.query.planId;
   console.log(route.query.planId)
   updateHitApi(route.query.planId, ({data}) => {
     console.log(data)
@@ -37,6 +44,11 @@ const deletePlan = () => {
     router.push({name: 'planlist'})
   }, (error) => console.log(error))
 }
+
+const setRoot = () => {
+  rootSwitch.value = !rootSwitch.value;
+}
+
 </script>
 <template>
   <div class="container">
@@ -70,10 +82,16 @@ const deletePlan = () => {
             data-bs-target="#deleteModal" 
             class="btn btn-outline-danger me-1" 
             style="float:right">삭제</button>
+            <button 
+            @click="setRoot"
+            class="btn btn-outline-secondary me-1" 
+            style="float:right">댓글</button>
         </div>
       </div>
     </div>
   </div>
+
+  <MemoList :plan_id="planId" :update="memoSwitch" :setRoot="rootSwitch"/>
 
   <!-- 삭제 모달 -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">

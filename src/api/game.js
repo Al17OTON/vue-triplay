@@ -30,9 +30,9 @@ function getGameListApi(success, fail) {
 }
 
 function updateScoreApi(token, param, success, fail){
-    http.put('member/addScore', {
+    http.put('member/addScore', {}, {
         headers: {
-            token: token
+            access_token: token
         },
         params: param
     }).then(success).catch(fail)
