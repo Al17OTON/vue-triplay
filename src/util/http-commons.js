@@ -20,6 +20,7 @@ function Axios() {
       return response;
     },
     async (error) => {
+      console.log(error)
       if (error.response.status === 401) {
         await login();
 

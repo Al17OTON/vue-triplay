@@ -99,7 +99,7 @@ watch(
         store.gameList[store.id].location.y,
         store.gameList[store.id].location.x
       );
-      var randomLatLng = getRandomLocation(targetLatLng, 10000);
+      var randomLatLng = getRandomLocation(targetLatLng, 8000);
       // var randomMarker = new kakao.maps.Marker({
       //   position: randomLatLng,
       // });
