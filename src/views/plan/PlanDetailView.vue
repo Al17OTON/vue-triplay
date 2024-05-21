@@ -90,7 +90,7 @@ const clickPlace = async (place) => {
 <template>
   <div class="container">
     <div class="row justify-content-md-center">
-      <div class="col-lg-11">
+      <div class="col-lg-10">
         <h1 class="fw-bold">{{ plan.planTitle }}</h1>
         <div class="mt-3 mb-3">
           {{ plan.registerTime }}
@@ -140,7 +140,7 @@ const clickPlace = async (place) => {
           {{ plan.planContent }}
         </div>
         <VGptModal :place="gptPlace" :info="gptInfo" />
-        <div>
+        <div class="mb-2">
           <button
             @click="router.push({ name: 'plan' })"
             class="btn btn-outline-secondary"
