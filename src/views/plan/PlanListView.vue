@@ -19,8 +19,8 @@ onMounted(() => {
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-lg-10">
-        <h1>여행 계획 게시판</h1>
-        <div class="row row-cols-1 row-cols-md-2 g-4">
+        <h1 class="title">여행 계획 게시판</h1>
+        <div class="row row-cols-1 row-cols-md-2 mt-3 g-4">
           <VPlanListItem
             style="cursor: pointer"
             v-for="plan in planList"
@@ -33,4 +33,9 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.title {
+  display: flex;
+  justify-content: center;
+}
+</style>

@@ -5,7 +5,7 @@ import planRouter from "./planRouter";
 import MainView from "@/views/MainView.vue";
 import { useMemberStore } from "@/stores/memberStore.js";
 import { login } from "@/util/login.js";
-
+import PlanView from '@/views/plan/PlanView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
