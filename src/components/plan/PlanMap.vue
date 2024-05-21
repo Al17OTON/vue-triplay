@@ -482,6 +482,7 @@ function deleteDistnce() {
           <Container @drop="onDrop" :lock-axis="isDetail ? 'xy' : 'y'">
             <Draggable v-for="item in places" :key="item.id">
               <div
+                class="drag-item p-2 mb-3"
                 :class="{
                   'draggable-item': !isDetail,
                   custom_selected: selected[item.id + ''],
@@ -489,13 +490,21 @@ function deleteDistnce() {
                 }"
                 @click="onClick(item.id, isDetail)"
               >
-                <div>{{ item.id }}</div>
-                <div>{{ item.place_name }}</div>
-                <div>{{ item.location }}</div>
-                <div>{{ item.score }}</div>
-                <div>{{ item.distance }}</div>
+                <div style="font-weight: bold; font-size: 15px">{{ item.place_name }}</div>
+                <div>
+                  주소 &nbsp;>&nbsp;
+                  {{ item.address_name }}
+                </div>
+
+                <div v-show="!isDetail">
+                  점수 &nbsp;>&nbsp;
+                  {{ item.score }}
+                </div>
+                <div v-show="!isDetail">
+                  거리 &nbsp;>&nbsp;
+                  {{ item.distance }}
+                </div>
               </div>
-              <br />
             </Draggable>
           </Container>
         </div>
@@ -513,12 +522,13 @@ function deleteDistnce() {
 
 <style scoped>
 /*카카오 맵에서 사용하는 CSS - start*/
+.drag-item {
+  border-radius: 15px;
+}
 .map_wrap,
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  font-size: 12px;
 }
 .map_wrap a,
 .map_wrap a:hover,
@@ -660,10 +670,12 @@ function deleteDistnce() {
 }
 
 .custom_selected {
-  background-color: lightgreen;
+  border: 2px solid lightgreen;
+  background-color: rgb(230, 255, 230);
 }
 .custom_unselected {
-  background-color: rgb(142, 143, 142);
+  border: 2px solid rgb(192, 192, 192);
+  background-color: rgb(223, 223, 223);
 }
 .dot {
   overflow: hidden;

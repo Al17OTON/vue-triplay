@@ -56,24 +56,28 @@ const saveGame = () => {
 </script>
 
 <template>
-  <div>
-    <h3>게임 최종 결과!</h3>
-    <h1>{{ store.score }}</h1>
-    <h1>{{ store.gameSeed }}</h1>
-    <button
-      v-show="store.newGame"
-      class="btn btn-primary btn-md me-3"
-      data-bs-toggle="modal"
-      data-bs-target="#gameSaveModal"
-    >
-      게임 저장하기
-    </button>
-    <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">
-      여행 계획하기
-    </button>
-    <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
-      홈으로
-    </button>
+  <div class="container d-flex" style="height: 600px">
+    <div class="row justify-content-center align-self-center w-100">
+      <div class="col-lg-6 text-center">
+        <h3>게임 최종 결과!</h3>
+        <div class="result-score">{{ store.score }}</div>
+        <h1>{{ store.gameSeed }}</h1>
+        <button
+          v-show="store.newGame"
+          class="btn btn-primary btn-md me-3"
+          data-bs-toggle="modal"
+          data-bs-target="#gameSaveModal"
+        >
+          게임 저장하기
+        </button>
+        <button class="btn btn-primary btn-md me-3" @click="router.push({ name: 'planwrite' })">
+          여행 계획하기
+        </button>
+        <button class="btn btn-primary btn-md" @click="router.push({ name: 'gamehome' })">
+          홈으로
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- 게임 저장 모달 -->
@@ -81,7 +85,7 @@ const saveGame = () => {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content p-3">
         <div class="d-flex justify-content-center">
-          <h2 class="fw-bold">게임 저장</h2>
+          <h1 class="fw-bold">게임 저장</h1>
         </div>
 
         <div class="modal-body">
@@ -110,4 +114,9 @@ const saveGame = () => {
   <!-- 결과 모달 끝 -->
 </template>
 
-<style scoped></style>
+<style scoped>
+.result-score {
+  font-size: 55px;
+  font-weight: bold;
+}
+</style>

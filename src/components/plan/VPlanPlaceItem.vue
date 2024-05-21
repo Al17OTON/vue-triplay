@@ -35,7 +35,7 @@ defineProps({
   margin-bottom: 15px;
   padding: 10px;
   background-color: #ffffff;
-  box-shadow: -3px 3px 5px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: -3px 3px 5px 3px #cfcfcf; /*rgba(0, 0, 0, 0.3);*/
 }
 .place-name {
   font-size: 20px;

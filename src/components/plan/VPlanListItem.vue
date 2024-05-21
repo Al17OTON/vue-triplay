@@ -6,7 +6,7 @@ defineProps({
   plan: Object,
 });
 
-const thumbnail = "/src/assets/img/darksky.jpg";
+const thumbnail = "/src/assets/img/bg_default.jpg";
 const fileUrl = import.meta.env.VITE_API_URL + "plan";
 
 const getImageUrl = (file) => {
