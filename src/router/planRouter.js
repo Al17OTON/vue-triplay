@@ -20,7 +20,14 @@ export default[{
     {
       path: 'write',
       name: 'planwrite',
-      component: PlanWriteView
+      component: PlanWriteView,
+      props: {isCustom: false}
+    },
+    {
+      path: 'custom',
+      name: 'plancustom',
+      component: PlanWriteView,
+      props: {isCustom: true}
     },
     {
         path: '/planner',
