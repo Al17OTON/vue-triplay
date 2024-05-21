@@ -670,8 +670,8 @@ function deleteDistnce() {
 }
 
 .custom_selected {
-  border: 2px solid lightgreen;
-  background-color: rgb(230, 255, 230);
+  border: 2px solid #5bd26d;
+  background-color: rgb(199, 250, 199);
 }
 .custom_unselected {
   border: 2px solid rgb(192, 192, 192);

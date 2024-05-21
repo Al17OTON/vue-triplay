@@ -1,7 +1,8 @@
 <script setup>
 import { login, logout } from "@/util/login.js";
+import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/memberStore.js";
-
+const router = useRouter();
 const memberStore = useMemberStore();
 
 const callLogin = () => {
@@ -9,6 +10,7 @@ const callLogin = () => {
 };
 const callLogout = () => {
   logout();
+  router.replace({name: 'main'})
 };
 </script>
 
@@ -45,7 +47,7 @@ const callLogout = () => {
                 <RouterLink class="nav-link" :to="{ name: 'plan' }">여행 계획</RouterLink>
               </li>
               <li class="nav-item">
-                <a id="logoutLink" class="nav-link" @click.prevent="callLogout">로그아웃</a>
+                <a id="logoutLink" style="cursor: pointer" class="nav-link" @click.prevent="callLogout">로그아웃</a>
               </li>
               <li class="nav-item">
                 <!-- <a id="myPageLink" class="nav-link" @click.prevent="">마이페이지</a> -->

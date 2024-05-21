@@ -33,7 +33,7 @@ const writeMemo = () => {
         @click="modifyMemo"
         type="button"
         id="btn-comment-update"
-        class="btn btn-outline-primary mb-3"
+        class="btn btn-outline-primary mb-2"
       >
         수정
       </button>
@@ -42,7 +42,7 @@ const writeMemo = () => {
         @click="deleteMemo"
         type="button"
         id="btn-comment-delete"
-        class="btn btn-outline-danger mb-3 ms-1"
+        class="btn btn-outline-danger mb-2 ms-1"
       >
         삭제
       </button>
@@ -51,7 +51,7 @@ const writeMemo = () => {
         @click="writeMemo"
         type="button"
         id="btn-comment"
-        class="btn btn-outline-success mb-3 ms-1"
+        class="btn btn-outline-success mb-2 ms-1"
       >
         답글
       </button>
@@ -61,9 +61,10 @@ const writeMemo = () => {
 
 <style scoped>
 .comment-container {
-  border: 1px solid #ccc;
+  /* border-radius: 10px; */
+  border-bottom: 1px solid #ccc;
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 5px 10px;
 }
 
 .comment-author {

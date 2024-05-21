@@ -95,7 +95,7 @@ const submit = async () => {
           <input
             v-model="planInfo.planTitle"
             placeholder="제목을 입력해주세요"
-            class="form-control mb-3 title"
+            class="form-control mb-3 input-title"
             type="text"
           />
         </div>
@@ -120,7 +120,7 @@ const submit = async () => {
 </template>
 
 <style scoped>
-.title {
+.input-title {
   border-width: 0;
   font-size: 18pt;
 }

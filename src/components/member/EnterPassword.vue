@@ -30,12 +30,18 @@ const checkPassword = (method) => {
 </script>
 
 <template>
-    <div>
-        <span>본인확인을 위해 비밀번호를 입력해주세요.</span>
-        <div class="input-group mb-3">
-        <input v-model="pw" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required>
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-lg-6">
+                <div class="text-center"> <!-- 수평 가운데 정렬을 위한 text-center 클래스 추가 -->
+                    <h4>본인확인을 위해 비밀번호를 입력해주세요.</h4>
+                    <div class="input-group-lg mt-3 mb-3">
+                        <input v-model="pw" type="password" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1" required>
+                    </div>
+                    <button @click="checkPassword(method)" type="button" class="btn btn-success">확인</button>
+                </div>
+            </div>
         </div>
-        <button @click="checkPassword(method)" type="button" class="btn btn-success">확인</button>
     </div>
 </template>
 

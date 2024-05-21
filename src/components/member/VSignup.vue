@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { Axios } from "@/util/http-commons.js";
 import Swal from "sweetalert2";
 import Result from "@/components/common/Result.vue";
@@ -79,8 +79,8 @@ const checkPw = () => {
 
 <template>
   <div>
-    <div v-show="!signupSuccess" class="container">
-      <h2>회원가입</h2>
+    <div v-show="!signupSuccess" class="container" style="width: 450px">
+      <h2 class='fw-bold'>회원가입</h2>
       <form @submit.prevent="signup">
         <div class="form-group">
           <label for="username">아이디</label>
@@ -111,17 +111,14 @@ const checkPw = () => {
 
 <style scoped>
 .form-wrap {
-  padding-top: 10%;
   display: flex;
   justify-content: center;
   text-align: center;
 }
 
 .container {
-  
     background-color: #fff;
     padding: 20px;
-    padding-top: 20%;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;

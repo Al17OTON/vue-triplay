@@ -46,18 +46,18 @@ const startGame = () => {
 </script>
 
 <template>
-  <div class="game-item">
-    {{ game.gameTitle }} / {{ game.keyword }} / {{ game.memberId }} /
-    {{ game.difficulty }}
-
-    <button
-      @click="startGame"
-      class="btn start"
-      :class="{ 'btn-primary': game.difficulty, 'btn-success': !game.difficulty }"
-    >
-      시작하기
-    </button>
-    <!-- <button @click="startGame" style="float: right" class="btn btn-primary">시작하기</button> -->
+  <div class="game-item row">
+    <div class="col-4"><b>{{ game.gameTitle }}</b></div>
+    <div class="col-2">{{ game.keyword }}</div>
+    <div class="col-2">{{ game.memberId }}</div>
+    <div class="col-2">{{ game.difficulty }}</div>
+    <div class="col-2">
+      <button
+        @click="startGame"
+        class="btn start"
+        :class="{ 'btn-primary': game.difficulty, 'btn-success': !game.difficulty }">
+        시작하기</button>
+    </div>
   </div>
 </template>
 
