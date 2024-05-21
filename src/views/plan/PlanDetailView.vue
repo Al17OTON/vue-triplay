@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getPlanApi, deletePlanApi, updateHitApi } from "@/api/plan";
-import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap";
+import { searchIdApi, searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap";
 import { useGameStore } from "@/stores/gameStore";
 import { addMemo } from "@/util/memo.js";
 import PlanMap from "@/components/plan/PlanMap.vue";
@@ -25,6 +25,14 @@ const gptPlace = ref({
 const gptInfo = ref("...");
 
 onMounted(() => {
+  searchIdApi(
+    "186032184",
+    (res) => {
+      console.log(res);
+      console.log(res.data);
+    },
+    (error) => console.log(error)
+  );
   memoSwitch.value = true; //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
   planId.value = route.query.planId;
   console.log(route.query.planId);
