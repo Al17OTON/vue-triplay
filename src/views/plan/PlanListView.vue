@@ -34,7 +34,7 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.title{
+.title {
   display: flex;
   justify-content: center;
 }

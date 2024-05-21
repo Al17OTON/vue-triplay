@@ -19,11 +19,11 @@ const searchQuery = {
 
 const startGame = () => {
   searchQuery.query = props.game.keyword;
-  searchQuery.page = props.game.seedInfo[0]
+  searchQuery.page = props.game.seedInfo[0];
   searchKeywordApi(
     searchQuery,
     ({ data }) => {
-      const gameList = createListFromSeedApi(props.game.seedInfo.substring(2), data.documents)
+      const gameList = createListFromSeedApi(props.game.seedInfo.substring(2), data.documents);
 
       store.newGame = false;
       store.id = 0;
@@ -49,18 +49,29 @@ const startGame = () => {
   <div class="game-item">
     {{ game.gameTitle }} / {{ game.keyword }} / {{ game.memberId }} /
     {{ game.difficulty }}
-    <button 
-      @click="startGame" 
-      style="float: right"
-      class="btn btn-primary ">
-      시작하기</button>
+
+    <button
+      @click="startGame"
+      class="btn start"
+      :class="{ 'btn-primary': game.difficulty, 'btn-success': !game.difficulty }"
+    >
+      시작하기
+    </button>
+    <!-- <button @click="startGame" style="float: right" class="btn btn-primary">시작하기</button> -->
   </div>
 </template>
 
 <style scoped>
-.game-item{
+.game-item {
   background-color: white;
-  padding: 10px;
+  padding: 15px;
   border-radius: 10px;
+  box-shadow: -3px 3px 5px 3px #cfcfcf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.start {
+  display: inline-block;
 }
 </style>
