@@ -88,4 +88,17 @@ function KakaoPathFinder() {
   return instance;
 }
 
-export { Axios, AxiosMulti, Kakao, KakaoId, KakaoPathFinder };
+async function PlaceFindById(id) {
+  let place = {};
+  await Axios().get(`/place/${id}`)
+    .then((res) => {
+      place['title'] = res.data.resdata.title;
+      place['address'] = res.data.resdata.address;
+    }).catch((err) => {
+      console.log(err);
+      oops("삭제되었거나 장소 찾을 수 없습니다.");
+    });
+  return place;
+}
+
+export { Axios, AxiosMulti, Kakao, KakaoId, KakaoPathFinder, PlaceFindById };
