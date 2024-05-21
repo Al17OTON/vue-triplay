@@ -13,10 +13,8 @@ const pathFinder = KakaoPathFinder();
 const emit = defineEmits([
 
 ]);
-const props = defineProps({
-    isDetail : Boolean,
-    gameList: Object
-});
+
+const keyword = ref("");
 const imrich = ref(false);  //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
 /**
@@ -24,16 +22,16 @@ gameStore
 gameList: 플레이스 배열
 -> place 객체(id, address_name, place_name, location 객체(x, y), 점수, 거리)
  */
+let ps = null; //kakao 검색
 let distanceOverlay = null;
 let polyline = null;
 let polylineDash = null;
-const selected = ref({});
-const places = ref([{
-    id: 1
-}]);
+const searchList = ref([]);
+const places = ref([]);
 
 let map = null;
-let marker = [];
+let searchMarker = [];
+let placeMarker = [];
 var defaultLocation = null;
 const appKey = import.meta.env.VITE_KAKAO_APPKEY;
 const pathResult = ref();
@@ -54,34 +52,51 @@ const initMap = () => {
     level: 13, // 1~14
   };
   map = new kakao.maps.Map(container, options);
+  ps = new kakao.maps.services.Places();
+//   const zoomControl = new kakao.maps.ZoomControl();
+//   map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+//   var mapTypeControl = new kakao.maps.MapTypeControl();
+//   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
-  const zoomControl = new kakao.maps.ZoomControl();
-  map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
-  var mapTypeControl = new kakao.maps.MapTypeControl();
-  map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
-
-  if(!props.isDetail){
-    places.value = props.gameList;
-    //   전부 선택으로 할당
-    for(var i = 0; i < places.value.length; i++) {
-        selected.value[places.value[i].id + ''] = true;
-    }
     selectedCnt.value = places.value.length;
     drawMarker();
-  }
 };
 
-watch(()=> props.gameList, (gameList) => {
-    console.log(gameList)
-    places.value = gameList
-    for(var i = 0; i < places.value.length; i++) {
-        selected.value[places.value[i].id + ''] = true;
+const searchKeyword = () => {
+    if(!keyword.value) {
+        oops("검색어를 입력해주세요.");
+        return;
     }
-    selectedCnt.value = places.value.length;
-    drawMarker();
-    findPath();
-})
+    if (!keyword.value.replace(/^\s+|\s+$/g, "")) {
+        alert("키워드를 입력해주세요!");
+        return false;
+    }
+
+    searchList.value = [];
+    // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+    ps.keywordSearch(keyword.value, placesSearchCB);
+}
+
+function placesSearchCB(data, status, pagination) {
+  if (status === kakao.maps.services.Status.OK) {
+    searchList.value = data;
+      const kword = keyword.value.replace(' ', '_');
+
+    for(var i = 0; i < searchList.value.length; i++) {
+        searchList.value[i].keyword = kword;
+    }
+    console.log(searchList.value);
+    // displayPlaces(data); // 검색 목록, 마커
+    // displayPagination(pagination); // 페이지 번호
+  } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+    oops("검색 결과가 존재하지 않습니다.");
+    return;
+  } else if (status === kakao.maps.services.Status.ERROR) {
+    oops("검색 결과 중 오류가 발생했습니다.");
+    return;
+  }
+}
 
 //Smooth 버튼에서 사용
 //지도를 부드럽게 이동 시키기, 초반에 미적 요소로 사용되기 위해 작성됨. 불안정함...
@@ -90,7 +105,6 @@ const smoothLevel = () => {
 
     let bounds = new kakao.maps.LatLngBounds();
     for(var i = 0; i < places.value.length; i++) {
-        if(!selected.value[places.value[i].id+'']) continue;
         bounds.extend(new kakao.maps.LatLng(places.value[i].location.y, places.value[i].location.x));
     }
 
@@ -143,29 +157,6 @@ const smoothLevel = () => {
     kakao.maps.event.addListener(map, 'idle', levelCallback);
 }
 
-//1단계씩 줌인하면서 원하는 좌표로 이동하기... 너무 이상함
-const zoomInChain = (center, level) => {
-    let curLev = map.getLevel();
-    const panToCallback = () => {
-        map.panTo(center);
-        kakao.maps.event.removeListener(map, 'idle', panToCallback);
-        if(curLev > level) kakao.maps.event.addListener(map, 'idle', levelCallback);
-    }
-    const levelCallback = () => {
-        map.setLevel(curLev - 1, {
-            animate: {
-                duration : 10
-            },
-        });
-        curLev -= 2;
-        kakao.maps.event.removeListener(map, 'idle', levelCallback);
-        kakao.maps.event.addListener(map, 'idle', panToCallback);
-    }
-
-    map.panTo(center);
-    kakao.maps.event.addListener(map, 'idle', levelCallback);
-}
-
 // 마커에 번호를 부여하고 표시
 const drawMarker = () => {
     deleteMarker();
@@ -192,7 +183,7 @@ const drawMarker = () => {
 }
 
 //맵에 존재하는 마커 전부 제거
-const deleteMarker = () => {
+const deleteMarker = (marker) => {
     for(var i = 0; i < marker.length; i++){
         marker[i].setMap(null);
     }
@@ -208,13 +199,15 @@ const findPath = () => {
         return;
     }
 
-    let selectedPlace = [];
-    for(var i = 0; i < places.value.length; i++) {
-        if(selected.value[places.value[i].id+'']) {
-            selectedPlace.push(places.value[i]);
-        }
+    if (selectedCnt.value > 10) {
+        oops("장소는 최대 10개만 선택 가능합니다.");
+        if(imrich.value) imrich.value = false;  //경로 자동 업데이트가 켜져있다면 끄기
+        removePath();
+        return;
     }
 
+    let selectedPlace = places.value;
+    
     let body = {
         origin: {
             x: selectedPlace[0].location.x,
@@ -319,33 +312,12 @@ const removePath = () => {
 }
 
 // 드래그앤드랍시 이벤트
-const onDrop = ((dropResult) => {
-    if(props.isDetail) return;
-    // console.log(dropResult);
-    // dropResult.payload = places[dropResult.removedIndex];
-    places.value = applyDrag(places.value, dropResult);
+const onDrop = ((num ,dropResult) => {
+    if(num === 1) places.value = applyDrag(places.value, dropResult);
+    else searchList.value = applyDrag(searchList.value, dropResult);
     drawMarker();
-    if(imrich.value) findPath();
-    else removePath();
-    // console.log(places.value);
+    removePath();
 })
-
-//선택된 id값을 탐색하여 선택 여부를 반전. 마커는 최대 10개이므로 O(n)으로 충분히 해결가능
-const onClick = (id, isDetail) => {
-    if(isDetail) return;
-    for(var i = 0; i < places.value.length; i++) {
-        if(places.value[i].id === id) {
-            selected.value[id+''] = !selected.value[id+''];
-            if(selected.value[id+'']) selectedCnt.value++;
-            else selectedCnt.value--;
-            break;
-        }
-    }
-    console.log(id);
-    drawMarker();
-    if(imrich.value) findPath();
-    else removePath();
-}
 
 const savePlaces2Pinia = (distance, duration) => {
     let seed = '';
@@ -371,9 +343,6 @@ onMounted(() => {
     loadScript();
   }
 });
-
-onUpdated(() => {});
-
 
 // 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여 
 // 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
@@ -440,30 +409,33 @@ function deleteDistnce () {
         distanceOverlay = null;
     }
 }
+
+const getChildPayload1 = (idx) => {
+    return searchList.value[idx];
+}
+const getChildPayload2 = (idx) => {
+    return places.value[idx];
+}
+
 </script>
 
 <template>
-
-  <div class="map-view" id="map-mo">
+    <div>
+        <button @click="test">버튼</button>
+        <div class="input-group mb-3">
+        <input v-model="keyword" type="text" class="form-control" placeholder="KeyWord" aria-label="KeyWord" aria-describedby="button-addon2">
+        <button @click="searchKeyword" class="btn btn-outline-secondary" type="button" id="button-addon2" >검색</button>
+        </div>
         <div class="map_wrap">
             <!--카카오맵이 표시되는 영역-->
             <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
-            <div v-if="!isDetail">
-                <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
-                <div class="form-check form-switch custom_switch">
-                    <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
-                </div>
-                <div class="custom_submit">
-                    <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
-                </div>
-            </div>
+            
             <!--카카오 맵에 표시되는 관광정보 리스트 view-->
             <div id="menu_wrap" class="bg_white">
                 <div class="option">
-                    <Container @drop="onDrop" :lock-axis="isDetail?'xy':'y'">
-                        <Draggable v-for="item in places" :key="item.id">
-                            <div :class="{'draggable-item' : !isDetail, 'custom_selected': selected[item.id+''], 'custom_unselected' : !selected[item.id+'']}" @click="onClick(item.id, isDetail)">
+                    <Container group-name="1" :get-child-payload="getChildPayload1" @drop="onDrop(2, $event)">
+                        <Draggable v-for="item in searchList" :key="item.id">
+                            <div :class="{'draggable-item' : true, 'custom_selected': true}">
                                 <div>{{ item.id }}</div>
                                 <div>{{ item.place_name }}</div>
                                 <div>{{ item.location }}</div>
@@ -477,6 +449,38 @@ function deleteDistnce () {
                 <hr>
                 <ul id="placesList"></ul>
                 <div id="pagination"></div>
+            </div>
+
+            <div id="menu_wrap_second" class="bg_white">
+                <div class="option">
+                    <Container group-name="1" :get-child-payload="getChildPayload2" @drop="onDrop(1, $event)">
+                        <Draggable v-for="item in places" :key="item.id">
+                            <div :class="{'draggable-item' : true, 'custom_selected': true}">
+                                <div>{{ item.id }}</div>
+                                <div>{{ item.place_name }}</div>
+                                <div>{{ item.location }}</div>
+                                <div>{{ item.score }}</div>
+                                <div>{{ item.distance }}</div>
+                            </div>
+                            <br/>
+                        </Draggable>
+                    </Container>
+                </div>
+                <hr>
+                <ul id="placesList"></ul>
+                <div id="pagination"></div>
+            </div>
+        </div>
+        <div class="custom-button-container">
+            <div>  
+                <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">Smooth</button>
+            </div>      
+            <!-- <div class="form-check form-switch custom_switch">
+                <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
+            </div> -->
+            <div class="custom_submit">
+                <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
             </div>
         </div>
     </div>  
@@ -493,6 +497,7 @@ function deleteDistnce () {
         .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
         .map_wrap {position:relative;width:100%;height:100%;}
         #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:20%;margin:10px 0 10px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+        #menu_wrap_second {position:absolute;top:0;right:0;bottom:0;width:20%;margin:10px 0 10px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
         .bg_white {background:#fff;}
         #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
         #menu_wrap .option{text-align: center;}
@@ -511,21 +516,6 @@ function deleteDistnce () {
         #pagination a {display:inline-block;margin-right:10px;}
         #pagination .on {font-weight: bold; cursor: default;color:#777;}
     
-        .custom_submit {position:absolute;right:10px;bottom:5px;overflow:hidden;z-index:1;}        
-        .custom_btn {width: 80px; height: 30px;}
-
-        .custom_switch {position:absolute;right:10px;bottom:45px;z-index:1;display: flex; flex-direction: column-reverse; align-items: center; text-align: center;}   
-        .custom_switch input {
-            width: 60px;
-            height: 30px;
-        }
-        .custom_switch label {
-            position: relative;
-            /* padding-right: 20px; */
-        }
-        .custom_smooth {
-            position:absolute;right:10px;bottom:105px;overflow:hidden;z-index:1;
-        }
 
         .custom_selected {
             background-color: lightgreen;
@@ -533,6 +523,20 @@ function deleteDistnce () {
         .custom_unselected {
             background-color: rgb(142, 143, 142);
         }
+        .custom-button-container {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .custom_switch {
+            padding-left: 0px;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: center;
+            justify-content: center;
+        }
+
         .dot {overflow:hidden;float:left;width:12px;height:12px;background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/mini_circle.png');}    
         .dotOverlay { position:relative;bottom:10px;border-radius:6px;border: 1px solid #ccc;border-bottom:2px solid #ddd;float:left;font-size:12px;padding:5px;background: #fff;background-color:#fff;}
         .dotOverlay:nth-of-type(n) {border:0; box-shadow:0px 1px 2px #888;}    
