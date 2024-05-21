@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap.js";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
-import VKeywordItem from "../plan/VKeywordItem.vue";
 const router = useRouter();
 const store = useGameStore();
 const props = defineProps({
