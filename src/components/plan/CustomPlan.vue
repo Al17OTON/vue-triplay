@@ -26,12 +26,12 @@ let ps = null; //kakao 검색
 let distanceOverlay = null;
 let polyline = null;
 let polylineDash = null;
-const selected = ref({});
 const searchList = ref([]);
 const places = ref([]);
 
 let map = null;
-let marker = [];
+let searchMarker = [];
+let placeMarker = [];
 var defaultLocation = null;
 const appKey = import.meta.env.VITE_KAKAO_APPKEY;
 const pathResult = ref();
@@ -59,15 +59,8 @@ const initMap = () => {
 //   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
 
-//   if(!props.isDetail){
-//     places.value = props.gameList;
-    //   전부 선택으로 할당
-    for(var i = 0; i < places.value.length; i++) {
-        selected.value[places.value[i].id + ''] = true;
-    }
     selectedCnt.value = places.value.length;
     drawMarker();
-//   }
 };
 
 const searchKeyword = () => {
@@ -88,9 +81,10 @@ const searchKeyword = () => {
 function placesSearchCB(data, status, pagination) {
   if (status === kakao.maps.services.Status.OK) {
     searchList.value = data;
+      const kword = keyword.value.replace(' ', '_');
 
     for(var i = 0; i < searchList.value.length; i++) {
-        searchList.value[i].keyword = keyword.value;
+        searchList.value[i].keyword = kword;
     }
     console.log(searchList.value);
     // displayPlaces(data); // 검색 목록, 마커
@@ -111,7 +105,6 @@ const smoothLevel = () => {
 
     let bounds = new kakao.maps.LatLngBounds();
     for(var i = 0; i < places.value.length; i++) {
-        if(!selected.value[places.value[i].id+'']) continue;
         bounds.extend(new kakao.maps.LatLng(places.value[i].location.y, places.value[i].location.x));
     }
 
@@ -166,7 +159,6 @@ const smoothLevel = () => {
 
 // 마커에 번호를 부여하고 표시
 const drawMarker = () => {
-    return;
     deleteMarker();
     var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
         imageSize = new kakao.maps.Size(36, 37);  // 마커 이미지의 크기
@@ -191,7 +183,7 @@ const drawMarker = () => {
 }
 
 //맵에 존재하는 마커 전부 제거
-const deleteMarker = () => {
+const deleteMarker = (marker) => {
     for(var i = 0; i < marker.length; i++){
         marker[i].setMap(null);
     }
@@ -207,13 +199,15 @@ const findPath = () => {
         return;
     }
 
-    let selectedPlace = [];
-    for(var i = 0; i < places.value.length; i++) {
-        if(selected.value[places.value[i].id+'']) {
-            selectedPlace.push(places.value[i]);
-        }
+    if (selectedCnt.value > 10) {
+        oops("장소는 최대 10개만 선택 가능합니다.");
+        if(imrich.value) imrich.value = false;  //경로 자동 업데이트가 켜져있다면 끄기
+        removePath();
+        return;
     }
 
+    let selectedPlace = places.value;
+    
     let body = {
         origin: {
             x: selectedPlace[0].location.x,
@@ -324,23 +318,6 @@ const onDrop = ((num ,dropResult) => {
     drawMarker();
     removePath();
 })
-
-//선택된 id값을 탐색하여 선택 여부를 반전. 마커는 최대 10개이므로 O(n)으로 충분히 해결가능
-const onClick = (id, isDetail) => {
-    if(isDetail) return;
-    for(var i = 0; i < places.value.length; i++) {
-        if(places.value[i].id === id) {
-            selected.value[id+''] = !selected.value[id+''];
-            if(selected.value[id+'']) selectedCnt.value++;
-            else selectedCnt.value--;
-            break;
-        }
-    }
-    console.log(id);
-    drawMarker();
-    if(imrich.value) findPath();
-    else removePath();
-}
 
 const savePlaces2Pinia = (distance, duration) => {
     let seed = '';
