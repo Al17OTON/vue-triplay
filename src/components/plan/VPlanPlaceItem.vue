@@ -14,9 +14,11 @@ defineProps({
         {{ place.address_name }}
       </div>
       <button
-        data-bs-toggle="modal" data-bs-target="#gptModal"
-        class="ms-2 btn btn-success" 
-        style="margin: auto 0">
+        data-bs-toggle="modal"
+        data-bs-target="#gptModal"
+        class="ms-2 btn btn-outline-success"
+        style="margin: auto 0"
+      >
         🤖💬
       </button>
     </div>

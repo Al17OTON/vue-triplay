@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { getPlanApi, deletePlanApi, updateHitApi     } from '@/api/plan';
-import { searchKeywordApi, createListFromSeedApi } from '@/api/kakaomap';
-import { useGameStore } from '@/stores/gameStore';
-import { addMemo } from '@/util/memo.js';
-import PlanMap from '@/components/plan/PlanMap.vue';
-import MemoList from '@/components/plan/MemoList.vue';
-import VPlanPlaceItem from '@/components/plan/VPlanPlaceItem.vue';
+import { getPlanApi, deletePlanApi, updateHitApi } from "@/api/plan";
+import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap";
+import { useGameStore } from "@/stores/gameStore";
+import { addMemo } from "@/util/memo.js";
+import PlanMap from "@/components/plan/PlanMap.vue";
+import MemoList from "@/components/plan/MemoList.vue";
+import VPlanPlaceItem from "@/components/plan/VPlanPlaceItem.vue";
 import VGptModal from "@/components/plan/VGptModal.vue";
 import { OpenApiUtil } from "@/assets/js/OpenApiUtil";
 
@@ -18,49 +18,66 @@ const gameStore = useGameStore();
 const memoSwitch = ref(false);
 const rootSwitch = ref(false);
 const planId = ref();
-const plan = ref({})
+const plan = ref({});
 const gptPlace = ref({
-  place_name: ""
+  place_name: "",
 });
-const gptInfo = ref("...")
+const gptInfo = ref("...");
 
 onMounted(() => {
-  memoSwitch.value = true;  //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
+  memoSwitch.value = true; //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
   planId.value = route.query.planId;
-  console.log(route.query.planId)
-  updateHitApi(route.query.planId, ({data}) => {
-  }, error => console.log(error))
-  
-  getPlanApi(route.query.planId, ({data}) => {
-    console.log(data)
-    plan.value = data.resdata
-    // seed n : {x : 127.11024293202674, y : 37.394348634049784}
-    searchKeywordApi(
-      {query: plan.value.keyword, page: plan.value.seedInfo[0]},
-      ({data}) => {
-        plan.value.placeList = createListFromSeedApi(plan.value.seedInfo.substring(2), data.documents)
-        gameStore.gameList = plan.value.placeList 
-      }, error => console.log(error))
-  }, (error) => console.log(error))
-})
+  console.log(route.query.planId);
+  updateHitApi(
+    route.query.planId,
+    ({ data }) => {},
+    (error) => console.log(error)
+  );
+
+  getPlanApi(
+    route.query.planId,
+    ({ data }) => {
+      console.log(data);
+      plan.value = data.resdata;
+      // seed n : {x : 127.11024293202674, y : 37.394348634049784}
+      searchKeywordApi(
+        { query: plan.value.keyword, page: plan.value.seedInfo[0] },
+        ({ data }) => {
+          plan.value.placeList = createListFromSeedApi(
+            plan.value.seedInfo.substring(2),
+            data.documents
+          );
+          gameStore.gameList = plan.value.placeList;
+        },
+        (error) => console.log(error)
+      );
+    },
+    (error) => console.log(error)
+  );
+});
 
 const deletePlan = () => {
-  deletePlanApi(plan.value.planId, ({data}) => {
-    console.log(data)
-    router.push({name: 'planlist'})
-  }, (error) => console.log(error))
-}
+  deletePlanApi(
+    plan.value.planId,
+    ({ data }) => {
+      console.log(data);
+      router.push({ name: "planlist" });
+    },
+    (error) => console.log(error)
+  );
+};
 
 const setRoot = () => {
   rootSwitch.value = !rootSwitch.value;
-}
+};
 
 const clickPlace = async (place) => {
-  gptPlace.value = place
-  gptInfo.value = '...'
-  gptInfo.value = await OpenApiUtil.prompt(`${place}에 대한 설명 3줄 요약해줘`)
-}
-
+  gptPlace.value = place.place_name;
+  gptInfo.value = "...";
+  gptInfo.value = await OpenApiUtil.prompt(
+    `${place.address_name}에 위치한 ${place.place_name}에 대한 설명 3줄 요약해줘`
+  );
+};
 </script>
 <template>
   <div class="container">
@@ -83,7 +100,7 @@ const clickPlace = async (place) => {
             style="width: 100%; height: 550px"
           />
           <div class="left-info ps-3" style="width: 550px; height: 100%">
-            <div >
+            <div>
               <table>
                 <tr>
                   <td>예상 소요 시간 🕒</td>
@@ -102,7 +119,7 @@ const clickPlace = async (place) => {
 
             <div class="scroll-wrapper">
               <VPlanPlaceItem
-                @click="clickPlace(place.place_name)"
+                @click="clickPlace(place)"
                 :index="index"
                 :place="place"
                 v-for="(place, index) in plan.placeList"
@@ -125,20 +142,21 @@ const clickPlace = async (place) => {
           </button>
           <button
             data-bs-toggle="modal"
-            data-bs-target="#deleteModal" 
-            class="btn btn-outline-danger me-1" 
-            style="float:right">삭제</button>
-            <button 
-            @click="setRoot"
-            class="btn btn-outline-secondary me-1" 
-            style="float:right">댓글</button>
-
+            data-bs-target="#deleteModal"
+            class="btn btn-outline-danger me-1"
+            style="float: right"
+          >
+            삭제
+          </button>
+          <button @click="setRoot" class="btn btn-outline-secondary me-1" style="float: right">
+            댓글
+          </button>
         </div>
       </div>
     </div>
   </div>
 
-  <MemoList :plan_id="planId" :update="memoSwitch" :setRoot="rootSwitch"/>
+  <MemoList :plan_id="planId" :update="memoSwitch" :setRoot="rootSwitch" />
 
   <!-- 삭제 모달 -->
   <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
