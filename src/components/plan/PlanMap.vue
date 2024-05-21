@@ -2,15 +2,15 @@
 import { onMounted, onUpdated, ref, watch } from "vue";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
-import { KakaoPathFinder } from "@/util/http-commons.js";
+import { KakaoPathFinder, KakaoAddress2Coord } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-``;
 import { oops } from "@/util/sweetAlert.js";
 
 const memberStore = useMemberStore();
 const gameStore = useGameStore();
 const pathFinder = KakaoPathFinder();
+const address2Coord = KakaoAddress2Coord();
 const emit = defineEmits([]);
 const props = defineProps({
   isDetail: Boolean,
@@ -18,6 +18,7 @@ const props = defineProps({
 });
 const imrich = ref(false); //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
+let geocoder = null;
 /**
 gameStore 
 gameList: 플레이스 배열
@@ -44,7 +45,8 @@ const loadScript = () => {
   document.head.appendChild(script);
 };
 
-const initMap = () => {
+let cnt = ref(0);
+const initMap = async () => {
   console.log("init");
   defaultLocation = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);
   const container = document.getElementById("map");
@@ -67,22 +69,82 @@ const initMap = () => {
     }
     selectedCnt.value = places.value.length;
     drawMarker();
+  } else {
+    places.value = props.gameList;
+    console.log(places.value);
+    // for (var i = 0; i < places.value.length; i++) {
+    //   selected.value[places.value[i].id + ""] = true; 
+    //   await address2Coord.get("", {
+    //     query: places.value[i].address
+    //   })   
+    //   .then((res) => console.log(res.data));
+    // }
+
+    const promises = places.value.map(async data => {
+      return setTimeout(await address2Coord.get("", {query: data.address}).then((res) => res), 100);
+    }) 
+
+    console.log(promises);
+
+    const results = await Promise.all(promises);
+    results.forEach(data => console.log(data));     
+    console.log(results);
   }
+  // else {
+  //   cnt.value = 0;
+  //   places.value = props.gameList;
+  //   let promises = [];
+  //   for (var i = 0; i < places.value.length; i++) {
+  //     selected.value[places.value[i].id + ""] = true;
+  //     promises.push(getPos(places.value[i].address));
+  //     // new Promise((resolve) => {
+  //     //     geocoder.addressSearch(props.gameList[i].address, function(result, status) {
+  //     //     // 정상적으로 검색이 완료됐으면 
+  //     //     console.log(result, status); 
+  //     //     console.log(cnt.value); 
+  //     //     const pos = {'x':result[0].x,'y':result[0].y}; 
+  //     //     updatePlaceLocation(pos);  
+  //     //     resolve();
+  //     //   });  
+  //     // })     
+  //   }
+  //   console.log(promises);
+  //   await Promise.all(promises);
+  //   selectedCnt.value = places.value.length; 
+  //   drawMarker();
+  //   findPath();
+  // }
 };
 
-watch(
-  () => props.gameList,
-  (gameList) => {
-    console.log(gameList);
-    places.value = gameList;
-    for (var i = 0; i < places.value.length; i++) {
-      selected.value[places.value[i].id + ""] = true;
-    }
-    selectedCnt.value = places.value.length;
-    drawMarker();
-    findPath();
-  }
-);
+function ContentsList(intentList) {
+    intentList.reduce((prev, current) => {
+        prev.then(async ()=> {
+            let intentId = current.intentId;
+            if(!contentSet.has(intentId)) {
+                contentSet.add(current.intentId);
+                const response = await axios.get(url, {params : {intentId}})
+                if(Object.keys(response.data).length > 0) {
+                    
+                }
+            }
+        })
+   		return Promise.resolve(current)
+   }, Promise.resolve())
+}
+
+// watch(
+//   () => props.gameList,
+//   (gameList) => {
+//     console.log(gameList);
+//     places.value = gameList;
+//     for (var i = 0; i < places.value.length; i++) {
+//       selected.value[places.value[i].id + ""] = true;
+//     }
+//     selectedCnt.value = places.value.length;
+//     drawMarker();
+//     findPath();
+//   }
+// );
 
 //Smooth 버튼에서 사용
 //지도를 부드럽게 이동 시키기, 초반에 미적 요소로 사용되기 위해 작성됨. 불안정함...

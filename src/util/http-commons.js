@@ -1,8 +1,9 @@
 import axios from "axios";
 import { login } from "@/util/login.js";
 import { useMemberStore } from "@/stores/memberStore.js";
+import { oops } from "@/util/sweetAlert.js";
 
-const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY, VITE_KAKAO_ID_URL } = import.meta.env;
+const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY, VITE_KAKAO_ID_URL, VITE_KAKAO_ADDRESS_API_KEY } = import.meta.env;
 
 function Axios() {
   const instance = axios.create({
@@ -92,8 +93,9 @@ async function PlaceFindById(id) {
   let place = {};
   await Axios().get(`/place/${id}`)
     .then((res) => {
-      place['title'] = res.data.resdata.title;
-      place['address'] = res.data.resdata.address;
+      // console.log(res);
+      place['title'] = res.data.title;
+      place['address'] = res.data.address;
     }).catch((err) => {
       console.log(err);
       oops("삭제되었거나 장소 찾을 수 없습니다.");
@@ -101,4 +103,15 @@ async function PlaceFindById(id) {
   return place;
 }
 
-export { Axios, AxiosMulti, Kakao, KakaoId, KakaoPathFinder, PlaceFindById };
+function KakaoAddress2Coord() {
+  const instance = axios.create({
+    baseURL: VITE_KAKAO_ADDRESS_API_KEY,
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+      "Authorization": `KakaoAK ${VITE_KAKAO_RESTAPIKEY}`
+    }
+  });
+  return instance;
+}
+
+export { Axios, AxiosMulti, Kakao, KakaoId, KakaoPathFinder, PlaceFindById, KakaoAddress2Coord };
