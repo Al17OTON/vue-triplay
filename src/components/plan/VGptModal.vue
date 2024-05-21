@@ -1,7 +1,9 @@
 <script setup>
-defineProps({
-  place: Object,
+const props = defineProps({
+  place: String,
+  info: String
 });
+
 </script>
 
 <template>
@@ -15,12 +17,10 @@ defineProps({
         </div>
         <hr />
         <div>
-          <div class="chat client">{{ place.place_name }}에 대해서 알려줘</div>
+          <div class="chat client">{{ place }}에 대해 알려줘</div>
 
           <div class="chat gpt">
-            한밭수목원은 대전의 대표적인 자연 공원으로, 다양한 종류의 나무와 식물이 있는 아름다운
-            환경을 제공합니다. 이곳은 산책로와 휴식 공간을 갖추어 방문객들에게 자연 속에서의 즐거운
-            시간을 선사합니다.
+            {{info}}
           </div>
         </div>
       </div>
@@ -41,6 +41,7 @@ defineProps({
   margin-bottom: 8px;
 }
 .client {
+  min-width: 180px;
   background-color: #32f061;
   float: right;
 }

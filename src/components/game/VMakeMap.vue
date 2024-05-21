@@ -73,7 +73,7 @@ function placesSearchCB(data, status, pagination) {
     searchResult.value = data;
     console.log(searchResult.value);
     displayPlaces(data); // 검색 목록, 마커
-    displayPagination(pagination); // 페이지 번호
+    // displayPagination(pagination); // 페이지 번호
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
     alert("검색 결과가 존재하지 않습니다.");
     return;

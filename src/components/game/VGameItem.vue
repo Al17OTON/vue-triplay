@@ -14,16 +14,16 @@ const locations = ref();
 const searchQuery = {
   // category_group_code: "AT4",
   query: "",
-  page: "1",
   size: "15",
 };
 
 const startGame = () => {
   searchQuery.query = props.game.keyword;
+  searchQuery.page = props.game.seedInfo[0]
   searchKeywordApi(
     searchQuery,
     ({ data }) => {
-      const gameList = createListFromSeedApi(props.game.seedInfo, data.documents)
+      const gameList = createListFromSeedApi(props.game.seedInfo.substring(2), data.documents)
 
       store.newGame = false;
       store.id = 0;
@@ -46,11 +46,21 @@ const startGame = () => {
 </script>
 
 <template>
-  <div>
+  <div class="game-item">
     {{ game.gameTitle }} / {{ game.keyword }} / {{ game.memberId }} /
     {{ game.difficulty }}
-    <button @click="startGame" class="btn btn-primary btn-sm">시작하기</button>
+    <button 
+      @click="startGame" 
+      style="float: right"
+      class="btn btn-primary ">
+      시작하기</button>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.game-item{
+  background-color: aquamarine;
+  padding: 10px;
+  border-radius: 10px;
+}
+</style>

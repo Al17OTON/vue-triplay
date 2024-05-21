@@ -350,7 +350,7 @@ const onClick = (id, isDetail) => {
 };
 
 const savePlaces2Pinia = (distance, duration) => {
-  let seed = "";
+  let seed = `${gameStore.page} `;
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     if (selected.value[places.value[i].id + ""]) {

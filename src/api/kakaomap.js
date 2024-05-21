@@ -9,8 +9,8 @@ function searchKeywordApi(param, success, fail){
 function createListFromSeedApi(seedInfo, locations){
     const ids = seedInfo.split(" ");
     const gameList = [];
-    for (var location of locations) {
-        for (var id of ids) {
+    for (var id of ids) {
+        for (var location of locations) { // 15
             if (location.id === id) {
                 let place = {};
                 place.id = location.id;
