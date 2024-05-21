@@ -59,7 +59,7 @@ const startGame = () => {
 
 <style scoped>
 .game-item{
-  background-color: aquamarine;
+  background-color: white;
   padding: 10px;
   border-radius: 10px;
 }
