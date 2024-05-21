@@ -5,6 +5,7 @@ import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
 import VMakeMap from "@/components/game/VMakeMap.vue";
+import CustomPlan from "@/components/plan/CustomPlan.vue";
 const memberStore = useMemberStore();
 const store = useGameStore();
 const router = useRouter();
@@ -54,7 +55,8 @@ const saveGame = () => {
           placeholder="게임 제목을 입력해주세요."
         />
         <hr>
-        <VMakeMap/>
+        <!-- <VMakeMap/> -->
+        <CustomPlan :isGame="true" style="height: 600px;"/>
         <button @click="saveSeed" class="btn btn-outline-success mt-3 p-2 align-center ">
           게임 저장
         </button>

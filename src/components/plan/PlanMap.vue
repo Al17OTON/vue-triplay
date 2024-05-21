@@ -36,6 +36,7 @@ const appKey = import.meta.env.VITE_KAKAO_APPKEY;
 const pathResult = ref();
 
 const loadScript = () => {
+  console.log("load");
   const script = document.createElement("script");
   /* global kakao */
   script.onload = () => kakao.maps.load(initMap);
@@ -44,6 +45,7 @@ const loadScript = () => {
 };
 
 const initMap = () => {
+  console.log("init");
   defaultLocation = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);
   const container = document.getElementById("map");
   const options = {

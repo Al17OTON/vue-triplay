@@ -6,8 +6,13 @@ import { useMemberStore } from "@/stores/memberStore.js";
 import { insertPlanApi } from "@/api/plan.js";
 import { saveSeedApi } from "@/api/game";
 import PlanMap from "@/components/plan/PlanMap.vue";
+import CustomPlan from "@/components/plan/CustomPlan.vue";
 import { oops } from "@/util/sweetAlert.js";
 import { Axios } from "@/util/http-commons.js";
+
+const props = defineProps({
+  isCustom: Boolean
+})
 
 const api = Axios();
 const memberStore = useMemberStore();
@@ -96,7 +101,8 @@ const submit = async () => {
         </div>
 
         <hr />
-        <PlanMap :is-detail="false" :gameList="gameStore.gameList" style="height: 600px" />
+        <PlanMap v-if="!isCustom" :is-detail="false" :gameList="gameStore.gameList" style="height: 600px" />
+        <CustomPlan v-else :isGame="false" style="height: 600px"/>
 
         <input class="form-control mt-3 mb-3" @change="addFile" ref="file" type="file" />
         <textarea

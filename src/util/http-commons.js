@@ -7,7 +7,6 @@ const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY
 function Axios() {
   const instance = axios.create({
     baseURL: VITE_API_URL,
-    // baseURL: VITE_RELEASE_API_URL,
     headers: {
       "Content-Type": "application/json;charset=utf-8",
     },
