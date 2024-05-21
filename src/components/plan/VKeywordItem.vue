@@ -11,8 +11,10 @@ defineProps({
 <style scoped>
 .tag {
   display: inline-block;
-  padding: 5px;
+  padding: 5px 9px;
   border-radius: 10px;
-  border: 1px solid black;
+  color: white;
+  background-color: #12af29;
+  /* border: 1px solid black; */
 }
 </style>
