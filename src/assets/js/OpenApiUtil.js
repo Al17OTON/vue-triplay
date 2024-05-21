@@ -12,6 +12,7 @@ export const OpenApiUtil = {
           messages: [{ role: "system", content: msg }],
           model: "gpt-4o",
           // model: "gpt-3.5-turbo",
+
         });
     
         console.log(completion.choices[0].message.content);
