@@ -1,15 +1,39 @@
 <script setup>
-// import Header from "@/components/common/Header.vue";
 import LeaderBoard from "@/components/main/LeaderBoard.vue";
 import MainCarousel from "@/components/main/MainCarousel.vue";
-import MainContents from "@/components/main/MainContents.vue";
-// import Footer from "@/components/common/Footer.vue";
 </script>
 
 <template>
-  <MainCarousel />
-  <MainContents />
-  <LeaderBoard />
+  <div class="container">
+    <div class="split-animation">
+      <MainCarousel />
+    </div>
+    <div class="split-animation">
+      <LeaderBoard />
+    </div>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh; /* 화면 전체 높이 */
+}
+
+.split-animation {
+  animation: slide-up 1s ease forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(50px); /* 시작 위치 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0); /* 최종 위치 */
+  }
+}
+</style>

@@ -59,7 +59,7 @@ const saveGame = () => {
   <div class="container d-flex" style="height: 600px">
     <div class="row justify-content-center align-self-center w-100">
       <div class="col-lg-6 text-center">
-        <h3>게임 최종 결과!</h3>
+        <h2>게임 최종 결과!</h2>
         <div class="result-score">{{ store.score }}</div>
         <h1>{{ store.gameSeed }}</h1>
         <button
@@ -79,6 +79,9 @@ const saveGame = () => {
       </div>
     </div>
   </div>
+  <img class="confetti confetti1" src="/src/assets/img/icn/icn_confetti.png" />
+  <img class="confetti confetti2" src="/src/assets/img/icn/icn_confetti2.png" />
+  <!-- <img class="confetti3" src="/src/assets/img/icn/icn_confetti3.png" /> -->
 
   <!-- 게임 저장 모달 -->
   <div class="modal fade" id="gameSaveModal" tabindex="-1" aria-hidden="true">
@@ -116,7 +119,35 @@ const saveGame = () => {
 
 <style scoped>
 .result-score {
-  font-size: 55px;
+  font-size: 75px;
   font-weight: bold;
+}
+.confetti {
+  position: absolute;
+  width: 200px;
+  opacity: 0;
+  animation: confettiAnimation 1s ease-in-out forwards;
+}
+.confetti1 {
+  top: 40%;
+  right: 25%;
+}
+.confetti2 {
+  top: 20%;
+  left: 28%;
+}
+.confetti3 {
+  top: 50%;
+  left: 25%;
+}
+@keyframes confettiAnimation {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

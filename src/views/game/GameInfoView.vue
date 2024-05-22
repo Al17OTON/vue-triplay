@@ -14,7 +14,7 @@ onMounted(() => {
     countList.value.push({ text: i, value: i });
   }
   searchQuery.value.page = Math.floor(Math.random() * 2) + 1;
-  console.log(searchQuery.value.page)
+  console.log(searchQuery.value.page);
 });
 
 const sidoList = ref();
@@ -49,7 +49,7 @@ const selectRandom = (count) => {
 };
 const createSeed = (locations) => {
   let idx = selectRandom(gameSetting.value.count);
-  seedInfo.value = searchQuery.value.page + " "
+  seedInfo.value = searchQuery.value.page + " ";
   for (var i of idx) {
     let place = {};
     place.id = locations[i].id;
@@ -71,12 +71,12 @@ const createSeed = (locations) => {
     seedInfo: seedInfo.value,
     count: gameSetting.value.count,
   };
-  console.log("new Seed: " + seedInfo.value)
+  console.log("new Seed: " + seedInfo.value);
   console.log(gameList.value);
 };
 const searchKeyword = () => {
   console.log(searchQuery.value);
-  if(searchQuery.value.query[1] == '제주도'){
+  if (searchQuery.value.query[1] == "제주도") {
     searchQuery.value.page = 3;
   }
   if (searchQuery.value.query[0] != "" && gameSetting.value.difficulty && gameSetting.value.count) {
@@ -186,7 +186,7 @@ const selectGugun = (key, text) => {
           />
         </div>
         <div class="d-flex justify-content-center">
-          <button class="btn mt-3 btn-primary btn-lg" @click="searchKeyword">게임 시작</button>
+          <button class="btn mt-3 btn-success btn-lg" @click="searchKeyword">게임 시작</button>
         </div>
       </div>
     </div>
