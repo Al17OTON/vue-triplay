@@ -10,12 +10,14 @@ const info = ref({
   member_name: "",
   member_email: "",
   member_id: "",
+  score: 0,
 });
-const min = ref();
-const max = ref();
+const min = ref(0);
+const max = ref(0);
 const styleWidth = ref();
 const bigImg = ref();
 const smallImg = ref();
+const grade = ref();
 
 const getInfo = () => {
   api
@@ -28,12 +30,35 @@ const getInfo = () => {
       info.value = res.data.resdata;
       info.value.member_register_time = info.value.member_register_time.slice(0, 10);
       // 점수에 따라 등급 및 최소/최대값 정해주기
-      min.value = 0;
-      max.value = 100;
-      bigImg.value = "/src/assets/img/icn/icn_silver2.png";
-      smallImg.value = "/src/assets/img/icn/icn_silver.png";
-      styleWidth.value = (info.value.score * 100) / max.value;
+
+      if (info.value.score <= 20000) {
+        min.value = 0;
+        max.value = 20000;
+        grade.value = "sprout";
+      } else if (info.value.score <= 40000) {
+        min.value = 20001;
+        max.value = 40000;
+        grade.value = "bronze";
+      } else if (info.value.score <= 60000) {
+        min.value = 40001;
+        max.value = 60000;
+        grade.value = "silver";
+      } else {
+        min.value = 60001;
+        max.value = 100000;
+        grade.value = "gold";
+      }
+      bigImg.value = `/src/assets/img/icn/icn_${grade.value}2.png`;
+      smallImg.value = `/src/assets/img/icn/icn_${grade.value}.png`;
+      styleWidth.value = ((info.value.score - min.value) * 100) / min.value;
     });
+};
+
+const addCommasToNumberString = (number) => {
+  if (typeof number !== "string") {
+    number = number.toString();
+  }
+  return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 onMounted(() => {
@@ -47,8 +72,6 @@ const modify = () => {
   emit("needPassword", "modify");
 };
 </script>
-
-2024-05-21T08:59:06.000+00:00
 
 <template>
   <div>
@@ -73,8 +96,8 @@ const modify = () => {
                 </div>
                 <div class="mb-4">
                   등급
-                  <div class="info">{{ info.score }}</div>
                   <img class="info" :src="smallImg" />
+                  <div class="info me-2">{{ grade }}</div>
                 </div>
                 <div>
                   가입일
@@ -92,11 +115,12 @@ const modify = () => {
         <!-- 중앙 center content start -->
         <div class="col-lg-6">
           <div class="card card-shadow">
-            <div class="card-header text-white fs-5 d-flex justify-content-between">등급</div>
-            <div class="card-body">
+            <div class="card-header text-white p-3 fs-5 d-flex justify-content-between">등급</div>
+            <div class="card-body p-3">
               <img :src="bigImg" alt="" />
-              {{ info.score }}
-              <div class="progress mt-2">
+              <span class="info-score">{{ addCommasToNumberString(info.score) }} </span
+              ><span style="font-size: 18px">point</span>
+              <div class="progress mt-3">
                 <div
                   class="progress-bar progress-bar-striped progress-bar-animated bg-success"
                   role="progressbar"
@@ -105,6 +129,10 @@ const modify = () => {
                   :aria-valuemax="max"
                   :style="{ width: styleWidth + '%' }"
                 ></div>
+              </div>
+              <div class="mt-2">
+                {{ addCommasToNumberString(min) }}
+                <div style="float: right">{{ addCommasToNumberString(max) }}</div>
               </div>
             </div>
           </div>
@@ -142,5 +170,11 @@ const modify = () => {
 .info {
   font-weight: bold;
   float: right;
+}
+
+.info-score {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 0 10px;
 }
 </style>

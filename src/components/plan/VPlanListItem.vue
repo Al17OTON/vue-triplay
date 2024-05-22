@@ -22,20 +22,20 @@ const moveDetail = (planId) => {
 </script>
 <template>
   <div>
-    <div @click="moveDetail(plan.planId)" class="card mb-3" style="max-width: 540px; height: 250px">
+    <div @click="moveDetail(plan.planId)" class="card mb-3" style="height: 230px">
       <div class="row g-0">
         <div class="col-6">
           <img
             :src="getImageUrl(plan.file)"
-            style="height: 250px; width: 270px"
+            style="height: 230px; width: 270px"
             class="rounded-start img-fluid"
           />
         </div>
         <div class="col-6">
           <div class="card-body">
-            <h5 class="card-title">{{ plan.planTitle }}</h5>
+            <h5 class="card-title fw-bold">{{ plan.planTitle }}</h5>
             <p class="card-text">
-              <small class="text-muted">작성자 &nbsp;|&nbsp;{{ plan.memberId }}</small>
+              <p class="text-muted">작성자 &nbsp;|&nbsp; {{ plan.memberId }}</p>
             </p>
             <p class="card-text">
               <VKeywordItem :keyword="plan.keyword" />

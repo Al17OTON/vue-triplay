@@ -30,6 +30,13 @@ onMounted(async () => {
     getMyLeaderBoard();
   }
 });
+
+const addCommasToNumberString = (number) => {
+  if (typeof number !== "string") {
+    number = number.toString();
+  }
+  return number.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 </script>
 
 <template>
@@ -51,7 +58,7 @@ onMounted(async () => {
       <li v-for="leader in leaderBoard" :key="leader.member_id" class="leaderboard-item">
         <span class="rank">{{ leader.rank }}</span>
         <span class="username">{{ leader.member_id }}</span>
-        <span class="score">{{ leader.score }}</span>
+        <span class="score">{{ addCommasToNumberString(leader.score) }}</span>
       </li>
     </ul>
   </div>

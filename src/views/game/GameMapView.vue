@@ -30,25 +30,39 @@ const nextPlace = () => {
   }
 };
 
-const getDistance = (dis) => {
-  distance.value = dis;
-  var dif = 1000 - dis;
-  store.score += dif;
-  curScore.value = dif;
-  console.log("거리: " + dis);
-};
-
 const setHint = () => {
-  // if (store.difficulty === "EASY") hintFlag.value = true;
-  // else targetFlag.value = true;
-  hintFlag.value = true;
-  targetFlag.value = true;
+  if (store.difficulty === "HARD") hintFlag.value = true;
+  else targetFlag.value = true;
+  // hintFlag.value = true;
+  // targetFlag.value = true;
 };
 
 onMounted(() => {
   console.log(store.page);
   console.log(store.seedInfo);
 });
+
+const getDistance = (dis) => {
+  distance.value = dis;
+  var cur = 0;
+  if (dis <= 1000) {
+    cur = 1000 - dis;
+  } else if (dis <= 5000) {
+    cur = -Math.floor(dis / 5);
+  } else if (dis <= 10000) {
+    cur = -1000;
+  } else {
+    cur = -1100;
+  }
+
+  store.score += cur;
+  curScore.value = 1000 + cur;
+  if (hintFlag.value) {
+    store.score -= 100;
+    curScore.value -= 100;
+  }
+  console.log("거리: " + dis);
+};
 </script>
 
 <template>
@@ -112,6 +126,12 @@ onMounted(() => {
         </div>
         <hr />
         <div class="modal-body">
+          <div class="mb-3">
+            <h5>플레이스</h5>
+            <span style="font-size: 18pt; font-weight: bold">{{
+              store.gameList[store.id].place_name
+            }}</span>
+          </div>
           <div class="mb-3">
             <h5>거리</h5>
             <span style="font-size: 18pt; font-weight: bold">{{ distance }} m</span>
