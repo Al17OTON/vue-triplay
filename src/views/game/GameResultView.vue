@@ -8,6 +8,7 @@ const router = useRouter();
 const memberStore = useMemberStore();
 const store = useGameStore();
 
+const tempScore = store.score;
 onMounted(() => {
   console.log(store.seedInfo);
   updateScoreApi(
@@ -16,7 +17,10 @@ onMounted(() => {
       member_id: memberStore.member_id,
       amount: store.score,
     },
-    ({ data }) => console.log(data),
+    ({ data }) => {
+      console.log(data);
+      store.score = 0;
+    },
     (error) => console.log(error)
   );
 });
@@ -60,7 +64,7 @@ const saveGame = () => {
     <div class="row justify-content-center align-self-center w-100">
       <div class="col-lg-6 text-center">
         <h2>게임 최종 결과!</h2>
-        <div class="result-score">{{ store.score }}</div>
+        <div class="result-score">{{ tempScore }}</div>
         <h1>{{ store.gameSeed }}</h1>
         <button
           v-show="store.newGame"

@@ -4,13 +4,7 @@ import { getGameListApi } from "@/api/game.js";
 import VGameItem from "@/components/game/VGameItem.vue";
 
 const gameList = ref();
-const column = ref({
-  gameTitle: "제목",
-  keyword: "키워드",
-  member_id: "작성자",
-  difficulty: "난이도",
-  column: true,
-});
+
 onMounted(() => {
   getGameListApi(
     ({ data }) => {
