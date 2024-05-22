@@ -10,8 +10,8 @@ defineProps({
     <div class="d-flex">
       <h3>{{ index + 1 }}</h3>
       <div class="flex-fill ms-2 vertical-container">
-        <span class="place-name">{{ place.place_name }}</span>
-        {{ place.address_name }}
+        <span class="place-name">{{ place.place_name }}{{ place.title }}</span>
+        {{ place.address_name }}{{ place.address }}
       </div>
       <button
         data-bs-toggle="modal"
