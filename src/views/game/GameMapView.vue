@@ -1,5 +1,5 @@
 <script setup>
-import { ref,  onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import VRoadMap from "@/components/game/VRoadMap.vue";
@@ -45,10 +45,10 @@ const setHint = () => {
   targetFlag.value = true;
 };
 
-onMounted(()=>{
-  console.log(store.page)
+onMounted(() => {
+  console.log(store.page);
   console.log(store.seedInfo);
-})
+});
 </script>
 
 <template>
