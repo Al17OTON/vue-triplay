@@ -18,7 +18,6 @@ const props = defineProps({
 });
 const imrich = ref(false); //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
-let geocoder = null;
 /**
 gameStore 
 gameList: 플레이스 배열
@@ -62,13 +61,19 @@ const initMap = async () => {
   map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
 
   if (!props.isDetail) {
-    places.value = props.gameList;
-    //   전부 선택으로 할당
-    for (var i = 0; i < places.value.length; i++) {
-      selected.value[places.value[i].id + ""] = true;
-    }
-    selectedCnt.value = places.value.length;
-    drawMarker();
+    // places.value = props.gameList;
+    // console.log(props.gameList);
+    // //   전부 선택으로 할당
+    // for (var i = 0; i < places.value.length; i++) {
+    //   selected.value[places.value[i].id + ""] = true;
+    // }
+    // selectedCnt.value = places.value.length;
+    // drawMarker();
+    setTimeout(() => {
+      places.value = props.gameList;
+      getPlace(0);
+    }, 200);
+    console.log(props.gameList);
   } else {
     // props로 객체를 받으면 바로 받아와지는것이 아니라 값이 천천히 들어온다.
     // 따라서 Watch는 배열의 길이만큼 호출된다 + 맨처음에 비어있는 상태까지.
@@ -76,7 +81,7 @@ const initMap = async () => {
     // Watch의 종료 시점을 알기 위해서 배열의 길이를 알아야하는데 매우 귀찮기 때문에 100ms 뒤에 호출하도록 한다.
     setTimeout(() => {
       getPlace(0);
-    }, 100);
+    }, 200);
   }
   // else {
   //   cnt.value = 0;
@@ -105,11 +110,14 @@ const initMap = async () => {
 };
 
 const getPlace = (idx) => {
-  address2Coord.get(`address?query=${places.value[idx].address}`)
+// address2Coord.get(`address?query=${places.value[idx].address}`)
+  address2Coord.get(`keyword?query=${places.value[idx].title}`)
   .then((res) => {
-    // places.value[idx].
+    // console.log(res);
     const pos = { 'x': res.data.documents[0].x, 'y': res.data.documents[0].y };
+    updatePlaceId(idx, res.data.documents[0].id);
     updatePlaceLocation(idx, pos); 
+    // console.log(places.value);
     selected.value[places.value[idx].id + ""] = true;
     console.log(places.value);
     if(idx < places.value.length - 1)
@@ -117,15 +125,21 @@ const getPlace = (idx) => {
     else {
       selectedCnt.value = places.value.length; 
       drawMarker();
-      findPath();
+      if(props.isDetail)findPath();
     }
   })
 }
 function updatePlaceLocation(index, newLocation) {
-  places.value[index] = {
+  places.value[index] = { 
     ...places.value[index],
     location: newLocation
   };
+}
+function updatePlaceId(index, newId) {
+  places.value[index] = {
+    ...places.value[index],
+    id: newId
+  }
 }
 
 // watch(
@@ -144,7 +158,7 @@ function updatePlaceLocation(index, newLocation) {
 
 watch(
   () => props.gameList, async (newG, oldG) => {
-
+    console.log(props.gameList);
     places.value = newG;
     // if (newG.length === 3 && !stopFlag.value) {
     //   console.log(newG);
@@ -152,7 +166,7 @@ watch(
     //   places.value = newG;
     //   getPlace(0);
     // }
-  }, { deep: true }
+  }, { deep: true } //모든 watch를 호출
 );
 
 //Smooth 버튼에서 사용
@@ -423,7 +437,8 @@ const onClick = (id, isDetail) => {
 };
 
 const savePlaces2Pinia = (distance, duration) => {
-  let seed = `${gameStore.page} `;
+  // let seed = `${gameStore.page} `;
+  let seed = '';
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     if (selected.value[places.value[i].id + ""]) {
@@ -431,6 +446,8 @@ const savePlaces2Pinia = (distance, duration) => {
       cnt++;
     }
   }
+  console.log("SAVE2PINIA");
+  console.log(selected.value);
   console.log(places.value);
   console.log(seed);
   gameStore.seedInfo.isOk = true;

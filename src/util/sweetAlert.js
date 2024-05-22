@@ -7,3 +7,14 @@ export const oops = (msg) => {
         text: msg,
     });
 }
+
+export const loading = (msg) => {
+    Swal.fire({
+                title: 'Please Wait !',
+                html:  msg,// add html attribute if you want or remove
+                allowOutsideClick: false,
+                onBeforeOpen: () => {
+                    Swal.showLoading()
+                },
+    });
+}
