@@ -1,5 +1,6 @@
 <script setup>
 import VSelect from "/src/components/common/VSelect.vue";
+import VIntroModal from "@/components/game/VIntroModal.vue";
 import { ref, onMounted } from "vue";
 import { searchKeywordApi } from "@/api/kakaomap.js";
 import { getSidoApi, getGugunApi } from "@/api/game.js";
@@ -13,7 +14,7 @@ onMounted(() => {
   for (let i = 3; i <= 10; i++) {
     countList.value.push({ text: i, value: i });
   }
-  searchQuery.value.page = Math.floor(Math.random() * 2) + 1;
+  searchQuery.value.page = Math.floor(Math.random() * 4) + 1;
   console.log(searchQuery.value.page);
 });
 
@@ -131,6 +132,7 @@ const selectGugun = (key, text) => {
 </script>
 
 <template>
+  <VIntroModal/>
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-lg-6">
@@ -188,6 +190,11 @@ const selectGugun = (key, text) => {
           />
         </div>
         <div class="d-flex justify-content-center">
+          <button 
+            class="btn mt-3 btn-secondary btn-lg me-3"
+            data-bs-toggle="modal"
+            data-bs-target="#introModal"
+            >게임 설명</button>
           <button class="btn mt-3 btn-success btn-lg" @click="searchKeyword">게임 시작</button>
         </div>
       </div>

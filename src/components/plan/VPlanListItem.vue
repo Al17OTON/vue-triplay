@@ -1,19 +1,23 @@
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import VKeywordItem from "./VKeywordItem.vue";
 const router = useRouter();
-defineProps({
+const props = defineProps({
   plan: Object,
 });
 
-const thumbnail = "/src/assets/img/bg/bg_default.jpg";
 const fileUrl = import.meta.env.VITE_API_URL + "plan";
+const thumbnail = computed(() => {
+  console.log(props.plan.file)
+  return props.plan.file ? getImageUrl(props.plan.file) : "/src/assets/img/bg/bg_default.jpg";
+}) 
 
 const getImageUrl = (file) => {
   if (file && file.saveFolder && file.saveFile) {
     return fileUrl + `/${file.saveFolder}/${file.saveFile}`;
   }
-  return thumbnail;
+  return "/src/assets/img/bg/bg_default.jpg";
 };
 
 const moveDetail = (planId) => {
@@ -26,7 +30,7 @@ const moveDetail = (planId) => {
       <div class="row g-0">
         <div class="col-6">
           <img
-            :src="getImageUrl(plan.file)"
+            :src="thumbnail"
             style="height: 230px; width: 270px"
             class="rounded-start img-fluid"
           />

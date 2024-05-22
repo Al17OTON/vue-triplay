@@ -65,8 +65,8 @@ const getDistance = (dis) => {
   store.score += cur;
   curScore.value = 1000 + cur;
   if (hintFlag.value) {
-    store.score -= 100;
-    curScore.value -= 100;
+    store.score -= 500;
+    curScore.value -= 500;
   }
   console.log("거리: " + dis);
 };
@@ -82,6 +82,7 @@ const submit = () => {
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-lg-12">
+        <
         <!-- reset: {{ resetFlag }} submit: {{ submitFlag }} <br /> -->
         <button class="btn btn-primary btn-md me-3" @click="setHint">힌트</button>
         <button

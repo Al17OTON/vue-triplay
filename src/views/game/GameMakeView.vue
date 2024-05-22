@@ -5,7 +5,8 @@ import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
 import { saveGameApi, saveSeedApi } from "@/api/game.js";
 import VMakeMap from "@/components/game/VMakeMap.vue";
-import CustomPlan from "@/components/plan/CustomPlan.vue";
+import { oops } from "@/util/sweetAlert.js";
+
 const memberStore = useMemberStore();
 const store = useGameStore();
 const router = useRouter();
@@ -15,15 +16,19 @@ const gameTitle = ref();
 const saveSeed = () => {
   console.log("결과에서 seedInfo: ");
   console.log(store.seedInfo);
-  saveSeedApi(
-    store.seedInfo,
-    ({ data }) => {
-      seedId.value = data.resdata;
-      // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
-      saveGame();
-    },
-    (error) => console.log(error)
-  );
+  if(!gameTitle.value){
+    oops("게임 제목을 입력해주세요.")
+  }else{
+    saveSeedApi(
+      store.seedInfo,
+      ({ data }) => {
+        seedId.value = data.resdata;
+        // TODO: seed가 겹친다면 그 seedId를 찾아 넣어주기
+        saveGame();
+      },
+      (error) => console.log(error)
+    );
+  }
 };
 
 const saveGame = () => {

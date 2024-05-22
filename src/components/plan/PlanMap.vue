@@ -564,7 +564,7 @@ function deleteDistnce() {
             role="switch"
             id="flexSwitchCheckDefault"
           />
-          <label class="form-check-label" for="flexSwitchCheckDefault">I'M RICH!</label>
+          <label for="flexSwitchCheckDefault">I'M RICH!</label>
         </div>
         <div class="custom_submit">
           <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
@@ -740,7 +740,7 @@ function deleteDistnce() {
 
 .custom_switch {
   position: absolute;
-  right: 10px;
+  right: 0px;
   bottom: 45px;
   z-index: 1;
   display: flex;

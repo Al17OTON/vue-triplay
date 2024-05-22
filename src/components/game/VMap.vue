@@ -100,10 +100,6 @@ watch(
         store.gameList[store.id].location.x
       );
       var randomLatLng = getRandomLocation(targetLatLng, 3000);
-      // var randomMarker = new kakao.maps.Marker({
-      //   position: randomLatLng,
-      // });
-      // randomMarker.setMap(map);
 
       circle = new kakao.maps.Circle({
         center: randomLatLng, // 원의 중심좌표 입니다
@@ -116,6 +112,8 @@ watch(
       });
 
       circle.setMap(map);
+      map.setLevel(8);
+      map.panTo(randomLatLng);
     }
   }
 );
