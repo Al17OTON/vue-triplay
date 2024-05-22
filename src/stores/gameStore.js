@@ -31,6 +31,8 @@ export const useGameStore = defineStore('game', () => {
   const createSeedInfo = () => {
     // page.value = 1;
     // seedInfo.value.seedInfo = `${page.value} `
+    seedInfo.value.seedInfo = '';
+    console.log(seedInfo.value.seedInfo);
     for (var place of placeList.value) {
       seedInfo.value.seedInfo += place.id + " "
     }
