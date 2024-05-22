@@ -54,7 +54,7 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="row justify-content-md-center">
-      <div class="col-lg-10">
+      <div class="col-lg-12">
         <!-- reset: {{ resetFlag }} submit: {{ submitFlag }} <br /> -->
         <button class="btn btn-primary btn-md me-3" @click="setHint">힌트</button>
         <button

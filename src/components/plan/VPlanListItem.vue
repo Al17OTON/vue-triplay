@@ -6,7 +6,7 @@ defineProps({
   plan: Object,
 });
 
-const thumbnail = "/src/assets/img/bg_default.jpg";
+const thumbnail = "/src/assets/img/bg/bg_default.jpg";
 const fileUrl = import.meta.env.VITE_API_URL + "plan";
 
 const getImageUrl = (file) => {
@@ -22,10 +22,14 @@ const moveDetail = (planId) => {
 </script>
 <template>
   <div>
-    <div @click="moveDetail(plan.planId)" class="card mb-3" style="max-width: 540px; height: 230px">
+    <div @click="moveDetail(plan.planId)" class="card mb-3" style="max-width: 540px; height: 250px">
       <div class="row g-0">
         <div class="col-6">
-          <img :src="getImageUrl(plan.file)" style="height: 230px; width: 270px" class="rounded-start img-fluid" />
+          <img
+            :src="getImageUrl(plan.file)"
+            style="height: 250px; width: 270px"
+            class="rounded-start img-fluid"
+          />
         </div>
         <div class="col-6">
           <div class="card-body">

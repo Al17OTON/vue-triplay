@@ -11,7 +11,7 @@ function getPlanListApi(success, fail){
 }
 
 function getPlanApi(planId, success, fail){
-    http.get(`plan/${planId}`).then(success).catch(fail);
+    return http.get(`plan/${planId}`).then(success).catch(fail);
 }
 
 function deletePlanApi(planId, success, fail){

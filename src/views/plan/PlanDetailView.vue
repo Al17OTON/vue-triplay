@@ -10,6 +10,7 @@ import MemoList from "@/components/plan/MemoList.vue";
 import VPlanPlaceItem from "@/components/plan/VPlanPlaceItem.vue";
 import VGptModal from "@/components/plan/VGptModal.vue";
 import { OpenApiUtil } from "@/assets/js/OpenApiUtil";
+import { PlaceFindById } from "@/util/http-commons.js";
 
 const route = useRoute();
 const router = useRouter();
@@ -24,15 +25,15 @@ const gptPlace = ref({
 });
 const gptInfo = ref("...");
 
-onMounted(() => {
-  searchIdApi(
-    "186032184",
-    (res) => {
-      console.log(res);
-      console.log(res.data);
-    },
-    (error) => console.log(error)
-  );
+onMounted( async () => {
+  // searchIdApi(
+  //   "186032184",
+  //   (res) => {
+  //     console.log(res);
+  //     console.log(res.data);
+  //   },
+  //   (error) => console.log(error)
+  // );
   memoSwitch.value = true; //댓글 컴포넌트의 watch를 활성화하기위해 이렇게 해주기
   planId.value = route.query.planId;
   console.log(route.query.planId);
@@ -41,28 +42,52 @@ onMounted(() => {
     ({ data }) => {},
     (error) => console.log(error)
   );
-
-  getPlanApi(
-    route.query.planId,
-    ({ data }) => {
-      console.log(data);
-      plan.value = data.resdata;
-      // seed n : {x : 127.11024293202674, y : 37.394348634049784}
-      searchKeywordApi(
-        { query: plan.value.keyword, page: plan.value.seedInfo[0] },
-        ({ data }) => {
-          plan.value.placeList = createListFromSeedApi(
-            plan.value.seedInfo.substring(2),
-            data.documents
-          );
-          gameStore.gameList = plan.value.placeList;
-        },
-        (error) => console.log(error)
-      );
-    },
-    (error) => console.log(error)
-  );
+    
+  gameStore.gameList = await getPlace();
+  // console.log(gameStore.gameList);
+  // getPlanApi(
+  //   route.query.planId,
+  //   ({ data }) => {
+  //     console.log(data);
+  //     plan.value = data.resdata;
+  //     // seed n : {x : 127.11024293202674, y : 37.394348634049784}
+  //     searchKeywordApi(
+  //       { query: plan.value.keyword, page: plan.value.seedInfo[0] },
+  //       ({ data }) => {
+  //         plan.value.placeList = createListFromSeedApi(
+  //           plan.value.seedInfo.substring(2),
+  //           data.documents
+  //         );
+  //         gameStore.gameList = plan.value.placeList;
+  //       },
+  //       (error) => console.log(error)
+  //     );
+  //   },
+  //   (error) => console.log(error)
+  // );
 });
+
+const getPlace = async () => {
+  return await getPlanApi(route.query.planId,
+   async ({data}) => {
+      // console.log(data);
+      plan.value = data.resdata;
+      const ids = plan.value.seedInfo.split(' ');
+      // console.log(ids);
+      let placeInfo = [];
+      plan.value.placeList = [];
+      for(var i = 0; i < ids.length; i++) { 
+        if(i == ids.length - 1) break; 
+        const place = await PlaceFindById(ids[i]);
+        place.id = ids[i];
+        // place.location = {x:0, y:0};
+        placeInfo.push(place);
+        plan.value.placeList.push(place);
+      }
+      return placeInfo;
+    }
+  )
+}
 
 const deletePlan = () => {
   deletePlanApi(
@@ -80,10 +105,10 @@ const setRoot = () => {
 };
 
 const clickPlace = async (place) => {
-  gptPlace.value = place.place_name;
+  gptPlace.value = place.place_name ? place.place_name:place.title;
   gptInfo.value = "...";
   gptInfo.value = await OpenApiUtil.prompt(
-    `${place.address_name}에 위치한 ${place.place_name}에 대한 설명 3줄 요약해줘`
+    `${place.address_name ? place.address_name:place.address}에 위치한 ${gptPlace.value}에 대한 설명 3줄 요약해줘`
   );
 };
 </script>

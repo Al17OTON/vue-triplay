@@ -1,7 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
 const router = useRouter();
-
 </script>
 
 <template>
@@ -11,12 +10,13 @@ const router = useRouter();
         <div class="col">
           <div
             class="clickable card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-            id="card1"
+            id="game1"
           >
-            <div 
-              @click="router.push({name: 'gameinfo'})" 
-              class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h2 class=" pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" value="1">게임하기</h2>
+            <div
+              @click="router.push({ name: 'gameinfo' })"
+              class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+            >
+              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" value="1">게임하기</h2>
             </div>
           </div>
         </div>
@@ -24,12 +24,13 @@ const router = useRouter();
         <div class="col">
           <div
             class="clickable card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-            id="card2"
+            id="game2"
           >
             <div
-              @click="router.push({name: 'gamemake'})"  
-              class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-              <h2 class=" pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">게임 만들기</h2>
+              @click="router.push({ name: 'gamemake' })"
+              class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1"
+            >
+              <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">게임 만들기</h2>
             </div>
           </div>
         </div>
@@ -37,11 +38,12 @@ const router = useRouter();
         <div class="col">
           <div
             class="clickable card card-cover h-100 overflow-hidden text-white bg-dark rounded-5 shadow-lg"
-            id="card3"
+            id="game3"
           >
             <div
-              @click="router.push({name: 'gamelist'})"   
-              class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1">
+              @click="router.push({ name: 'gamelist' })"
+              class="d-flex flex-column h-100 p-5 pb-3 text-shadow-1"
+            >
               <h2 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">게임 둘러보기</h2>
             </div>
           </div>
@@ -52,7 +54,16 @@ const router = useRouter();
 </template>
 
 <style scoped>
-.clickable{
-  cursor: pointer
+#game1 {
+  background-image: url("@/assets/img/bg/bg_btn1.jpg");
+}
+#game2 {
+  background-image: url("@/assets/img/bg/bg_btn2.jpg");
+}
+#game3 {
+  background-image: url("@/assets/img/bg/bg_btn3.jpg");
+}
+.clickable {
+  cursor: pointer;
 }
 </style>

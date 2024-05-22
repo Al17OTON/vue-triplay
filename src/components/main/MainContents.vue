@@ -83,22 +83,22 @@
 </template>
 
 <style scoped>
-    #card1 {
-        background-image: url('@/assets/img/1.png')
-    }
-    #card2 {
-        background-image: url('@/assets/img/2.png')
-    }
-    #card3 {
-        background-image: url('@/assets/img/3.png')
-    }
-    #card4 {
-        background-image: url('@/assets/img/4.png')
-    }
-    #card5 {
-        background-image: url('@/assets/img/5.png')
-    }
-    #card6 {
-        background-image: url('@/assets/img/6.png')
-    }
+#card1 {
+  background-image: url("@/assets/img/1.png");
+}
+#card2 {
+  background-image: url("@/assets/img/2.png");
+}
+#card3 {
+  background-image: url("@/assets/img/3.png");
+}
+#card4 {
+  background-image: url("@/assets/img/4.png");
+}
+#card5 {
+  background-image: url("@/assets/img/5.png");
+}
+#card6 {
+  background-image: url("@/assets/img/6.png");
+}
 </style>

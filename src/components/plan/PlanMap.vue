@@ -2,22 +2,23 @@
 import { onMounted, onUpdated, ref, watch } from "vue";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
-import { KakaoPathFinder } from "@/util/http-commons.js";
+import { KakaoPathFinder, KakaoAddress2Coord } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-``;
 import { oops } from "@/util/sweetAlert.js";
 
 const memberStore = useMemberStore();
 const gameStore = useGameStore();
 const pathFinder = KakaoPathFinder();
+const address2Coord = KakaoAddress2Coord();
 const emit = defineEmits([]);
 const props = defineProps({
   isDetail: Boolean,
-  gameList: Object,
+  gameList: Array,
 });
 const imrich = ref(false); //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
+let geocoder = null;
 /**
 gameStore 
 gameList: 플레이스 배열
@@ -28,7 +29,7 @@ let polyline = null;
 let polylineDash = null;
 const selected = ref({});
 const places = ref([]);
-
+const stopFlag = ref(false);
 let map = null;
 let marker = [];
 var defaultLocation = null;
@@ -44,7 +45,8 @@ const loadScript = () => {
   document.head.appendChild(script);
 };
 
-const initMap = () => {
+let cnt = ref(0);
+const initMap = async () => {
   console.log("init");
   defaultLocation = new kakao.maps.LatLng(36.35559977190671, 127.29859991863871);
   const container = document.getElementById("map");
@@ -67,21 +69,90 @@ const initMap = () => {
     }
     selectedCnt.value = places.value.length;
     drawMarker();
+  } else {
+    // props로 객체를 받으면 바로 받아와지는것이 아니라 값이 천천히 들어온다.
+    // 따라서 Watch는 배열의 길이만큼 호출된다 + 맨처음에 비어있는 상태까지.
+    // 그래서 첫 watch호출에 배열의 값을 사용하려하면 Undefine이 뜬다.
+    // Watch의 종료 시점을 알기 위해서 배열의 길이를 알아야하는데 매우 귀찮기 때문에 100ms 뒤에 호출하도록 한다.
+    setTimeout(() => {
+      getPlace(0);
+    }, 100);
   }
+  // else {
+  //   cnt.value = 0;
+  //   places.value = props.gameList;
+  //   let promises = [];
+  //   for (var i = 0; i < places.value.length; i++) {
+  //     selected.value[places.value[i].id + ""] = true;
+  //     promises.push(getPos(places.value[i].address));
+  //     // new Promise((resolve) => {
+  //     //     geocoder.addressSearch(props.gameList[i].address, function(result, status) {
+  //     //     // 정상적으로 검색이 완료됐으면 
+  //     //     console.log(result, status); 
+  //     //     console.log(cnt.value); 
+  //     //     const pos = {'x':result[0].x,'y':result[0].y}; 
+  //     //     updatePlaceLocation(pos);  
+  //     //     resolve();
+  //     //   });  
+  //     // })     
+  //   }
+  //   console.log(promises);
+  //   await Promise.all(promises);
+  //   selectedCnt.value = places.value.length; 
+  //   drawMarker();
+  //   findPath();
+  // }
 };
 
-watch(
-  () => props.gameList,
-  (gameList) => {
-    console.log(gameList);
-    places.value = gameList;
-    for (var i = 0; i < places.value.length; i++) {
-      selected.value[places.value[i].id + ""] = true;
+const getPlace = (idx) => {
+  address2Coord.get(`address?query=${places.value[idx].address}`)
+  .then((res) => {
+    // places.value[idx].
+    const pos = { 'x': res.data.documents[0].x, 'y': res.data.documents[0].y };
+    updatePlaceLocation(idx, pos); 
+    selected.value[places.value[idx].id + ""] = true;
+    console.log(places.value);
+    if(idx < places.value.length - 1)
+      getPlace(idx + 1);
+    else {
+      selectedCnt.value = places.value.length; 
+      drawMarker();
+      findPath();
     }
-    selectedCnt.value = places.value.length;
-    drawMarker();
-    findPath();
-  }
+  })
+}
+function updatePlaceLocation(index, newLocation) {
+  places.value[index] = {
+    ...places.value[index],
+    location: newLocation
+  };
+}
+
+// watch(
+//   () => props.gameList,
+//   (gameList) => {
+//     console.log(gameList);
+//     places.value = gameList;
+//     for (var i = 0; i < places.value.length; i++) {
+//       selected.value[places.value[i].id + ""] = true;
+//     }
+//     selectedCnt.value = places.value.length;
+//     drawMarker();
+//     findPath();
+//   }
+// );
+
+watch(
+  () => props.gameList, async (newG, oldG) => {
+
+    places.value = newG;
+    // if (newG.length === 3 && !stopFlag.value) {
+    //   console.log(newG);
+    //   stopFlag.value = true;
+    //   places.value = newG;
+    //   getPlace(0);
+    // }
+  }, { deep: true }
 );
 
 //Smooth 버튼에서 사용
@@ -490,10 +561,11 @@ function deleteDistnce() {
                 }"
                 @click="onClick(item.id, isDetail)"
               >
-                <div style="font-weight: bold; font-size: 15px">{{ item.place_name }}</div>
+                <div style="font-weight: bold; font-size: 15px">{{ item.place_name }}{{item.title}}</div>
                 <div>
                   주소 &nbsp;>&nbsp;
                   {{ item.address_name }}
+                  {{ item.address }}
                 </div>
 
                 <div v-show="!isDetail">

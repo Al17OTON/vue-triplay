@@ -29,7 +29,7 @@ onMounted(() => {
           >
         </div>
         <div class="column row">
-          <div class="col-4">제목</div>
+          <div class="col-3">제목</div>
           <div class="col-2">키워드</div>
           <div class="col-2">작성자</div>
           <div class="col-2">난이도</div>
