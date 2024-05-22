@@ -203,6 +203,7 @@ function addMarker(position, idx, place) {
       alert("플레이스 추가는 최대 10개까지 가능합니다.");
     } else {
       store.addPlace(place);
+      console.log(store.placeList);
     }
   });
 

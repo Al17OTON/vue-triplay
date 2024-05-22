@@ -5,7 +5,6 @@ import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-``;
 import { oops } from "@/util/sweetAlert.js";
 
 const gameStore = useGameStore();
