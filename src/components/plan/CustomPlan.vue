@@ -425,7 +425,8 @@ function deleteDistnce() {
 }
 
 const savePlaces2Pinia = (distance, duration) => {
-  let seed = `${gameStore.page} `;
+  // let seed = `${gameStore.page} `;
+  let seed = '';
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     seed += `${places.value[i].id} `;

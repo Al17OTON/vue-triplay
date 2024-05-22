@@ -29,7 +29,7 @@ export const useGameStore = defineStore('game', () => {
   // watch로 바꾸기?
   const createSeedInfo = () => {
     // page.value = 1;
-    seedInfo.value.seedInfo = `${page.value} `
+    // seedInfo.value.seedInfo = `${page.value} `
     for (var place of placeList.value) {
       seedInfo.value.seedInfo += place.id + " "
     }
