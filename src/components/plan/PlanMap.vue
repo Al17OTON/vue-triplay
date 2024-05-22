@@ -328,6 +328,10 @@ const findPath = () => {
   pathFinder
     .post("", body)
     .then((res) => {
+      if(res.data.routes[0].result_code !== 0) {
+        oops("현재 경로에 문제가 있습니다. <br> 다시 시도해주세요. <br> (경로 없음, 경로 초과, 교통 장애 등)");
+        return;
+      }
       pathResult.value = res.data;
       // Swal.close();
       mixinToast("경로 탐색 완료", 'success');

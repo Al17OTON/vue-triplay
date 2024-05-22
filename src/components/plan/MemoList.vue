@@ -70,20 +70,20 @@ const modifyM = async (memo_id) => {
         <div class="row justify-content-md-center">
             <div class="col-lg-10">
                 <div v-show="inputId===0" id="commentDiv" class="mt-3">
-                    <div class="input-group mb-3">
-                            <input v-model="commentTable['id0']" type="text" class="form-control" placeholder="댓글" aria-label="Memo" aria-describedby="basic-addon1">
-                            <button @click="submitMemo()" type="button" class="btn btn-success">등록</button>
-                    </div>
+                    <form @submit.prevent="submitMemo()" class="input-group mb-3">
+                            <input v-model="commentTable['id0']" type="text" class="form-control" placeholder="댓글" aria-label="Memo" aria-describedby="basic-addon1" required>
+                            <button type="submit" class="btn btn-success">등록</button>
+                    </form>
                     <div :style="{'clear' : 'both'}"></div>
                 </div>
                 <div id="comment-area">
                     <div v-for="memo in memoList" :key="memo.memo_id" :style="{'margin' : '5px 0 0 ' + (memo.depth * 5) + '%'}">
                         <MemoItem :memo="memo" @deleteMemo="deleteM" @modifyMemo="modifyM" @writeMemo="onClick"/>
-                        <div v-show="inputId===memo.memo_id" id="commentDiv" class="input-group mb-3">
+                        <form @submit.prevent="submitMemo(memo)" v-show="inputId===memo.memo_id" id="commentDiv" class="input-group mb-3">
                             <!-- 댓글 작성 Form -->
                             <input v-model="commentTable['id'+memo.memo_id]" id="commentArea" class="form-control" type="text" placeholder="댓글" required />
-                            <button class="btn btn-success" type="button" @click="submitMemo(memo)">등록</button>
-                        </div>
+                            <button class="btn btn-success" type="submit">등록</button>
+                        </form>
                         <div :style="{'clear' : 'both'}"></div>
                     </div>
                 </div>
