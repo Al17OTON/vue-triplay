@@ -47,16 +47,20 @@ const startGame = () => {
 
 <template>
   <div class="game-item row">
-    <div class="col-4"><b>{{ game.gameTitle }}</b></div>
+    <div class="col-3">
+      <b>{{ game.gameTitle }}</b>
+    </div>
     <div class="col-2">{{ game.keyword }}</div>
     <div class="col-2">{{ game.memberId }}</div>
     <div class="col-2">{{ game.difficulty }}</div>
-    <div class="col-2">
+    <div class="col-2 d-flex justify-content-center">
       <button
         @click="startGame"
         class="btn start"
-        :class="{ 'btn-primary': game.difficulty, 'btn-success': !game.difficulty }">
-        시작하기</button>
+        :class="{ 'btn-primary': game.difficulty, 'btn-success': !game.difficulty }"
+      >
+        START
+      </button>
     </div>
   </div>
 </template>
