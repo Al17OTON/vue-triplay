@@ -227,7 +227,6 @@ const drawMarker = (list, marker, type) => {
       });
 
       if (!type) {
-        console.log(title);
         itemEl.onmouseover = function () {
           displayInfowindow(marker, title);
         };

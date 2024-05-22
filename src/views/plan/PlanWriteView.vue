@@ -56,6 +56,9 @@ const submit = async () => {
   if (!gameStore.seedInfo.isOk) {
     oops("길찾기 버튼을 눌러주세요");
     return;
+  }else if(!planInfo.value.planTitle || !planInfo.value.planContent){
+    oops("제목 및 본문을 입력해주세요");
+    return;
   }
   const seedId = await submitSeed();
   console.log(seedId);
@@ -77,7 +80,7 @@ const submit = async () => {
     formData,
     ({ data }) => {
       console.log(data);
-      router.push({ name: "plan" });
+      setTimeout(move, 1000)
     },
     (error) => {
       console.log(error);
@@ -85,6 +88,10 @@ const submit = async () => {
     }
   );
 };
+
+function move() {
+  router.push({ name: "plan" })
+}
 </script>
 
 <template>

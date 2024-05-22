@@ -5,6 +5,7 @@ export const useGameStore = defineStore('game', () => {
   const id = ref(0)
   const score = ref(0)
   const newGame = ref(true)
+  const submitFlag = ref(false)
   
   // seed table
   const page = ref(1);
@@ -42,5 +43,5 @@ export const useGameStore = defineStore('game', () => {
     id.value++
   }
 
-  return { id, score, newGame, seedInfo, difficulty, gameList, placeList, addPlace, removePlace, increment }
+  return { id, score, newGame, submitFlag, seedInfo, difficulty, gameList, placeList, addPlace, removePlace, increment }
 },{persist: true})

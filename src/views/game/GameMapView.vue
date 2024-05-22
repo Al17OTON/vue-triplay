@@ -11,6 +11,7 @@ const submitFlag = ref(false);
 const resetFlag = ref(true);
 const targetFlag = ref(false);
 const hintFlag = ref(false);
+const validFlag = ref(false);
 const distance = ref();
 const curScore = ref();
 // x: 경도(long), y: 위도(lati)
@@ -20,6 +21,8 @@ const nextPlace = () => {
   hintFlag.value = false;
   resetFlag.value = true;
   submitFlag.value = false;
+  validFlag.value = false;
+  store.submitFlag = false;
 
   store.gameList[store.id].distance = distance.value;
   store.gameList[store.id].score = curScore.value;
@@ -38,8 +41,12 @@ const setHint = () => {
 };
 
 onMounted(() => {
-  console.log(store.page);
-  console.log(store.seedInfo);
+  console.log(store.submitFlag);
+  if(store.submitFlag){
+    alert("에러가 발생해 메인화면으로 이동합니다.")
+    router.replace({name: 'main'})
+    console.log("에러발생 홈으로 이동합니다.")
+  }
 });
 
 const getDistance = (dis) => {
@@ -58,17 +65,24 @@ const getDistance = (dis) => {
   store.score += cur;
   curScore.value = 1000 + cur;
   if (hintFlag.value) {
-    store.score -= 100;
-    curScore.value -= 100;
+    store.score -= 500;
+    curScore.value -= 500;
   }
   console.log("거리: " + dis);
 };
+
+const submit = () => {
+  submitFlag.value = true;
+  resetFlag.value = false;
+  store.submitFlag = true;
+}
 </script>
 
 <template>
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-lg-12">
+        <
         <!-- reset: {{ resetFlag }} submit: {{ submitFlag }} <br /> -->
         <button class="btn btn-primary btn-md me-3" @click="setHint">힌트</button>
         <button
@@ -85,10 +99,8 @@ const getDistance = (dis) => {
           class="btn btn-primary btn-md mb-3"
           data-bs-toggle="modal"
           data-bs-target="#resultModal"
-          @click="
-            submitFlag = true;
-            resetFlag = false;
-          "
+          :disabled="!validFlag"
+          @click="submit"
         >
           제출
         </button>
@@ -111,6 +123,7 @@ const getDistance = (dis) => {
             :submit="submitFlag"
             :reset="resetFlag"
             @get-distance="getDistance"
+            @move-location="validFlag = true"
           />
         </div>
       </div>
