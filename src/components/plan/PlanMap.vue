@@ -69,6 +69,14 @@ const initMap = async () => {
     }
     selectedCnt.value = places.value.length;
     drawMarker();
+  } else {
+    // props로 객체를 받으면 바로 받아와지는것이 아니라 값이 천천히 들어온다.
+    // 따라서 Watch는 배열의 길이만큼 호출된다 + 맨처음에 비어있는 상태까지.
+    // 그래서 첫 watch호출에 배열의 값을 사용하려하면 Undefine이 뜬다.
+    // Watch의 종료 시점을 알기 위해서 배열의 길이를 알아야하는데 매우 귀찮기 때문에 100ms 뒤에 호출하도록 한다.
+    setTimeout(() => {
+      getPlace(0);
+    }, 100);
   }
   // else {
   //   cnt.value = 0;
@@ -136,13 +144,14 @@ function updatePlaceLocation(index, newLocation) {
 
 watch(
   () => props.gameList, async (newG, oldG) => {
-    
-    if (newG.length === 3 && !stopFlag.value) {
-      console.log(newG);
-      stopFlag.value = true;
-      places.value = newG;
-      getPlace(0);
-    }
+
+    places.value = newG;
+    // if (newG.length === 3 && !stopFlag.value) {
+    //   console.log(newG);
+    //   stopFlag.value = true;
+    //   places.value = newG;
+    //   getPlace(0);
+    // }
   }, { deep: true }
 );
 
