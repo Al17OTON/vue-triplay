@@ -22,12 +22,12 @@ const moveDetail = (planId) => {
 </script>
 <template>
   <div>
-    <div @click="moveDetail(plan.planId)" class="card mb-3" style="max-width: 540px">
+    <div @click="moveDetail(plan.planId)" class="card mb-3" style="max-width: 540px; height: 230px">
       <div class="row g-0">
-        <div class="col-md-4">
-          <img :src="getImageUrl(plan.file)" style="height: 100%" class="rounded-start img-fluid" />
+        <div class="col-6">
+          <img :src="getImageUrl(plan.file)" style="height: 230px; width: 270px" class="rounded-start img-fluid" />
         </div>
-        <div class="col-md-8">
+        <div class="col-6">
           <div class="card-body">
             <h5 class="card-title">{{ plan.planTitle }}</h5>
             <p class="card-text">

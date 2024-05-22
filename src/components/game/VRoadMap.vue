@@ -24,7 +24,21 @@ const initMap = () => {
 
   // 특정 위치의 좌표와 가까운 로드뷰의 panoId를 추출하여 로드뷰를 띄운다.
   roadviewClient.getNearestPanoId(position, 800, function (panoId) {
-    roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+    try {
+      if (panoId) roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+      else throw new Error("panoId is not available");
+    } catch (e) {
+        roadviewClient.getNearestPanoId(position, 1200, function (panoId) {
+          try {
+              if (panoId) roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
+              else throw new Error("panoId is not available");
+          } catch (e) {
+              alert("타겟 위치 근방 로드뷰를 찾을 수 없습니다. ")
+              console.log(e);
+          }
+        });
+        console.log(e);
+    }
   });
 };
 

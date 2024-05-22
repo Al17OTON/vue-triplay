@@ -51,12 +51,12 @@ const saveGame = () => {
         <input
           v-model="gameTitle"
           type="text"
-          class="mt-3 form-control mb-3 title"
+          class="mt-3 form-control mb-3 input-title"
           placeholder="게임 제목을 입력해주세요."
         />
         <hr>
-        <!-- <VMakeMap/> -->
-        <CustomPlan :isGame="true" style="height: 600px;"/>
+        <VMakeMap/>
+        <!-- <CustomPlan :isGame="true" style="height: 600px;"/> -->
         <button @click="saveSeed" class="btn btn-outline-success mt-3 p-2 align-center ">
           게임 저장
         </button>
@@ -66,7 +66,7 @@ const saveGame = () => {
 </template>
 
 <style scoped>
-.title{
+.input-title{
   border-width: 0; 
   font-size: 18pt;
 }

@@ -88,8 +88,8 @@ const checkPw = () => {
 
 <template>
   <div>
-    <h1>회원정보 수정</h1>
-    <div v-show="!modifySuccess" class="container">
+    <div v-show="!modifySuccess" class="container" style="width: 450px">
+      <h2 class="fw-bold">회원정보 수정</h2>
       <form @submit.prevent="modify">
         <div class="form-group">
           <label for="username">아이디</label>
