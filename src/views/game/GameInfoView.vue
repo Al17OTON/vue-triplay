@@ -49,7 +49,8 @@ const selectRandom = (count) => {
 };
 const createSeed = (locations) => {
   let idx = selectRandom(gameSetting.value.count);
-  seedInfo.value = searchQuery.value.page + " ";
+  // seedInfo.value = searchQuery.value.page + " ";
+  seedInfo.value = '';
   for (var i of idx) {
     let place = {};
     place.id = locations[i].id;

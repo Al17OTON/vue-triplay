@@ -4,6 +4,7 @@ import { searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap.js";
 import { useRouter } from "vue-router";
 import { useGameStore } from "@/stores/gameStore";
 import { PlaceFindById, KakaoAddress2Coord } from "@/util/http-commons";
+
 const router = useRouter();
 const store = useGameStore();
 const props = defineProps({
@@ -53,7 +54,13 @@ const startGame = async () => {
   for (var i = 0; i < seeds.length; i++) {
     if (!seeds[i]) continue;
     places.value.push(await PlaceFindById(seeds[i]));
+    console.log(places.value[i]);
   }
+
+  setTimeout(delayedFunction, 200);
+};
+
+const delayedFunction = () => {
   getPlace(0, () => {
     store.gameList = places.value;
     store.score = props.game.count * 1000;
@@ -67,7 +74,7 @@ const startGame = async () => {
     console.log(store.gameList);
     router.push({ name: "gamemap" });
   });
-};
+}
 
 const getPlace = (idx, end) => {
 // address2Coord.get(`address?query=${places.value[idx].address}`)
@@ -75,7 +82,8 @@ const getPlace = (idx, end) => {
   .then((res) => {
     // places.value[idx].
     const pos = { 'x': res.data.documents[0].x, 'y': res.data.documents[0].y };
-    updatePlaceLocation(idx, pos); 
+    updatePlaceLocation(idx, pos);
+    updatePlaceId(idx, res.data.documents[0].id);
     console.log(places.value);
     if (idx < places.value.length - 1)
       getPlace(idx + 1, end);
@@ -88,6 +96,14 @@ function updatePlaceLocation(index, newLocation) {
     location: newLocation
   };
 }
+
+function updatePlaceId(index, newId) {
+  places.value[index] = {
+    ...places.value[index],
+    id: newId
+  };
+}
+
 </script>
 
 <template>

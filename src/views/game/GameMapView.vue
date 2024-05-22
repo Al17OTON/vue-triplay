@@ -94,7 +94,7 @@ const getDistance = (dis) => {
         </button>
         <!-- {{ store.id }} -->
         <div v-if="hintFlag" style="display: inline">
-          플레이스 이름 > <span class="fw-bold"> {{ store.gameList[store.id].place_name }} </span>
+          플레이스 이름 > <span class="fw-bold"> {{ store.gameList[store.id].place_name }}{{ store.gameList[store.id].title }} </span>
         </div>
 
         <div></div>

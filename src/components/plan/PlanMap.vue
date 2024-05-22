@@ -5,7 +5,8 @@ import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder, KakaoAddress2Coord } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-import { oops } from "@/util/sweetAlert.js";
+import { oops, loading, mixinToast } from "@/util/sweetAlert.js";
+import Swal from "sweetalert2";
 
 const memberStore = useMemberStore();
 const gameStore = useGameStore();
@@ -111,9 +112,9 @@ const initMap = async () => {
 
 const getPlace = (idx) => {
 // address2Coord.get(`address?query=${places.value[idx].address}`)
-  address2Coord.get(`keyword?query=${places.value[idx].title}`)
+  address2Coord.get(`keyword?query=${places.value[idx].title ? places.value[idx].title : places.value[idx].place_name}`)
   .then((res) => {
-    // console.log(res);
+    console.log(res);
     const pos = { 'x': res.data.documents[0].x, 'y': res.data.documents[0].y };
     updatePlaceId(idx, res.data.documents[0].id);
     updatePlaceLocation(idx, pos); 
@@ -322,12 +323,17 @@ const findPath = () => {
   }
   body.waypoints = waypoints;
 
+  // loading("경로를 탐색 중입니다. 경로가 길 경우 탐색에 실패하거나 약 10초 정도 소요될 수 있습니다.");
+  mixinToast("경로를 탐색 중입니다.\n 경로가 길 경우 탐색에 실패하거나 약 10초 정도 소요될 수 있습니다.", 'info');
   pathFinder
     .post("", body)
     .then((res) => {
       pathResult.value = res.data;
+      // Swal.close();
+      mixinToast("경로 탐색 완료", 'success');
     })
-    .then(() => drawPath());
+    .then(() => drawPath())
+    .catch(() => mixinToast("경로 탐색 실패"));
 };
 
 //위에 findPath로부터 결과를 받아 경로를 그린다.
