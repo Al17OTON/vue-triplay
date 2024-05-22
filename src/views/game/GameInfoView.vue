@@ -66,6 +66,7 @@ const createSeed = (locations) => {
   store.score = gameSetting.value.count * 1000;
   store.gameList = gameList.value;
   store.difficulty = gameSetting.value.difficulty;
+  store.submitFlag = false;
   store.seedInfo = {
     keyword: searchQuery.value.query,
     seedInfo: seedInfo.value,

@@ -11,6 +11,7 @@ const submitFlag = ref(false);
 const resetFlag = ref(true);
 const targetFlag = ref(false);
 const hintFlag = ref(false);
+const validFlag = ref(false);
 const distance = ref();
 const curScore = ref();
 // x: 경도(long), y: 위도(lati)
@@ -20,6 +21,8 @@ const nextPlace = () => {
   hintFlag.value = false;
   resetFlag.value = true;
   submitFlag.value = false;
+  validFlag.value = false;
+  store.submitFlag = false;
 
   store.gameList[store.id].distance = distance.value;
   store.gameList[store.id].score = curScore.value;
@@ -38,8 +41,12 @@ const setHint = () => {
 };
 
 onMounted(() => {
-  console.log(store.page);
-  console.log(store.seedInfo);
+  console.log(store.submitFlag);
+  if(store.submitFlag){
+    alert("에러가 발생해 메인화면으로 이동합니다.")
+    router.replace({name: 'main'})
+    console.log("에러발생 홈으로 이동합니다.")
+  }
 });
 
 const getDistance = (dis) => {
@@ -63,6 +70,12 @@ const getDistance = (dis) => {
   }
   console.log("거리: " + dis);
 };
+
+const submit = () => {
+  submitFlag.value = true;
+  resetFlag.value = false;
+  store.submitFlag = true;
+}
 </script>
 
 <template>
@@ -85,10 +98,8 @@ const getDistance = (dis) => {
           class="btn btn-primary btn-md mb-3"
           data-bs-toggle="modal"
           data-bs-target="#resultModal"
-          @click="
-            submitFlag = true;
-            resetFlag = false;
-          "
+          :disabled="!validFlag"
+          @click="submit"
         >
           제출
         </button>
@@ -111,6 +122,7 @@ const getDistance = (dis) => {
             :submit="submitFlag"
             :reset="resetFlag"
             @get-distance="getDistance"
+            @move-location="validFlag = true"
           />
         </div>
       </div>
