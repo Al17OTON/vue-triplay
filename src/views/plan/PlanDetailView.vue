@@ -70,10 +70,10 @@ onMounted( async () => {
 const getPlace = async () => {
   return await getPlanApi(route.query.planId,
    async ({data}) => {
-      console.log(data);
+      // console.log(data);
       plan.value = data.resdata;
       const ids = plan.value.seedInfo.split(' ');
-      console.log(ids);
+      // console.log(ids);
       let placeInfo = [];
       plan.value.placeList = [];
       for(var i = 0; i < ids.length; i++) { 
@@ -105,10 +105,10 @@ const setRoot = () => {
 };
 
 const clickPlace = async (place) => {
-  gptPlace.value = place.place_name;
+  gptPlace.value = place.place_name ? place.place_name:place.title;
   gptInfo.value = "...";
   gptInfo.value = await OpenApiUtil.prompt(
-    `${place.address_name}에 위치한 ${place.place_name}에 대한 설명 3줄 요약해줘`
+    `${place.address_name ? place.address_name:place.address}에 위치한 ${gptPlace.value}에 대한 설명 3줄 요약해줘`
   );
 };
 </script>

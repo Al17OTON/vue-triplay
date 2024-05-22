@@ -14,7 +14,7 @@ const address2Coord = KakaoAddress2Coord();
 const emit = defineEmits([]);
 const props = defineProps({
   isDetail: Boolean,
-  gameList: Object,
+  gameList: Array,
 });
 const imrich = ref(false); //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 const selectedCnt = ref(0); //선택된 장소가 몇개인지 카운트
@@ -29,7 +29,7 @@ let polyline = null;
 let polylineDash = null;
 const selected = ref({});
 const places = ref([]);
-
+const stopFlag = ref(false);
 let map = null;
 let marker = [];
 var defaultLocation = null;
@@ -69,26 +69,6 @@ const initMap = async () => {
     }
     selectedCnt.value = places.value.length;
     drawMarker();
-  } else {
-    places.value = props.gameList;
-    console.log(places.value);
-    // for (var i = 0; i < places.value.length; i++) {
-    //   selected.value[places.value[i].id + ""] = true; 
-    //   await address2Coord.get("", {
-    //     query: places.value[i].address
-    //   })   
-    //   .then((res) => console.log(res.data));
-    // }
-
-    const promises = places.value.map(async data => {
-      return setTimeout(await address2Coord.get("", {query: data.address}).then((res) => res), 100);
-    }) 
-
-    console.log(promises);
-
-    const results = await Promise.all(promises);
-    results.forEach(data => console.log(data));     
-    console.log(results);
   }
   // else {
   //   cnt.value = 0;
@@ -116,20 +96,28 @@ const initMap = async () => {
   // }
 };
 
-function ContentsList(intentList) {
-    intentList.reduce((prev, current) => {
-        prev.then(async ()=> {
-            let intentId = current.intentId;
-            if(!contentSet.has(intentId)) {
-                contentSet.add(current.intentId);
-                const response = await axios.get(url, {params : {intentId}})
-                if(Object.keys(response.data).length > 0) {
-                    
-                }
-            }
-        })
-   		return Promise.resolve(current)
-   }, Promise.resolve())
+const getPlace = (idx) => {
+  address2Coord.get(`address?query=${places.value[idx].address}`)
+  .then((res) => {
+    // places.value[idx].
+    const pos = { 'x': res.data.documents[0].x, 'y': res.data.documents[0].y };
+    updatePlaceLocation(idx, pos); 
+    selected.value[places.value[idx].id + ""] = true;
+    console.log(places.value);
+    if(idx < places.value.length - 1)
+      getPlace(idx + 1);
+    else {
+      selectedCnt.value = places.value.length; 
+      drawMarker();
+      findPath();
+    }
+  })
+}
+function updatePlaceLocation(index, newLocation) {
+  places.value[index] = {
+    ...places.value[index],
+    location: newLocation
+  };
 }
 
 // watch(
@@ -145,6 +133,18 @@ function ContentsList(intentList) {
 //     findPath();
 //   }
 // );
+
+watch(
+  () => props.gameList, async (newG, oldG) => {
+    
+    if (newG.length === 3 && !stopFlag.value) {
+      console.log(newG);
+      stopFlag.value = true;
+      places.value = newG;
+      getPlace(0);
+    }
+  }, { deep: true }
+);
 
 //Smooth 버튼에서 사용
 //지도를 부드럽게 이동 시키기, 초반에 미적 요소로 사용되기 위해 작성됨. 불안정함...
@@ -552,10 +552,11 @@ function deleteDistnce() {
                 }"
                 @click="onClick(item.id, isDetail)"
               >
-                <div style="font-weight: bold; font-size: 15px">{{ item.place_name }}</div>
+                <div style="font-weight: bold; font-size: 15px">{{ item.place_name }}{{item.title}}</div>
                 <div>
                   주소 &nbsp;>&nbsp;
                   {{ item.address_name }}
+                  {{ item.address }}
                 </div>
 
                 <div v-show="!isDetail">

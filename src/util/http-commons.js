@@ -3,7 +3,7 @@ import { login } from "@/util/login.js";
 import { useMemberStore } from "@/stores/memberStore.js";
 import { oops } from "@/util/sweetAlert.js";
 
-const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY, VITE_KAKAO_ID_URL, VITE_KAKAO_ADDRESS_API_KEY } = import.meta.env;
+const { VITE_API_URL, VITE_KAKAO_API_URL, VITE_KAKAO_APIKEY, VITE_KAKAO_MOBILITY_URL, VITE_KAKAO_RESTAPIKEY, VITE_KAKAO_ID_URL, VITE_KAKAO_ADDRESS_API_URL } = import.meta.env;
 
 function Axios() {
   const instance = axios.create({
@@ -105,9 +105,9 @@ async function PlaceFindById(id) {
 
 function KakaoAddress2Coord() {
   const instance = axios.create({
-    baseURL: VITE_KAKAO_ADDRESS_API_KEY,
+    baseURL: VITE_KAKAO_ADDRESS_API_URL,
     headers: {
-      "Content-Type": "application/json;charset=utf-8",
+      "content-type": "application/json;charset=UTF-8",
       "Authorization": `KakaoAK ${VITE_KAKAO_RESTAPIKEY}`
     }
   });
