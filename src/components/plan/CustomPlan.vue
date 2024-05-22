@@ -5,7 +5,7 @@ import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-import { oops } from "@/util/sweetAlert.js";
+import { oops, loading, mixinToast, dragInfo } from "@/util/sweetAlert.js";
 
 const gameStore = useGameStore();
 const memberStore = useMemberStore();
@@ -292,10 +292,17 @@ const findPath = () => {
   }
   body.waypoints = waypoints;
 
+  mixinToast("경로를 탐색 중입니다.\n 경로가 길 경우 탐색에 실패하거나 약 10초 정도 소요될 수 있습니다.", 'info');
   pathFinder
     .post("", body)
     .then((res) => {
+      console.log(res.data);
+      if(res.data.routes[0].result_code !== 0) {
+        oops("현재 경로에 문제가 있습니다. <br> 다시 시도해주세요. <br> (경로 없음, 경로 초과, 교통 장애 등)");
+        return;
+      }
       pathResult.value = res.data;
+      mixinToast("경로 탐색 완료", 'success');
     })
     .then(() => drawPath())
     .catch((err) => {
@@ -373,7 +380,7 @@ const drawPath = () => {
   durationText += min + "분";
 
   showDistance(getTimeHTML(distance, duration), path[path.length - 1]);
-  savePlaces2Pinia(distance, duration);
+  savePlaces2Pinia(distanceText, durationText);
   // map.setBounds(bounds);
 };
 
@@ -409,7 +416,22 @@ onMounted(() => {
   } else {
     loadScript();
   }
+  
+  if(!getCookie('customVisited')) {
+    dragInfo();
+    setCookie("customVisited", "true", 10);
+  }
 });
+
+const setCookie = function(name, value, exp) {      
+  var date = new Date();      
+  date.setTime(date.getTime() + exp*24*60*60*1000);      
+  document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';  
+};
+const getCookie = function(name) {      
+  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');      
+  return value? value[2] : null;  
+};
 
 // 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
 // 그려진 선의 총거리 정보와 거리에 대한 도보, 자전거 시간을 계산하여
@@ -486,11 +508,16 @@ function deleteDistnce() {
 const savePlaces2Pinia = (distance, duration) => {
   // let seed = `${gameStore.page} `;
   let seed = "";
+  let question = '다음과 같이 키워드들이 주어졌어, ';
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     seed += `${places.value[i].id} `;
+    question += `${places.value[i].keyword}, `;
     cnt++;
   }
+
+  question += ' 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘';
+
   console.log(places.value);
   console.log(seed);
   gameStore.seedInfo.isOk = true;
@@ -498,6 +525,7 @@ const savePlaces2Pinia = (distance, duration) => {
   gameStore.seedInfo.count = cnt;
   gameStore.seedInfo.distance = distance;
   gameStore.seedInfo.duration = duration;
+  gameStore.seedInfo.GPTQuestion = question;
 };
 </script>
 

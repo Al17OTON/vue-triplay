@@ -9,6 +9,7 @@ import PlanMap from "@/components/plan/PlanMap.vue";
 import CustomPlan from "@/components/plan/CustomPlan.vue";
 import { oops } from "@/util/sweetAlert.js";
 import { Axios } from "@/util/http-commons.js";
+import { OpenApiUtil } from "@/assets/js/OpenApiUtil.js";
 
 const props = defineProps({
   isCustom: Boolean
@@ -30,6 +31,9 @@ onMounted(() => {
 const submitSeed = async () => {
   console.log("seed 저장 직전!!!");
   console.log(gameStore.seedInfo);
+
+  if(gameStore.seedInfo.GPTQuestion) gameStore.seedInfo.keyword = await OpenApiUtil.prompt(gameStore.seedInfo.GPTQuestion);
+  
   return await api
     .post(
       "/seed",
