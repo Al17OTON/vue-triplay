@@ -3,6 +3,8 @@ import VRoadMap from "@/components/game/VRoadMap.vue";
 import VPlaceItem from "@/components/game/VPlaceItem.vue";
 import { useGameStore } from "@/stores/gameStore";
 import { onMounted, ref } from "vue";
+import { oops } from "@/util/sweetAlert.js";
+
 const store = useGameStore();
 const appKey = import.meta.env.VITE_KAKAO_APPKEY;
 
@@ -75,10 +77,10 @@ function placesSearchCB(data, status, pagination) {
     displayPlaces(data); // 검색 목록, 마커
     // displayPagination(pagination); // 페이지 번호
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-    alert("검색 결과가 존재하지 않습니다.");
+    oops("검색 결과가 존재하지 않습니다.");
     return;
   } else if (status === kakao.maps.services.Status.ERROR) {
-    alert("검색 결과 중 오류가 발생했습니다.");
+    oops("검색 결과 중 오류가 발생했습니다.");
     return;
   }
 }
@@ -341,7 +343,7 @@ onMounted(() => {
 .map_wrap {
   position: relative;
   width: 100%;
-  height: 600px
+  height: 600px;
 }
 #menu_left {
   position: absolute;

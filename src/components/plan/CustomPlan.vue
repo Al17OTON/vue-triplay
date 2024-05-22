@@ -1,11 +1,10 @@
 <script setup>
-import { onMounted, onUpdated, ref, watch } from "vue";
+import { onMounted, watch, ref, nextTick } from "vue";
 import { useGameStore } from "@/stores/gameStore";
 import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder } from "@/util/http-commons.js";
 import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
-``;
 import { oops } from "@/util/sweetAlert.js";
 
 const gameStore = useGameStore();
@@ -19,7 +18,7 @@ const props = defineProps({
 const keyword = ref("");
 const imrich = ref(false); //변경사항이 있을때마다 API호출 여부를 저장하는 변수
 /**
-gameStore 
+gameStore
 gameList: 플레이스 배열
 -> place 객체(id, address_name, place_name, location 객체(x, y), 점수, 거리)
  */
@@ -29,7 +28,7 @@ let polyline = null;
 let polylineDash = null;
 const searchList = ref([]);
 const places = ref([]);
-
+var infowindow = null;
 let map = null;
 let searchMarker = [];
 let placeMarker = [];
@@ -56,6 +55,7 @@ const initMap = () => {
   };
   map = new kakao.maps.Map(container, options);
   ps = new kakao.maps.services.Places();
+  infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
   //   const zoomControl = new kakao.maps.ZoomControl();
   //   map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
   //   var mapTypeControl = new kakao.maps.MapTypeControl();
@@ -85,8 +85,10 @@ function placesSearchCB(data, status, pagination) {
     for (var i = 0; i < searchList.value.length; i++) {
       searchList.value[i].keyword = kword;
     }
-    console.log(searchList.value);
-    drawMarker(searchList.value, searchMarker, false);
+    // 0522 원래 코드
+    // console.log(searchList.value);
+    // drawMarker(searchList.value, searchMarker, false);
+
     // displayPlaces(data); // 검색 목록, 마커
     // displayPagination(pagination); // 페이지 번호
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
@@ -160,6 +162,28 @@ const smoothLevel = () => {
   kakao.maps.event.addListener(map, "idle", levelCallback);
 };
 
+const performPostRenderActions = (list, marker, flag) => {
+  nextTick(() => {
+    // dom 다 생성 후 실행
+    console.log("in nextTick!" + flag);
+    console.log(list);
+    drawMarker(list, marker, flag);
+    // drawMarker(searchList.value, searchMarker, false);
+  });
+};
+watch(
+  () => searchList.value,
+  (n, o) => {
+    performPostRenderActions(searchList.value, searchMarker, false);
+  }
+);
+
+watch(
+  () => places.value,
+  (n, o) => {
+    performPostRenderActions(places.value, placeMarker, true);
+  }
+);
 // 마커에 번호를 부여하고 표시
 const drawMarker = (list, marker, type) => {
   deleteMarker(marker);
@@ -169,6 +193,7 @@ const drawMarker = (list, marker, type) => {
       : "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png", // 마커 이미지 url, 스프라이트 이미지를 씁니다
     imageSize = type ? new kakao.maps.Size(36, 37) : new kakao.maps.Size(24, 35); // 마커 이미지의 크기
   let idx = 0;
+  // console.log(list);
   for (var i = 0; i < list.length; i++) {
     var imgOptions = {
       spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
@@ -176,18 +201,51 @@ const drawMarker = (list, marker, type) => {
       offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
     };
     var markerImage = type
-      ? new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions)
-      : new kakao.maps.MarkerImage(imageSrc, imageSize);
-    marker.push(
-      new kakao.maps.Marker({
+        ? new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions)
+        : new kakao.maps.MarkerImage(imageSrc, imageSize),
+      m = new kakao.maps.Marker({
         position: new kakao.maps.LatLng(list[i].y, list[i].x),
         title: list[i].id,
         map: map,
         image: markerImage,
-      })
-    );
+      });
+    marker.push(m);
+
+    var itemEl = null;
+    if (!type) {
+      // element가 그려진 후에 marker를 찍어야함
+      itemEl = document.getElementById(`place${i}`);
+    }
+
+    (function (marker, title) {
+      kakao.maps.event.addListener(marker, "mouseover", function () {
+        displayInfowindow(marker, title);
+      });
+
+      kakao.maps.event.addListener(marker, "mouseout", function () {
+        infowindow.close();
+      });
+
+      if (!type) {
+        console.log(title);
+        itemEl.onmouseover = function () {
+          displayInfowindow(marker, title);
+        };
+
+        itemEl.onmouseout = function () {
+          infowindow.close();
+        };
+      }
+    })(m, list[i].place_name);
   }
 };
+
+function displayInfowindow(marker, title) {
+  var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+
+  infowindow.setContent(content);
+  infowindow.open(map, marker);
+}
 
 //맵에 존재하는 마커 전부 제거
 const deleteMarker = (marker) => {
@@ -337,6 +395,7 @@ const onDrop = (num, dropResult) => {
 
   removePath();
 };
+
 const getChildPayload1 = (idx) => {
   return searchList.value[idx];
 };
@@ -426,7 +485,7 @@ function deleteDistnce() {
 
 const savePlaces2Pinia = (distance, duration) => {
   // let seed = `${gameStore.page} `;
-  let seed = '';
+  let seed = "";
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     seed += `${places.value[i].id} `;
@@ -449,19 +508,19 @@ const savePlaces2Pinia = (distance, duration) => {
       <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
 
       <!--카카오 맵에 표시되는 관광정보 리스트 view-->
-      <div id="menu_wrap" class="bg_white">
+      <div id="menu_wrap" class="menu_wrap">
         <div class="input-group mb-3">
           <input
             v-model="keyword"
             type="text"
-            class="form-control"
-            placeholder="KeyWord"
+            class="form-control p-2"
+            placeholder="검색어 입력"
             aria-label="KeyWord"
             aria-describedby="button-addon2"
           />
           <button
             @click="searchKeyword"
-            class="btn btn-outline-secondary"
+            class="btn btn-secondary p-2"
             type="button"
             id="button-addon2"
           >
@@ -475,15 +534,16 @@ const savePlaces2Pinia = (distance, duration) => {
             @drop="onDrop(2, $event)"
             style="height: 100%"
           >
-            <Draggable v-for="item in searchList" :key="item.id">
-              <div :class="{ 'draggable-item': true, custom_selected: true }">
-                <div>{{ item.id }}</div>
-                <div>{{ item.place_name }}</div>
-                <div>{{ item.location }}</div>
-                <div>{{ item.score }}</div>
-                <div>{{ item.distance }}</div>
+            <Draggable v-for="(item, idx) in searchList" :key="item.id">
+              <div
+                :id="`place${idx}`"
+                :class="{ 'draggable-item': true }"
+                style="padding: 10px; margin-bottom: 8px"
+                class="place-item"
+              >
+                <div class="fw-bold">{{ item.place_name }}</div>
+                <div style="font-size: 13px">{{ item.address_name }}</div>
               </div>
-              <br />
             </Draggable>
           </Container>
         </div>
@@ -492,7 +552,7 @@ const savePlaces2Pinia = (distance, duration) => {
         <div id="pagination"></div>
       </div>
 
-      <div id="menu_wrap_second" class="bg_white">
+      <div id="menu_wrap_second" class="menu_wrap">
         <div class="option custom-container-height">
           <Container
             group-name="1"
@@ -501,14 +561,14 @@ const savePlaces2Pinia = (distance, duration) => {
             style="height: 100%"
           >
             <Draggable v-for="item in places" :key="item.id">
-              <div :class="{ 'draggable-item': true, custom_selected: true }">
-                <div>{{ item.id }}</div>
-                <div>{{ item.place_name }}</div>
-                <div>{{ item.location }}</div>
-                <div>{{ item.score }}</div>
-                <div>{{ item.distance }}</div>
+              <div
+                :class="{ 'draggable-item': true }"
+                style="padding: 10px; margin-bottom: 8px"
+                class="place-item"
+              >
+                <div class="fw-bold">{{ item.place_name }}</div>
+                <div style="font-size: 13px">{{ item.address_name }}</div>
               </div>
-              <br />
             </Draggable>
           </Container>
         </div>
@@ -517,26 +577,20 @@ const savePlaces2Pinia = (distance, duration) => {
         <div id="pagination"></div>
       </div>
 
-      <div class="custom-button-container">
+      <div id="button_wrap">
         <div>
-          <button
-            @click="smoothLevel"
-            type="button"
-            class="btn btn-success custom_btn custom_smooth"
-          >
-            Smooth
-          </button>
+          <button @click="smoothLevel" type="button" class="btn btn-success p-2">Smooth</button>
         </div>
         <!-- <div class="form-check form-switch custom_switch">
                     <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                     <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
                 </div> -->
-        <div v-if="!isGame" class="custom_submit">
+        <div v-if="!isGame">
           <button
             @click="findPath"
             type="button"
-            class="btn btn-success custom_btn"
-            style="margin-left: 20px"
+            class="btn btn-success p-2"
+            style="margin-left: 15px"
           >
             길찾기
           </button>
@@ -551,13 +605,17 @@ const savePlaces2Pinia = (distance, duration) => {
 </template>
 
 <style scoped>
+.place-item {
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
 /*카카오 맵에서 사용하는 CSS - start*/
 .map_wrap,
 .map_wrap * {
   margin: 0;
   padding: 0;
-  font-family: "Malgun Gothic", dotum, "돋움", sans-serif;
-  font-size: 12px;
 }
 .map_wrap a,
 .map_wrap a:hover,
@@ -570,37 +628,37 @@ const savePlaces2Pinia = (distance, duration) => {
   width: 100%;
   height: 100%;
 }
-#menu_wrap {
+
+#button_wrap {
+  position: absolute;
+  left: 43%;
+  bottom: 0;
+  margin-bottom: 10px;
+  z-index: 1;
+  display: flex;
+}
+
+.menu_wrap {
   position: absolute;
   top: 0;
-  left: 0;
   bottom: 0;
   width: 20%;
   margin: 10px 0 20px 10px;
-  padding: 5px;
+  padding: 8px;
   overflow-y: auto;
-  background: rgba(255, 255, 255, 0.7);
   z-index: 1;
-  font-size: 12px;
   border-radius: 10px;
+}
+#menu_wrap {
+  left: 0;
+  background: rgba(255, 255, 255, 0.7);
 }
 #menu_wrap_second {
-  position: absolute;
-  top: 0;
   right: 0;
-  bottom: 0;
-  width: 20%;
   margin: 10px 10px 20px 10px;
-  padding: 5px;
-  overflow-y: auto;
   background: rgba(255, 255, 255, 0.7);
-  z-index: 1;
-  font-size: 12px;
-  border-radius: 10px;
 }
-.bg_white {
-  background: #fff;
-}
+
 #menu_wrap hr {
   display: block;
   height: 1px;
@@ -700,10 +758,12 @@ const savePlaces2Pinia = (distance, duration) => {
   background-color: rgb(142, 143, 142);
 }
 .custom-button-container {
-  position: relative;
+  /* position: abolute;
+  right: 50%;
+  bottom: 0;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
 }
 .custom_switch {
   padding-left: 0px;
