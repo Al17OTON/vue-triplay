@@ -284,14 +284,20 @@ onMounted(() => {
     <div id="menu_left" class="bg_white">
       <div class="option">
         <div style="display: flex">
-          <input
-            type="text"
-            v-model="searchQuery.query"
-            placeholder="검색어를 입력하세요"
-            class="form-control p-1"
-            id="keyword"
-          />
-          <button class="btn btn-secondary p-1" @click="searchPlaces">검색</button>
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              v-model="searchQuery.query"
+              placeholder="검색어 입력"
+              class="form-control p-1"
+              id="keyword"
+              aria-label="KeyWord"
+              aria-describedby="button-addon2"
+            />
+            <button id="button-addon2" class="btn btn-secondary p-1" @click="searchPlaces">
+              검색
+            </button>
+          </div>
         </div>
       </div>
       <hr />

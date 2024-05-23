@@ -12,8 +12,8 @@ import { Axios } from "@/util/http-commons.js";
 import { OpenApiUtil } from "@/assets/js/OpenApiUtil.js";
 
 const props = defineProps({
-  isCustom: Boolean
-})
+  isCustom: Boolean,
+});
 
 const api = Axios();
 const memberStore = useMemberStore();
@@ -37,7 +37,6 @@ const submitSeed = async () => {
     gameStore.seedInfo.keyword = await OpenApiUtil.prompt(gameStore.seedInfo.GPTQuestion);
     mixinToast("생성 완료", 'success');
   } 
-  
   return await api
     .post(
       "/seed",
@@ -64,7 +63,7 @@ const submit = async () => {
   if (!gameStore.seedInfo.isOk) {
     oops("길찾기 버튼을 눌러주세요");
     return;
-  }else if(!planInfo.value.planTitle || !planInfo.value.planContent){
+  } else if (!planInfo.value.planTitle || !planInfo.value.planContent) {
     oops("제목 및 본문을 입력해주세요");
     return;
   }
@@ -88,7 +87,8 @@ const submit = async () => {
     formData,
     ({ data }) => {
       console.log(data);
-      setTimeout(move, 1000)
+      // setTimeout(move, 2000);
+      router.push({ name: "plan" });
     },
     (error) => {
       console.log(error);
@@ -98,7 +98,7 @@ const submit = async () => {
 };
 
 function move() {
-  router.push({ name: "plan" })
+  router.push({ name: "plan" });
 }
 </script>
 
@@ -116,8 +116,13 @@ function move() {
         </div>
 
         <hr />
-        <PlanMap v-if="!isCustom" :is-detail="false" :gameList="gameStore.gameList" style="height: 600px" />
-        <CustomPlan v-else :isGame="false" style="height: 600px"/>
+        <PlanMap
+          v-if="!isCustom"
+          :is-detail="false"
+          :gameList="gameStore.gameList"
+          style="height: 600px"
+        />
+        <CustomPlan v-else :isGame="false" style="height: 600px" />
 
         <input class="form-control mt-3 mb-3" @change="addFile" ref="file" type="file" />
         <textarea

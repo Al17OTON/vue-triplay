@@ -44,10 +44,10 @@ const moveDetail = (planId) => {
             <p class="card-text">
               <VKeywordItem :keyword="plan.keyword" />
             </p>
-            <p class="card-text">
+            <p class="card-text truncate ">
               {{ plan.planContent }}
             </p>
-            <p class="card-text">
+            <p class="card-text truncate bottom-container">
               <small class="text-muted">{{ plan.registerTime }}</small>
               <small class="text-muted" style="float: right">조회수 &nbsp;{{ plan.hit }}</small>
             </p>
@@ -58,4 +58,17 @@ const moveDetail = (planId) => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.truncate {
+  width: 100%; /* 원하는 너비로 설정 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.bottom-container{
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* 수직 정렬을 위해 추가 */
+  width: 100%; /* 필요에 따라 조정 */
+}
+</style>

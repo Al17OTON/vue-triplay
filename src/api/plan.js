@@ -6,8 +6,8 @@ async function insertPlanApi(data, success, fail){
     await httpMulti.post('plan', data).then(success).catch(fail);
 }
 
-function getPlanListApi(success, fail){
-    http.get('plan').then(success).catch(fail);
+async function getPlanListApi(success, fail){
+    await http.get('plan').then(success).catch(fail);
 }
 
 function getPlanApi(planId, success, fail){

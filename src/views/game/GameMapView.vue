@@ -42,10 +42,10 @@ const setHint = () => {
 
 onMounted(() => {
   console.log(store.submitFlag);
-  if(store.submitFlag){
-    alert("에러가 발생해 메인화면으로 이동합니다.")
-    router.replace({name: 'main'})
-    console.log("에러발생 홈으로 이동합니다.")
+  if (store.submitFlag) {
+    alert("에러가 발생해 메인화면으로 이동합니다.");
+    router.replace({ name: "main" });
+    console.log("에러발생 홈으로 이동합니다.");
   }
 });
 
@@ -75,14 +75,13 @@ const submit = () => {
   submitFlag.value = true;
   resetFlag.value = false;
   store.submitFlag = true;
-}
+};
 </script>
 
 <template>
   <div class="container">
     <div class="row justify-content-md-center">
       <div class="col-lg-12">
-        <
         <!-- reset: {{ resetFlag }} submit: {{ submitFlag }} <br /> -->
         <button class="btn btn-primary btn-md me-3" @click="setHint">힌트</button>
         <button
@@ -106,7 +105,10 @@ const submit = () => {
         </button>
         <!-- {{ store.id }} -->
         <div v-if="hintFlag" style="display: inline">
-          플레이스 이름 > <span class="fw-bold"> {{ store.gameList[store.id].place_name }}{{ store.gameList[store.id].title }} </span>
+          플레이스 이름 >
+          <span class="fw-bold">
+            {{ store.gameList[store.id].place_name }}{{ store.gameList[store.id].title }}
+          </span>
         </div>
 
         <div></div>

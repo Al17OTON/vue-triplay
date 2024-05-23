@@ -2,13 +2,13 @@
 import { ref, onMounted } from "vue";
 import { getPlanListApi } from "@/api/plan";
 import { useRouter } from "vue-router";
-import axios from "axios"
+import axios from "axios";
 import VPlanListItem from "/src/components/plan/VPlanListItem.vue";
 const planList = ref();
 const router = useRouter();
 
-onMounted(() => {
-  getPlanListApi(
+onMounted(async () => {
+  await getPlanListApi(
     ({ data }) => {
       console.log(data);
       planList.value = data.resdata;
@@ -17,29 +17,28 @@ onMounted(() => {
   );
 });
 
-const loadingImg = ref("")
+const loadingImg = ref("");
 // 요청 인터셉터
 axios.interceptors.request.use(
   function (config) {
-    loadingImg.value = "loading.png"
-    return config
+    loadingImg.value = "loading.png";
+    return config;
   },
   function (error) {
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
+);
 
 // 응답 인터셉터
 axios.interceptors.response.use(
   function (response) {
-    loadingImg.value = ""
-    return response
+    loadingImg.value = "";
+    return response;
   },
   function (error) {
-    return Promise.reject(error)
+    return Promise.reject(error);
   }
-)
-
+);
 </script>
 
 <template>
