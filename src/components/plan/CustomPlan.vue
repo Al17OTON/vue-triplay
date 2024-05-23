@@ -232,6 +232,7 @@ const drawMarker = (list, marker, type) => {
       }
     })(m, list[i].place_name);
   }
+  if (imrich.value) findPath();
 };
 
 function displayInfowindow(marker, title) {
@@ -515,7 +516,7 @@ const savePlaces2Pinia = (distance, duration) => {
     cnt++;
   }
 
-  question += ' 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘, 무조건 한단어야만해.';
+  question += ' 를 한단어(8글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘, 무조건 한단어야만해.';
 
   console.log(places.value);
   console.log(seed);
@@ -607,12 +608,12 @@ const savePlaces2Pinia = (distance, duration) => {
 
       <div id="button_wrap">
         <div>
-          <button @click="smoothLevel" type="button" class="btn btn-success p-2">Smooth</button>
+          <button @click="smoothLevel" type="button" class="btn btn-success p-2">보기</button>
         </div>
-        <!-- <div class="form-check form-switch custom_switch">
-                    <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
-                </div> -->
+        <div class="form-check form-switch custom_switch">
+          <input v-model="imrich" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+          <label class="form-check-label" for="flexSwitchCheckDefault">자동 경로</label>
+        </div>
         <div v-if="!isGame">
           <button
             @click="findPath"

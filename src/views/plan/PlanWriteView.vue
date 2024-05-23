@@ -35,6 +35,7 @@ const submitSeed = async () => {
   if (gameStore.seedInfo.GPTQuestion) {
     mixinToast("Chat GPT가 키워드를 생성 중입니다.", 'info')
     gameStore.seedInfo.keyword = await OpenApiUtil.prompt(gameStore.seedInfo.GPTQuestion);
+    if (gameStore.seedInfo.keyword.length > 8) gameStore.seedInfo.keyword = '기타';
     mixinToast("생성 완료", 'success');
   } 
   return await api
