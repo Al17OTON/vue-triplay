@@ -6,29 +6,37 @@ import Footer from "@/components/common/Footer.vue";
 </script>
 
 <template>
-  <header class="header-wrap">
-    <Header />
-  </header>
+  <div>
+    <header class="header-wrap">
+      <Header />
+    </header>
 
-  <RouterView />
+    <main>
+      <RouterView />
+    </main>
 
-  <footer>
-    <Footer />
-  </footer>
+    <footer>
+      <Footer />
+    </footer>
+  </div>
 </template>
 
 <style scoped>
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .header-wrap {
-  /* padding-bottom: 2%; */
-  margin-bottom: 5%; /*해결필요*/
+  margin-bottom: 5%;
+}
+
+.main-content {
+  flex: 1;
 }
 
 .footer-wrap {
-  position: relative;
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
-  
 }
 </style>
