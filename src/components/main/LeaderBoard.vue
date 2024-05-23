@@ -1,20 +1,22 @@
 <script setup>
 import { useMemberStore } from "@/stores/memberStore.js";
 import { Axios } from "@/util/http-commons.js";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 
 const api = Axios();
 const memberStore = useMemberStore();
 const leaderBoard = ref([]);
+const myrank = ref();
 const url = "/member/leaderBoard";
 
 const getLeaderBoardList = async () => {
   await api.get(url).then((res) => (leaderBoard.value = res.data.resdata));
 };
 const getMyLeaderBoard = () => {
-  api
-    .get(url + `/${memberStore.member_id}`)
-    .then((res) => leaderBoard.value.push(res.data.resdata));
+  api.get(url + `/${memberStore.member_id}`).then((res) => {
+    // leaderBoard.value.push(res.data.resdata);
+    myrank.value = res.data.resdata;
+  });
 };
 
 //로그인 되어있고 리더보드에 자신이 포함되어 있지 않다면 서버에서 자신의 순위 정보 가져오기
@@ -31,6 +33,18 @@ onMounted(async () => {
   }
 });
 
+watch(
+  () => memberStore.isLogin,
+  () => {
+    for (var i = 0; i < leaderBoard.value.length; i++) {
+      if (leaderBoard.value[i].member_id === memberStore.member_id) {
+        return;
+      }
+    }
+    getMyLeaderBoard();
+  }
+);
+
 const addCommasToNumberString = (number) => {
   if (typeof number !== "string") {
     number = number.toString();
@@ -42,33 +56,55 @@ const addCommasToNumberString = (number) => {
 <template>
   <h2 class="title m-3 p-2" style="text-align: center">순위표🏆</h2>
   <hr style="width: 70%; margin: 0 auto; border: none; height: 2px; background-color: #ccc" />
-  <div class="mt-3" style="text-align: center; font-size: 20px">
+  <div class="mt-3 mb-3" style="text-align: center; font-size: 20px">
     순위표를 확인하고 더 높은 점수를 향해 도전해보세요!
   </div>
-  <div class="leaderboard">
-    <!-- <div class="leaderboard-header">
-      <h2 class="title" style="text-align: center">순위표</h2>
-    </div> -->
-    <ul class="leaderboard-list">
-      <li class="leaderboard-item">
-        <span class="rank">순위</span>
-        <span class="username">ID</span>
-        <span class="score">점수</span>
+  <div>
+    <div class="leaderboard">
+      <ul class="leaderboard-list">
+        <li class="leaderboard-item">
+          <span class="rank">순위</span>
+          <span class="username">ID</span>
+          <span class="score">점수</span>
+        </li>
+        <li
+          v-for="leader in leaderBoard"
+          :key="leader.member_id"
+          :class="{
+            'leaderboard-item': true,
+            'leaderboard-myself': leader.member_id === memberStore.member_id,
+          }"
+        >
+          <span class="rank">{{ leader.rank }}</span>
+          <span class="username">{{ leader.member_id }}</span>
+          <span class="score">{{ addCommasToNumberString(leader.score) }}</span>
+        </li>
+      </ul>
+    </div>
+    <div v-if="myrank != undefined && memberStore.isLogin">
+      <img style="display: block; margin: 0 auto" src="/src/assets/img/icn/icn_etc.png" alt="" />
+      <li
+        class="leaderboard-item myrank-item"
+        style="max-width: 400px; margin: 0px auto; background-color: rgb(160, 217, 104)"
+      >
+        <span class="rank">{{ myrank.rank }}</span>
+        <span class="username">{{ myrank.member_id }}</span>
+        <span class="score">{{ addCommasToNumberString(myrank.score) }}</span>
       </li>
-      <li v-for="leader in leaderBoard" :key="leader.member_id" :class="{'leaderboard-item' : true, 'leaderboard-myself' : (leader.member_id===memberStore.member_id)}">
-        <span class="rank">{{ leader.rank }}</span>
-        <span class="username">{{ leader.member_id }}</span>
-        <span class="score">{{ addCommasToNumberString(leader.score) }}</span>
-      </li>
-    </ul>
+    </div>
   </div>
 </template>
 
 <style scoped>
 /**chatGPT에게 부탁한 간단한 리더보드 디자인 */
+.myrank-item {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(160, 217, 104);
+}
 .leaderboard {
   max-width: 400px;
-  margin: 20px auto;
+  margin: 0px auto;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

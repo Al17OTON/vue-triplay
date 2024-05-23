@@ -19,7 +19,6 @@ import MainCarousel from "@/components/main/MainCarousel.vue";
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh; /* 화면 전체 높이 */
 }
 
 .split-animation {
