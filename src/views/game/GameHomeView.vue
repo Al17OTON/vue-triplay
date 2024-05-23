@@ -66,4 +66,13 @@ const router = useRouter();
 .clickable {
   cursor: pointer;
 }
+
+.clickable div:hover{ /* img 마우스 오버시*/
+  cursor:pointer;
+  transform:scale(1.1); /* 마우스 오버시 이미지 크기를 1.1 배만큼 확대시킨다. */
+  -o-transform:scale(1.1); -moz-transform:scale(1.1);
+  -webkit-transform:scale(1.1);
+  transition: transform .35s;    
+  -o-transition: transform .35s;-moz-transition: transform .35s;-webkit-transition: transform .35s; /* 마우스 오버시 이미지가 즉시 커지지않고 30.5 second 의 시간에 걸쳐 커진다 애니메이션 효과*/
+}
 </style>

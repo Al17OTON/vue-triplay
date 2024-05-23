@@ -2,8 +2,8 @@ import { Axios, AxiosMulti } from "@/util/http-commons.js";
 const httpMulti = AxiosMulti();
 const http = Axios();
 
-function insertPlanApi(data, success, fail){
-    httpMulti.post('plan', data).then(success).catch(fail);
+async function insertPlanApi(data, success, fail){
+    await httpMulti.post('plan', data).then(success).catch(fail);
 }
 
 function getPlanListApi(success, fail){
