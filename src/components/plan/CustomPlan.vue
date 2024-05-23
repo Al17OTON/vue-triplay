@@ -232,6 +232,7 @@ const drawMarker = (list, marker, type) => {
       }
     })(m, list[i].place_name);
   }
+  if (imrich.value) findPath();
 };
 
 function displayInfowindow(marker, title) {
@@ -514,7 +515,6 @@ const savePlaces2Pinia = (distance, duration) => {
     question += `${places.value[i].keyword}, `;
     cnt++;
   }
-
   question +=
     " 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘, 무조건 한단어야만해.";
 
@@ -610,7 +610,6 @@ const savePlaces2Pinia = (distance, duration) => {
         <div>
           <button @click="smoothLevel" type="button" class="btn btn-success p-2">보기</button>
         </div>
-
         <div v-if="!isGame">
           <button
             @click="findPath"
@@ -621,7 +620,7 @@ const savePlaces2Pinia = (distance, duration) => {
             길찾기
           </button>
         </div>
-        <div class="form-check form-switch custom_switch">
+        <!-- <div class="form-check form-switch custom_switch">
           <input
             v-model="imrich"
             class="form-check-input"
@@ -630,8 +629,8 @@ const savePlaces2Pinia = (distance, duration) => {
             id="flexSwitchCheckDefault"
           />
           경로 자동 갱신
-          <!-- <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label> -->
-        </div>
+           <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
+        </div> -->
       </div>
     </div>
   </div>
@@ -668,7 +667,7 @@ const savePlaces2Pinia = (distance, duration) => {
 
 #button_wrap {
   position: absolute;
-  left: 40%;
+  left: 45%;
   bottom: 0;
   margin-bottom: 10px;
   z-index: 1;

@@ -151,11 +151,11 @@ function getListItem(index, places) {
   var el = document.createElement("li"),
     itemStr =
       '<div class="info" > ' +
-      "   <h5 class='mb-1'>" +
+      "   <div class='mb-1' style='font-size: 15px'>" +
       (index + 1) +
       ". " +
       places.place_name +
-      "</h5>";
+      "</div>";
 
   const btn = document.createElement("button");
 
@@ -289,21 +289,21 @@ onMounted(() => {
               type="text"
               v-model="searchQuery.query"
               placeholder="검색어 입력"
-              class="form-control p-1"
+              class="form-control p-2"
               id="keyword"
               aria-label="KeyWord"
               aria-describedby="button-addon2"
             />
-            <button id="button-addon2" class="btn btn-secondary p-1" @click="searchPlaces">
+            <button id="button-addon2" type="button" class="btn btn-secondary p-2" @click="searchPlaces">
               검색
             </button>
           </div>
         </div>
       </div>
-      <hr />
       <ul id="placesList"></ul>
       <div id="pagination"></div>
     </div>
+
 
     <div id="menu_right" class="bg_white">
       <div></div>
@@ -357,7 +357,8 @@ onMounted(() => {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 300px;
+  /* width: 300px; */
+  width: 20%;
   height: 95%;
   margin: 10px 0 30px 10px;
   padding: 5px;
@@ -373,7 +374,8 @@ onMounted(() => {
   top: 0;
   right: 40px;
   bottom: 0;
-  width: 300px;
+  /* width: 300px; */
+  width: 20%;
   height: 95%;
   margin: 10px 0 30px 10px;
   padding: 5px;
@@ -386,7 +388,7 @@ onMounted(() => {
 }
 /* .bg_white {
   background: #fff;
-} */
+}*/
 #menu_left hr {
   display: block;
   height: 1px;
@@ -401,7 +403,7 @@ onMounted(() => {
   margin: 10px 0;
 }
 #menu_left .option button {
-  margin-left: 5px;
+  /* margin-left: 5px; */
 }
 #pagination {
   margin: 10px auto;

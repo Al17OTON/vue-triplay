@@ -5,7 +5,7 @@
     <div id="carouselExampleFade" class="carousel slide carousel-fade pics" data-bs-ride="carousel">
       <div class="carousel-inner" style="border-radius: 10px">
         <div class="carousel-item active">
-          <img src="@/assets/img/bg/bg_map3.jpg" class="d-block w-100 h-50" alt="..." />
+          <img src="@/assets/img/bg/bg_map4.jpg" class="d-block w-100 h-50" alt="..." />
           <div class="text-overlay title">
             <span style="font-family: 'SokchoBadaDotum', sans-serif; font-size: 45px"
               >여행 계획을 더 재미있게!</span

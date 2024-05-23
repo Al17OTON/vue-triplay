@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted } from "vue";
 import { oops, loading, mixinToast } from "@/util/sweetAlert.js";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   location: Object,
 });
 
+const router = useRouter();
 const appKey = import.meta.env.VITE_KAKAO_APPKEY;
 const loadScript = () => {
   const script = document.createElement("script");
@@ -37,8 +39,10 @@ const initMap = () => {
                 roadview.setPanoId(panoId, position); //panoId와 중심좌표를 통해 로드뷰 실행
               } else throw new Error("panoId is not available");
           } catch (e) {
-              alert("타겟 위치 근방 로드뷰를 찾을 수 없습니다. ")
-              console.log(e);
+            // alert("타겟 위치 근방 로드뷰를 찾을 수 없습니다. ")
+            oops("로드뷰를 찾는데 문제가 발생하였습니다. <br> 개발팀에 문의 바랍니다. 🙏");
+            router.replace({ name: 'gameinfo' });
+            console.log(e);
           }
         });
         console.log(e);

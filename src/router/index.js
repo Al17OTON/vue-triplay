@@ -52,7 +52,11 @@ router.beforeEach(async (to, from, next) => {
     // console.log("로그인안됨");
     await login();
     if (memberStore.isLogin) next();
-    else next('/');
+    // else next('/');
+    else {
+      router.push(' ');
+      router.push('/');
+    } 
   }
 }); 
 

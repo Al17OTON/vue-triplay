@@ -3,8 +3,8 @@ import Swal from "sweetalert2";
 import { Axios } from "@/util/http-commons.js";
 
 export const login = async () => {
-  
   const memberStore = useMemberStore(); 
+  memberStore.logout();
   const api = Axios();
     const res = await Swal.fire({
       title: "로그인",
@@ -25,7 +25,7 @@ export const login = async () => {
       preConfirm: async () => {
         const id = document.getElementById('swal-input1').value;
         const pw = document.getElementById('swal-input2').value;
-        
+
         if (!id || !pw) {
           return Swal.showValidationMessage("아이디와 비밀번호를 모두 입력해주세요.");
         }
@@ -39,7 +39,7 @@ export const login = async () => {
           console.log(err);
           return err;
         })
-        if(response.status != 200) {
+        if (response.status != 200) {
           return Swal.showValidationMessage("로그인 정보가 올바르지 않습니다."); 
         }
         console.log(response);

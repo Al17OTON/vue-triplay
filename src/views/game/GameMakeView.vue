@@ -16,6 +16,12 @@ const gameTitle = ref();
 const saveSeed = () => {
   console.log("결과에서 seedInfo: ");
   console.log(store.seedInfo);
+
+  if (store.seedInfo.count < 3) {
+    oops("장소를 3개 이상 10개 이하 선택해주세요!");
+    return;
+  }
+
   if(!gameTitle.value){
     oops("게임 제목을 입력해주세요.")
   }else{

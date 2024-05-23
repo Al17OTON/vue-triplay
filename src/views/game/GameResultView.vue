@@ -96,9 +96,9 @@ const saveGame = () => {
   <!-- 게임 저장 모달 -->
   <div class="modal fade" id="gameSaveModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content p-3">
+      <div class="modal-content p-4">
         <div class="d-flex justify-content-center">
-          <h1 class="fw-bold">게임 저장</h1>
+          <h3 class="fw-bold">게임 저장</h3>
         </div>
 
         <div class="modal-body">
@@ -116,7 +116,7 @@ const saveGame = () => {
             >
               확인
             </button>
-            <button type="button" data-bs-dismiss="modal" class="btn btn-outline-success me-2">
+            <button type="button" data-bs-dismiss="modal" class="btn btn-outline-danger me-2">
               취소
             </button>
           </div>

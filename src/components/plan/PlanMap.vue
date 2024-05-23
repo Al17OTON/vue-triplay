@@ -558,7 +558,7 @@ function deleteDistnce() {
       <div id="map" style="width: 100%; height: 100%; position: relative; overflow: hidden"></div>
       <div v-if="!isDetail">
         <button @click="smoothLevel" type="button" class="btn btn-success custom_btn custom_smooth">
-          Smooth
+          보기
         </button>
         <div class="form-check form-switch custom_switch">
           <input
@@ -568,7 +568,7 @@ function deleteDistnce() {
             role="switch"
             id="flexSwitchCheckDefault"
           />
-          <label for="flexSwitchCheckDefault">I'M RICH!</label>
+          <label for="flexSwitchCheckDefault">자동 경로</label>
         </div>
         <div class="custom_submit">
           <button @click="findPath" type="button" class="btn btn-success custom_btn">길찾기</button>
