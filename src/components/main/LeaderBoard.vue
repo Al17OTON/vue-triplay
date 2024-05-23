@@ -36,6 +36,7 @@ onMounted(async () => {
 watch(
   () => memberStore.isLogin,
   () => {
+    myrank.value = undefined;
     for (var i = 0; i < leaderBoard.value.length; i++) {
       if (leaderBoard.value[i].member_id === memberStore.member_id) {
         return;
@@ -62,34 +63,40 @@ const addCommasToNumberString = (number) => {
   <div>
     <div class="leaderboard">
       <ul class="leaderboard-list">
-        <li class="leaderboard-item">
-          <span class="rank">순위</span>
-          <span class="username">ID</span>
-          <span class="score">점수</span>
+        <li class="leaderboard-item row no-gutters">
+          <span class="rank col">순위</span>
+          <span class="username col">ID</span>
+          <span class="score col">점수</span>
         </li>
         <li
-          v-for="leader in leaderBoard"
+          v-for="(leader, idx) in leaderBoard"
           :key="leader.member_id"
           :class="{
             'leaderboard-item': true,
             'leaderboard-myself': leader.member_id === memberStore.member_id,
           }"
+          class="row no-gutters"
         >
-          <span class="rank">{{ leader.rank }}</span>
-          <span class="username">{{ leader.member_id }}</span>
-          <span class="score">{{ addCommasToNumberString(leader.score) }}</span>
+          <span class="rank col">
+            {{ leader.rank }}
+            <img v-if="idx == 0" src="/src/assets/img/icn/icn_gold.png" alt="" />
+            <img v-else-if="idx == 1" src="/src/assets/img/icn/icn_silver.png" alt="" />
+            <img v-else-if="idx == 2" src="/src/assets/img/icn/icn_bronze.png" alt="" />
+          </span>
+          <span class="username col">{{ leader.member_id }}</span>
+          <span class="score col">{{ addCommasToNumberString(leader.score) }}</span>
         </li>
       </ul>
     </div>
     <div v-if="myrank != undefined && memberStore.isLogin">
       <img style="display: block; margin: 0 auto" src="/src/assets/img/icn/icn_etc.png" alt="" />
       <li
-        class="leaderboard-item myrank-item"
-        style="max-width: 400px; margin: 0px auto; background-color: rgb(160, 217, 104)"
+        class="leaderboard-item myrank-item row no-gutters"
+        style="max-width: 450px; margin: 0px auto; background-color: rgb(160, 217, 104)"
       >
-        <span class="rank">{{ myrank.rank }}</span>
-        <span class="username">{{ myrank.member_id }}</span>
-        <span class="score">{{ addCommasToNumberString(myrank.score) }}</span>
+        <span class="rank col">{{ myrank.rank }}</span>
+        <span class="username col">{{ myrank.member_id }}</span>
+        <span class="score col">{{ addCommasToNumberString(myrank.score) }}</span>
       </li>
     </div>
   </div>
@@ -103,7 +110,7 @@ const addCommasToNumberString = (number) => {
   background-color: rgb(160, 217, 104);
 }
 .leaderboard {
-  max-width: 400px;
+  max-width: 450px;
   margin: 0px auto;
   background-color: #fff;
   border-radius: 8px;
@@ -154,5 +161,15 @@ const addCommasToNumberString = (number) => {
 
 .leaderboard-myself {
   background-color: rgb(160, 217, 104) !important;
+}
+
+/* 추가된 CSS */
+.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+.no-gutters > .col {
+  padding-right: 0;
+  padding-left: 0;
 }
 </style>
