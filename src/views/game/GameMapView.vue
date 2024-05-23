@@ -143,9 +143,8 @@ const submit = () => {
         <div class="modal-body">
           <div class="mb-3">
             <h5>플레이스</h5>
-            <span style="font-size: 18pt; font-weight: bold">{{
-              store.gameList[store.id].place_name
-            }}</span>
+            <span style="font-size: 18pt; font-weight: bold">
+              {{store.gameList[store.id].place_name}}{{ store.gameList[store.id].title }}</span>
           </div>
           <div class="mb-3">
             <h5>거리</h5>

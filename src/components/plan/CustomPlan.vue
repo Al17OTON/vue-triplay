@@ -620,7 +620,7 @@ const savePlaces2Pinia = (distance, duration) => {
             길찾기
           </button>
         </div>
-        <div class="form-check form-switch custom_switch">
+        <!-- <div class="form-check form-switch custom_switch">
           <input
             v-model="imrich"
             class="form-check-input"
@@ -629,8 +629,8 @@ const savePlaces2Pinia = (distance, duration) => {
             id="flexSwitchCheckDefault"
           />
           경로 자동 갱신
-          <!-- <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label> -->
-        </div>
+           <label class="form-check-label" for="flexSwitchCheckDefault">경로 자동 갱신</label>
+        </div> -->
       </div>
     </div>
   </div>
@@ -667,7 +667,7 @@ const savePlaces2Pinia = (distance, duration) => {
 
 #button_wrap {
   position: absolute;
-  left: 40%;
+  left: 45%;
   bottom: 0;
   margin-bottom: 10px;
   z-index: 1;
