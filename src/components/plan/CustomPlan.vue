@@ -208,8 +208,7 @@ const drawMarker = (list, marker, type) => {
     var itemEl = null;
     if (!type) {
       // element가 그려진 후에 marker를 찍어야함
-      itemEl = document.getElementById(`place${i}`);
-      // console.log(itemEl);
+      itemEl = document.getElementById(`place${list[i].id}`);
     }
 
     (function (marker, title) {
@@ -515,8 +514,7 @@ const savePlaces2Pinia = (distance, duration) => {
     cnt++;
   }
 
-  question +=
-    " 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘";
+  question += ' 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘, 무조건 한단어야만해.';
 
   console.log(places.value);
   console.log(seed);
@@ -562,9 +560,9 @@ const savePlaces2Pinia = (distance, duration) => {
             @drop="onDrop(2, $event)"
             style="height: 100%"
           >
-            <Draggable v-for="(item, idx) in searchList" :key="item.id">
+            <Draggable v-for="item in searchList" :key="item.id">
               <div
-                :id="`place${idx}`"
+                :id="`place${item.id}`"
                 :class="{ 'draggable-item': true }"
                 style="padding: 10px; margin-bottom: 8px"
                 class="place-item"
@@ -590,6 +588,7 @@ const savePlaces2Pinia = (distance, duration) => {
           >
             <Draggable v-for="item in places" :key="item.id">
               <div
+                :id="`place${item.id}`"
                 :class="{ 'draggable-item': true }"
                 style="padding: 10px; margin-bottom: 8px"
                 class="place-item"
