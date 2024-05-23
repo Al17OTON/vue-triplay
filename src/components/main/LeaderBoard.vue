@@ -55,7 +55,7 @@ const addCommasToNumberString = (number) => {
         <span class="username">ID</span>
         <span class="score">점수</span>
       </li>
-      <li v-for="leader in leaderBoard" :key="leader.member_id" class="leaderboard-item">
+      <li v-for="leader in leaderBoard" :key="leader.member_id" :class="{'leaderboard-item' : true, 'leaderboard-myself' : (leader.member_id===memberStore.member_id)}">
         <span class="rank">{{ leader.rank }}</span>
         <span class="username">{{ leader.member_id }}</span>
         <span class="score">{{ addCommasToNumberString(leader.score) }}</span>
@@ -114,5 +114,9 @@ const addCommasToNumberString = (number) => {
 }
 .leaderboard-item .score {
   font-weight: bold;
+}
+
+.leaderboard-myself {
+  background-color: rgb(160, 217, 104) !important;
 }
 </style>

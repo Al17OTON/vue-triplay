@@ -7,7 +7,7 @@ import { insertPlanApi } from "@/api/plan.js";
 import { saveSeedApi } from "@/api/game";
 import PlanMap from "@/components/plan/PlanMap.vue";
 import CustomPlan from "@/components/plan/CustomPlan.vue";
-import { oops } from "@/util/sweetAlert.js";
+import { oops, mixinToast } from "@/util/sweetAlert.js";
 import { Axios } from "@/util/http-commons.js";
 import { OpenApiUtil } from "@/assets/js/OpenApiUtil.js";
 
@@ -32,7 +32,11 @@ const submitSeed = async () => {
   console.log("seed 저장 직전!!!");
   console.log(gameStore.seedInfo);
 
-  if(gameStore.seedInfo.GPTQuestion) gameStore.seedInfo.keyword = await OpenApiUtil.prompt(gameStore.seedInfo.GPTQuestion);
+  if (gameStore.seedInfo.GPTQuestion) {
+    mixinToast("Chat GPT가 키워드를 생성 중입니다.", 'info')
+    gameStore.seedInfo.keyword = await OpenApiUtil.prompt(gameStore.seedInfo.GPTQuestion);
+    mixinToast("생성 완료", 'success');
+  } 
   
   return await api
     .post(
@@ -80,7 +84,7 @@ const submit = async () => {
   //    insertPlanApi()
   // }, error => alert(error))
 
-  insertPlanApi(
+  await insertPlanApi(
     formData,
     ({ data }) => {
       console.log(data);
