@@ -50,7 +50,7 @@ const getInfo = () => {
       }
       bigImg.value = `/src/assets/img/icn/icn_${grade.value}2.png`;
       smallImg.value = `/src/assets/img/icn/icn_${grade.value}.png`;
-      styleWidth.value = ((info.value.score - min.value) * 100) / min.value;
+      styleWidth.value = ((info.value.score - min.value) * 100) / max.value;
     });
 };
 

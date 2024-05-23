@@ -2,8 +2,8 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { getPlanApi, deletePlanApi, updateHitApi } from "@/api/plan";
-import { searchIdApi, searchKeywordApi, createListFromSeedApi } from "@/api/kakaomap";
 import { useGameStore } from "@/stores/gameStore";
+import { useMemberStore } from "@/stores/memberStore";
 import { addMemo } from "@/util/memo.js";
 import PlanMap from "@/components/plan/PlanMap.vue";
 import MemoList from "@/components/plan/MemoList.vue";
@@ -15,6 +15,7 @@ import { PlaceFindById } from "@/util/http-commons.js";
 const route = useRoute();
 const router = useRouter();
 const gameStore = useGameStore();
+const memberStore = useMemberStore();
 
 const memoSwitch = ref(false);
 const rootSwitch = ref(false);
@@ -25,7 +26,7 @@ const gptPlace = ref({
 });
 const gptInfo = ref("...");
 
-onMounted( async () => {
+onMounted(async () => {
   // searchIdApi(
   //   "186032184",
   //   (res) => {
@@ -42,7 +43,7 @@ onMounted( async () => {
     ({ data }) => {},
     (error) => console.log(error)
   );
-    
+
   gameStore.gameList = await getPlace();
   // console.log(gameStore.gameList);
   // getPlanApi(
@@ -68,26 +69,24 @@ onMounted( async () => {
 });
 
 const getPlace = async () => {
-  return await getPlanApi(route.query.planId,
-   async ({data}) => {
-      // console.log(data);
-      plan.value = data.resdata;
-      const ids = plan.value.seedInfo.split(' ');
-      // console.log(ids);
-      let placeInfo = [];
-      plan.value.placeList = [];
-      for(var i = 0; i < ids.length; i++) { 
-        if(i == ids.length - 1) break; 
-        const place = await PlaceFindById(ids[i]);
-        place.id = ids[i];
-        // place.location = {x:0, y:0};
-        placeInfo.push(place);
-        plan.value.placeList.push(place);
-      }
-      return placeInfo;
+  return await getPlanApi(route.query.planId, async ({ data }) => {
+    // console.log(data);
+    plan.value = data.resdata;
+    const ids = plan.value.seedInfo.split(" ");
+    // console.log(ids);
+    let placeInfo = [];
+    plan.value.placeList = [];
+    for (var i = 0; i < ids.length; i++) {
+      if (i == ids.length - 1) break;
+      const place = await PlaceFindById(ids[i]);
+      place.id = ids[i];
+      // place.location = {x:0, y:0};
+      placeInfo.push(place);
+      plan.value.placeList.push(place);
     }
-  )
-}
+    return placeInfo;
+  });
+};
 
 const deletePlan = () => {
   deletePlanApi(
@@ -105,10 +104,12 @@ const setRoot = () => {
 };
 
 const clickPlace = async (place) => {
-  gptPlace.value = place.place_name ? place.place_name:place.title;
+  gptPlace.value = place.place_name ? place.place_name : place.title;
   gptInfo.value = "...";
   gptInfo.value = await OpenApiUtil.prompt(
-    `${place.address_name ? place.address_name:place.address}에 위치한 ${gptPlace.value}에 대한 설명 3줄 요약해줘`
+    `${place.address_name ? place.address_name : place.address}에 위치한 ${
+      gptPlace.value
+    }에 대한 설명 3줄 요약해줘`
   );
 };
 </script>
@@ -174,6 +175,7 @@ const clickPlace = async (place) => {
             목록으로
           </button>
           <button
+            v-if="plan.memberId === memberStore.member_id"
             data-bs-toggle="modal"
             data-bs-target="#deleteModal"
             class="btn btn-outline-danger me-1"

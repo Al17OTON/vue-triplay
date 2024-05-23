@@ -1,16 +1,12 @@
 <script setup>
 import { onMounted, watch, ref, nextTick } from "vue";
 import { useGameStore } from "@/stores/gameStore";
-import { useMemberStore } from "@/stores/memberStore";
 import { KakaoPathFinder } from "@/util/http-commons.js";
-import { Container, Draggable } from "vue3-smooth-dnd";
 import { applyDrag, generateItems } from "@/util/dragHelper.js";
 import { oops, loading, mixinToast, dragInfo } from "@/util/sweetAlert.js";
 
 const gameStore = useGameStore();
-const memberStore = useMemberStore();
 const pathFinder = KakaoPathFinder();
-const emit = defineEmits([]);
 const props = defineProps({
   isGame: Boolean,
 });
@@ -165,12 +161,10 @@ const smoothLevel = () => {
 const performPostRenderActions = (list, marker, flag) => {
   nextTick(() => {
     // dom 다 생성 후 실행
-    console.log("in nextTick!" + flag);
-    console.log(list);
     drawMarker(list, marker, flag);
-    // drawMarker(searchList.value, searchMarker, false);
   });
 };
+
 watch(
   () => searchList.value,
   (n, o) => {
@@ -215,6 +209,7 @@ const drawMarker = (list, marker, type) => {
     if (!type) {
       // element가 그려진 후에 marker를 찍어야함
       itemEl = document.getElementById(`place${i}`);
+      // console.log(itemEl);
     }
 
     (function (marker, title) {
@@ -291,17 +286,22 @@ const findPath = () => {
   }
   body.waypoints = waypoints;
 
-  mixinToast("경로를 탐색 중입니다.\n 경로가 길 경우 탐색에 실패하거나 약 10초 정도 소요될 수 있습니다.", 'info');
+  mixinToast(
+    "경로를 탐색 중입니다.\n 경로가 길 경우 탐색에 실패하거나 약 10초 정도 소요될 수 있습니다.",
+    "info"
+  );
   pathFinder
     .post("", body)
     .then((res) => {
       console.log(res.data);
-      if(res.data.routes[0].result_code !== 0) {
-        oops("현재 경로에 문제가 있습니다. <br> 다시 시도해주세요. <br> (경로 없음, 경로 초과, 교통 장애 등)");
+      if (res.data.routes[0].result_code !== 0) {
+        oops(
+          "현재 경로에 문제가 있습니다. <br> 다시 시도해주세요. <br> (경로 없음, 경로 초과, 교통 장애 등)"
+        );
         return;
       }
       pathResult.value = res.data;
-      mixinToast("경로 탐색 완료", 'success');
+      mixinToast("경로 탐색 완료", "success");
     })
     .then(() => drawPath())
     .catch((err) => {
@@ -415,21 +415,21 @@ onMounted(() => {
   } else {
     loadScript();
   }
-  
-  if(!getCookie('customVisited')) {
+
+  if (!getCookie("customVisited")) {
     dragInfo();
     setCookie("customVisited", "true", 10);
   }
 });
 
-const setCookie = function(name, value, exp) {      
-  var date = new Date();      
-  date.setTime(date.getTime() + exp*24*60*60*1000);      
-  document.cookie = name + '=' + value + ';expires=' + date.toUTCString() + ';path=/';  
+const setCookie = function (name, value, exp) {
+  var date = new Date();
+  date.setTime(date.getTime() + exp * 24 * 60 * 60 * 1000);
+  document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/";
 };
-const getCookie = function(name) {      
-  var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');      
-  return value? value[2] : null;  
+const getCookie = function (name) {
+  var value = document.cookie.match("(^|;) ?" + name + "=([^;]*)(;|$)");
+  return value ? value[2] : null;
 };
 
 // 마우스 우클릭 하여 선 그리기가 종료됐을 때 호출하여
@@ -507,7 +507,7 @@ function deleteDistnce() {
 const savePlaces2Pinia = (distance, duration) => {
   // let seed = `${gameStore.page} `;
   let seed = "";
-  let question = '다음과 같이 키워드들이 주어졌어, ';
+  let question = "다음과 같이 키워드들이 주어졌어, ";
   let cnt = 0;
   for (var i = 0; i < places.value.length; i++) {
     seed += `${places.value[i].id} `;
@@ -515,7 +515,8 @@ const savePlaces2Pinia = (distance, duration) => {
     cnt++;
   }
 
-  question += ' 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘';
+  question +=
+    " 를 한단어(5글자 이내, 최대한 짧게 공백없이, 모든 단어를 통일할 필요는 없고 대다수가 같은 의미를 가지고 있는 걸로 해도됨)로 통일해주고 답변을 한 단어로만 해줘";
 
   console.log(places.value);
   console.log(seed);
