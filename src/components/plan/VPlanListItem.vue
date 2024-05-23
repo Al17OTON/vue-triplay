@@ -7,7 +7,8 @@ const props = defineProps({
   plan: Object,
 });
 
-const fileUrl = import.meta.env.VITE_API_URL + "plan";
+// const fileUrl = import.meta.env.VITE_API_URL + "plan";
+const fileUrl = import.meta.env.VITE_FILE_PATH;
 const thumbnail = computed(() => {
   console.log(props.plan.file)
   return props.plan.file ? getImageUrl(props.plan.file) : "/src/assets/img/bg/bg_default.jpg";
